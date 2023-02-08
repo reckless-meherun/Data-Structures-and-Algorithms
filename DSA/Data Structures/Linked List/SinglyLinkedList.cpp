@@ -167,21 +167,22 @@ int main()
         else
             a.head = new node(x, a.head);
     }
-    a.insertAfterNode(a.head, 3);
+    //a.insertAfterNode(a.head, 3);
     /* can be used to insert last too,
     but you have to provide the pointer of the last element :3
     so u'd better create an insertLast() */
     // a.head = new node(5, a.head);
-    a.insertFirst(0);
-    a.insertLast(9);
+    // a.insertFirst(0);
+    // a.insertLast(9);
+    // a.printList(a.head);
+    // a.deleteLast();
+    // a.printList(a.head);
+    // a.deleteFirst();
+    // a.printList(a.head);
+    // a.deleteAfterNode(2);
+    // a.printList(a.head);
+    // node *rev_head = a.reverseList();
+    // a.printList(rev_head);
     a.printList(a.head);
-    a.deleteLast();
-    a.printList(a.head);
-    a.deleteFirst();
-    a.printList(a.head);
-    a.deleteAfterNode(2);
-    a.printList(a.head);
-    node *rev_head = a.reverseList();
-    a.printList(rev_head);
     return 0;
 }

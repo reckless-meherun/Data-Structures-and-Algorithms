@@ -19,58 +19,20 @@ public:
     }
 };
 
-class circulinkedlist
+class linkedlist
 {
 public:
     node *head;
-    node *tail;
-
-    circulinkedlist()
+    linkedlist()
     {
         head = NULL;
-        tail = NULL;
     }
-
-    void insertAfterNode(node *curr, int data) // gonna insert 'data' after node 'curr'
-    {
-        node *temp = new node(data, NULL);
-        temp->next = curr->next;
-        curr->next = temp; // be careful about the order so the link doesn't get lost
-    }
-
     void insertFirst(int data)
     {
         node *temp = new node(data, NULL);
         temp->next = head;
         head = temp;
-        tail->next = head;
     }
-
-    void insertLast(int data)
-    {
-        insertAfterNode(tail, data);
-    }
-
-    void deleteFirst()
-    {
-        node *top = head;
-        head = top->next;
-        delete (top);
-        tail->next = head;
-        // tail->next = tail->next->next; // why isn't it working !!
-    }
-
-    void deleteLast()
-    {
-        node *curr = head;
-        for (; curr->next->next != head; curr = curr->next)
-        {
-        }
-        node *havetodel = curr->next;
-        curr->next = curr->next->next;
-        delete (havetodel);
-    }
-
     void deleteAfterNode(int del) // delete the del_th element from the linkedlist
     {
         node *curr = head;
@@ -83,7 +45,46 @@ public:
         // delete(curr->next);
         curr->next = curr->next->next;
     }
+    node* removeDuplicates()
+    {  
+        if(!head) //no element
+            return head;
+        else if(head->next==NULL) //one element
+        {
+            return head;
+        }
+        else if(head->next->next==NULL) //two elements
+        {
+            if(head->data==head->next->data)
+            {
+                return NULL;
+            }
+            else
+                return head;
+        }
 
+        //more than two elements
+        insertFirst(-1);
+        node *curr = head;
+        int count=0;
+        while(curr->next->next!=NULL)
+        {
+            if(curr->next->data == curr->next->next->data)
+            {
+                int keep = curr->next->data;
+                while(curr->next->data==keep)
+                {
+                    deleteAfterNode(count);
+                }                                
+            }
+            else
+            {
+                curr = curr->next;
+                count++;
+            }
+        }
+        return head->next;
+    }
     node *reverseList()
     {
         node *prev_head = head;
@@ -105,23 +106,11 @@ public:
         {
             cout << "Empty LinkedList" << endl;
         }
-        else
+        else 
         {
-            node *curr = HEAD;
-            cout << curr->data << " ";
-            curr = curr->next;
-            for (; curr != NULL;)
+            for (node *curr = HEAD; curr != NULL; curr = curr->next)
             {
                 cout << curr->data << " ";
-                if (curr->next == HEAD)
-                {
-                    cout << endl;
-                    return;
-                }
-                else
-                {
-                    curr = curr->next;
-                }
             }
             cout << endl;
         }
@@ -132,31 +121,24 @@ int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
-    circulinkedlist a;
+    linkedlist a;
     int n;
     cin >> n;
+    int x;
     for (int i = 0; i < n; i++)
     {
-        int x;
         cin >> x;
         if (i == 0)
         {
             a.head = new node(x, NULL);
-            a.tail = a.head;
         }
         else
         {
             a.head = new node(x, a.head);
         }
     }
-    a.tail->next = a.head;    
-    a.insertFirst(10);
-    a.insertLast(20);
+    a.head = a.reverseList();
+    a.head = a.removeDuplicates();
     a.printList(a.head);
-    a.printList(a.head->next->next); // to prove that it's a circular linked list
-    a.deleteFirst();
-    a.deleteLast();
-    a.deleteAfterNode(2);
-    a.printList(a.head);    
     return 0;
 }
