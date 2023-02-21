@@ -1,18 +1,18 @@
 #include <bits/stdc++.h>
 using namespace std;
+typedef long long ll;
 
 class node
 {
 public:
-    string data;
+    char data;
     node *next;
-
     node()
     {
-        data = "0";
+        data = 0;
         next = NULL;
     }
-    node(string _data, node *_next)
+    node(char _data, node *_next)
     {
         data = _data;
         next = _next;
@@ -23,15 +23,13 @@ class linkedlist
 {
 public:
     node *head, *tail;
-    int flag = 0;
-    int flag_rev = 0;
     linkedlist()
     {
         head = NULL;
         tail = NULL;
     }
 
-    node *search(string data)
+    node *search(int data)
     {
         for (node *curr = head; curr != NULL; curr = curr->next)
         {
@@ -45,46 +43,30 @@ public:
         return NULL;
     }
 
-    void insertFirst(string data)
+    void insertFirst(char data)
     {
         node *temp = new node(data, NULL);
-        if (temp == NULL)
-        {
-            cout << "Stack Overflow" << endl;
-            return;
-        }
         temp->next = head;
         head = temp;
-        tail = head;
     }
 
-    void insertAfterNode(node *curr, string data) // gonna insert 'data' after node 'curr'
+    void insertAfterNode(node *curr, char data) // gonna insert 'data' after node 'curr'
     {
         node *temp = new node(data, NULL);
-        if (temp == NULL)
-        {
-            cout << "Stack Overflow" << endl;
-            return;
-        }
         temp->next = curr->next;
         curr->next = temp; // be careful about the order so the link doesn't get lost
     }
 
-    void insertLast(string data)
+    void insertLast(char data)
     {
         if (!head)
             insertFirst(data);
         else
         {
-            node *curr = tail;
-            if (flag == 0)
-            {
-                while (curr->next != NULL)
-                    curr = curr->next;
-                flag = 1;
-            }
+            node *curr = head;
+            while (curr->next != NULL)
+                curr = curr->next;
             insertAfterNode(curr, data);
-            tail = curr->next;
         }
     }
 
@@ -97,14 +79,14 @@ public:
 
     void deleteLast()
     {
-        if (head->next == NULL)
-        {
-            head = NULL;
-            return;
-        }
-
+    	if(head->next == NULL)
+    	{
+    		head = NULL;
+    		return;
+    	}
+    		
         node *curr;
-
+        
         for (curr = head; curr->next->next != NULL; curr = curr->next)
         {
         }
@@ -126,9 +108,9 @@ public:
         delete (to_delete);
     }
 
-    void remove(string val)
+    void remove(char val)
     {
-        node *dummy = new node("-1", NULL);
+        node *dummy = new node(-1, NULL);
         dummy->next = head;
         node *curr = dummy;
         while (curr != NULL and curr->next != NULL)
@@ -156,11 +138,6 @@ public:
             prev_head->next = temp1;
             temp1 = prev_head;
             prev_head = temp2;
-            if (flag_rev == 0)
-            {
-                tail = temp1;
-                flag_rev = 1;
-            }
         }
         prev_head = temp1;
         return prev_head;
@@ -174,8 +151,7 @@ public:
         }
         else
         {
-            head = reverseList();
-            for (node *curr = head; curr != tail->next; curr = curr->next)
+            for (node *curr = head; curr != NULL; curr = curr->next)
             {
                 cout << curr->data << " ";
             }
@@ -188,11 +164,11 @@ class MyStack
 {
 public:
     linkedlist Stack;
-    bool empty()
+    bool isEmpty()
     {
         return Stack.head == NULL;
     }
-    void push(string val)
+    void push(char val)
     {
         if (!Stack.head)
             Stack.insertFirst(val);
@@ -203,12 +179,12 @@ public:
     {
         Stack.deleteLast();
     }
-    string top()
+    char peek()
     {
-        if (empty())
+        if (isEmpty())
         {
             cout << "Empty Stack" << endl;
-            return " ";
+            return ' ';
         }
         else
         {
@@ -225,7 +201,7 @@ public:
         Stack.tail = Stack.head;
         while (Stack.tail)
         {
-            Stack.tail->data = "0";
+            Stack.tail->data = 0;
             Stack.tail = Stack.tail->next;
         }
     }
@@ -246,37 +222,30 @@ public:
     }
 };
 
+string rev_string(string x)
+{
+    MyStack s;
+    int i = 0;
+    while (i < x.length())
+    {
+        s.push(x[i++]);
+    }
+    i = 0;
+    while (!s.isEmpty())
+    {
+        x[i] = s.peek();
+        i++;
+        s.pop();
+    }
+    return x;
+}
+
 int main()
 {
-    string prefix;
-    //stack<string> infix;
-    MyStack infix;
-    cin >> prefix;
-    for (int i = prefix.length() - 1; i >= 0; i--)
-    {
-        if ((prefix[i] >= 'A' and prefix[i] <= 'Z') or (prefix[i] >= 'a' and prefix[i] <= 'z') or (prefix[i] >= '0' and prefix[i] <= '9'))
-        {
-            infix.push(string(1, prefix[i])); //converting a single character to a string
-            // string class has a constructor
-            // that allows us to specify size of
-            // string as first parameter and character
-            // to be filled in given size as second
-            // parameter.
-        }
-        else
-        {
-            string operand_one = infix.top();
-            infix.pop();
-            string operand_two = infix.top();
-            infix.pop();
-            char operator_between = prefix[i];
-
-            string need_to_push = "(" + operand_one + operator_between + operand_two + ")";
-            infix.push(need_to_push);
-        }
-    }
-
-    cout << infix.top() << endl;
-
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
+    string x;
+    cin >> x;
+    cout << rev_string(x) << endl;
     return 0;
 }

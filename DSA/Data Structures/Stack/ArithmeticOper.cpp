@@ -39,7 +39,8 @@ string Infix_To_Postfix(char infix[])
             tmp = "";
             while (s.top() != '(')
             {
-                postfix += s.top();
+                if (s.top() != ' ')
+                    postfix += s.top();
                 s.pop();
             }
             s.pop();
@@ -49,7 +50,8 @@ string Infix_To_Postfix(char infix[])
             tmp = "";
             while (s.top() != '{')
             {
-                postfix += s.top();
+                if (s.top() != ' ')
+                    postfix += s.top();
                 s.pop();
             }
             s.pop();
@@ -59,7 +61,8 @@ string Infix_To_Postfix(char infix[])
             tmp = "";
             while (s.top() != '[')
             {
-                postfix += s.top();
+                if (s.top() != ' ')
+                    postfix += s.top();
                 s.pop();
             }
             s.pop();
@@ -68,8 +71,8 @@ string Infix_To_Postfix(char infix[])
         {
             if (tmp != "")
             {
-                num = stoi(tmp);
-                num = num * 10 + (infix[i]-'0');
+                num = atoi(tmp.c_str());
+                num = num * 10 + (infix[i] - '0');
                 tmp = to_string(num);
             }
             else
@@ -80,7 +83,8 @@ string Infix_To_Postfix(char infix[])
             tmp = "";
             while (!s.empty() and (check_precedence(s.top()) >= check_precedence(infix[i])))
             {
-                postfix += s.top();
+                if (s.top() != ' ')
+                    postfix += s.top();
                 s.pop();
             }
             s.push(infix[i]);
@@ -89,7 +93,8 @@ string Infix_To_Postfix(char infix[])
 
     while (!s.empty())
     {
-        postfix += s.top();
+        if (s.top() != ' ')
+            postfix += s.top();
         s.pop();
     }
     return postfix;
@@ -98,14 +103,15 @@ string Infix_To_Postfix(char infix[])
 string do_algebra(string postfix)
 {
     stack<string> ans;
-    string tmp="";
+    string tmp = "";
     int num;
 
     for (int i = 0; i < postfix.length(); i++)
     {
         if (postfix[i] == ' ')
         {
-            ans.push(tmp);
+            if (tmp != "")
+                ans.push(tmp);
             tmp = "";
             continue;
         }
@@ -113,8 +119,8 @@ string do_algebra(string postfix)
         {
             if (tmp != "")
             {
-                num = stoi(tmp);
-                num = num * 10 + (postfix[i]-'0');
+                num = atoi(tmp.c_str());
+                num = num * 10 + (postfix[i] - '0');
                 tmp = to_string(num);
             }
             else
@@ -125,27 +131,27 @@ string do_algebra(string postfix)
             tmp = "";
             char optr = postfix[i];
             string operand_one = ans.top();
-            int num_one = stoi(operand_one);
+            int num_one = atoi(operand_one.c_str());
             ans.pop();
             string operand_two = ans.top();
-            int num_two = stoi(operand_two);
+            int num_two = atoi(operand_two.c_str());
             ans.pop();
             int res;
             if (optr == '/')
             {
-                res = num_one/num_two;
+                res = num_one / num_two;
             }
             else if (optr == '*')
             {
-                res = num_one*num_two;
+                res = num_one * num_two;
             }
             else if (optr == '+')
             {
-                res = num_one+num_two;
+                res = num_one + num_two;
             }
             else if (optr == '-')
             {
-                res = num_one-num_two;
+                res = num_one - num_two;
             }
             tmp = to_string(res);
         }
@@ -156,14 +162,16 @@ string do_algebra(string postfix)
 
 int main()
 {
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     char infix[100];
     scanf("%[^\n]", infix);
 
     string postfix = Infix_To_Postfix(infix);
-    cout<<postfix<<endl;
-   
+    cout <<"Postfix Notation: "<< postfix << endl;
+
     string ans = do_algebra(postfix);
-    cout<<ans<<endl;
+    cout << "ans: " << ans << endl;
 
     return 0;
 }

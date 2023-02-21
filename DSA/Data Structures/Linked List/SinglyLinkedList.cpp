@@ -22,10 +22,11 @@ public:
 class linkedlist
 {
 public:
-    node *head;
+    node *head, *tail;
     linkedlist()
     {
         head = NULL;
+        tail = NULL;
     }
 
     node *search(int data)
@@ -95,8 +96,9 @@ public:
             curr = curr->next;
             Index++;
         }
-        // delete(curr->next);
+        node *to_delete = curr->next;
         curr->next = curr->next->next;
+        delete(to_delete);
     }
 
     void remove(int val)
@@ -134,15 +136,15 @@ public:
         return prev_head;
     }
 
-    void printList(node *HEAD)
+    void printList()
     {
-        if (!HEAD)
+        if (!head)
         {
             cout << "Empty LinkedList" << endl;
         }
         else
         {
-            for (node *curr = HEAD; curr != NULL; curr = curr->next)
+            for (node *curr = head; curr != NULL; curr = curr->next)
             {
                 cout << curr->data << " ";
             }
@@ -157,32 +159,39 @@ int main()
     freopen("output.in", "w", stdout);
     linkedlist a;
     int n;
-    cin>>n;
-    int x;
+    cin>>n;    
     for (int i = 0; i < n; i++)
     {
-        cin >> x;
-        if (i == 0)
+        int x;
+        cin>>x;
+        if(i==0)
+        {            
             a.head = new node(x, NULL);
+            a.tail = a.head;
+        }
         else
-            a.head = new node(x, a.head);
+        {
+            a.tail->next = new node(x, NULL);
+            a.tail = a.tail->next;
+        }
     }
+    a.printList();
     //a.insertAfterNode(a.head, 3);
     /* can be used to insert last too,
     but you have to provide the pointer of the last element :3
     so u'd better create an insertLast() */
     // a.head = new node(5, a.head);
-    // a.insertFirst(0);
-    // a.insertLast(9);
+    //a.insertFirst(0);
+    //a.insertLast(9);
     // a.printList(a.head);
-    // a.deleteLast();
+    //a.deleteLast();
     // a.printList(a.head);
-    // a.deleteFirst();
-    // a.printList(a.head);
-    // a.deleteAfterNode(2);
-    // a.printList(a.head);
-    // node *rev_head = a.reverseList();
+    //a.deleteFirst();
+    //a.printList();
+    //a.deleteAfterNode(2);
+    // a.printList();
+    a.head = a.reverseList();
     // a.printList(rev_head);
-    a.printList(a.head);
+    a.printList();
     return 0;
 }

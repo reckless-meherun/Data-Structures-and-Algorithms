@@ -1,18 +1,19 @@
 #include <bits/stdc++.h>
 using namespace std;
+typedef long long ll;
 
 class node
 {
 public:
-    string data;
+    int data;
     node *next;
 
     node()
     {
-        data = "0";
+        data = 0;
         next = NULL;
     }
-    node(string _data, node *_next)
+    node(int _data, node *_next)
     {
         data = _data;
         next = _next;
@@ -31,7 +32,7 @@ public:
         tail = NULL;
     }
 
-    node *search(string data)
+    node *search(int data)
     {
         for (node *curr = head; curr != NULL; curr = curr->next)
         {
@@ -45,7 +46,7 @@ public:
         return NULL;
     }
 
-    void insertFirst(string data)
+    void insertFirst(int data)
     {
         node *temp = new node(data, NULL);
         if (temp == NULL)
@@ -58,7 +59,7 @@ public:
         tail = head;
     }
 
-    void insertAfterNode(node *curr, string data) // gonna insert 'data' after node 'curr'
+    void insertAfterNode(node *curr, int data) // gonna insert 'data' after node 'curr'
     {
         node *temp = new node(data, NULL);
         if (temp == NULL)
@@ -70,7 +71,7 @@ public:
         curr->next = temp; // be careful about the order so the link doesn't get lost
     }
 
-    void insertLast(string data)
+    void insertLast(int data)
     {
         if (!head)
             insertFirst(data);
@@ -126,9 +127,9 @@ public:
         delete (to_delete);
     }
 
-    void remove(string val)
+    void remove(int val)
     {
-        node *dummy = new node("-1", NULL);
+        node *dummy = new node(-1, NULL);
         dummy->next = head;
         node *curr = dummy;
         while (curr != NULL and curr->next != NULL)
@@ -188,11 +189,11 @@ class MyStack
 {
 public:
     linkedlist Stack;
-    bool empty()
+    bool isEmpty()
     {
         return Stack.head == NULL;
     }
-    void push(string val)
+    void push(int val)
     {
         if (!Stack.head)
             Stack.insertFirst(val);
@@ -203,12 +204,12 @@ public:
     {
         Stack.deleteLast();
     }
-    string top()
+    int peek()
     {
-        if (empty())
+        if (isEmpty())
         {
             cout << "Empty Stack" << endl;
-            return " ";
+            return ' ';
         }
         else
         {
@@ -225,7 +226,7 @@ public:
         Stack.tail = Stack.head;
         while (Stack.tail)
         {
-            Stack.tail->data = "0";
+            Stack.tail->data = 0;
             Stack.tail = Stack.tail->next;
         }
     }
@@ -248,35 +249,19 @@ public:
 
 int main()
 {
-    string prefix;
-    //stack<string> infix;
-    MyStack infix;
-    cin >> prefix;
-    for (int i = prefix.length() - 1; i >= 0; i--)
-    {
-        if ((prefix[i] >= 'A' and prefix[i] <= 'Z') or (prefix[i] >= 'a' and prefix[i] <= 'z') or (prefix[i] >= '0' and prefix[i] <= '9'))
-        {
-            infix.push(string(1, prefix[i])); //converting a single character to a string
-            // string class has a constructor
-            // that allows us to specify size of
-            // string as first parameter and character
-            // to be filled in given size as second
-            // parameter.
-        }
-        else
-        {
-            string operand_one = infix.top();
-            infix.pop();
-            string operand_two = infix.top();
-            infix.pop();
-            char operator_between = prefix[i];
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
+    MyStack s;
 
-            string need_to_push = "(" + operand_one + operator_between + operand_two + ")";
-            infix.push(need_to_push);
-        }
+    for (int i = 0; i < 10; i++)
+    {
+        s.push(i);
     }
 
-    cout << infix.top() << endl;
+    s.printStack();
+    s.pop();
+    s.printStack();
+    // cout<<s.size()<<endl;
 
     return 0;
 }
