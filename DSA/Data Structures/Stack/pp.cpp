@@ -2,54 +2,32 @@
 using namespace std;
 typedef long long ll;
 
-int minAddToMakeValid(string paren)
+int scoreOfParentheses(string s)
 {
-    stack<char> s;
-    int i = 0, count = 0;
-    while (paren[i])
+    stack<int> st;
+    int score = 0;
+    for (int i = 0; i < s.size(); i++)
     {
-        if (paren[i] == '(')
+        if (s[i] == '(')
         {
-            s.push('(');
+            st.push(score);
+            score = 0;
         }
-        else if (paren[i] == ')')
+        else
         {
-            if (!s.empty())
-            {
-                if (s.top() == '(')
-                {
-                    s.pop();
-                }
-                else
-                {
-                    count++;
-                }
-            }
-            else
-            {
-                count++;
-            }
+            score = st.top() + max(2 * score, 1);
+            st.pop();
         }
-        i++;
     }
-
-    while (!s.empty())
-    {
-        s.pop();
-        count++;
-    }
-
-    return count;
+    return score;
 }
 
 int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
-    string paren;
-    cin >> paren;
-
-    cout<<minAddToMakeValid(paren)<<endl;
-    
+    string s;
+    cin >> s;
+    cout << scoreOfParentheses(s) << endl;
     return 0;
 }

@@ -190,7 +190,7 @@ int main()
     //a.printList();
     //a.deleteAfterNode(2);
     // a.printList();
-    a.head = a.reverseList();
+    //a.head = a.reverseList();
     // a.printList(rev_head);
     a.printList();
     return 0;
