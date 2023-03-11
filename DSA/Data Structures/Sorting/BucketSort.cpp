@@ -1,14 +1,28 @@
-// C++ program to sort an
-// array using bucket sort
 #include <bits/stdc++.h>
 using namespace std;
+const int range = 1000000;
+
+void InsertionSort(vector<double> &v, int len)
+{
+    for (int outer = 1; outer < v.size(); outer++)
+    {
+        double toPlace = v[outer]; // u have to save it as before shifting
+        int inner = outer - 1;
+        while (inner >= 0 and (v[inner] - toPlace)>0.00001) // cannot write v[inner]>v[outer] as v[outer] gets changed after one shift in the inner loop
+        {
+            v[inner + 1] = v[inner];
+            inner--;
+        }
+        v[inner + 1] = toPlace;
+    }
+}
 
 // Function to sort arr[] of
 // size n using bucket sort
-void bucketSort(float arr[], int n)
+void bucketSort(double arr[], int n)
 {
     // 1) Create n empty buckets
-    vector<float> b[n];
+    vector<double> b[n];
 
     // 2) Put array elements
     // in different buckets
@@ -20,8 +34,8 @@ void bucketSort(float arr[], int n)
 
     // 3) Sort individual buckets
     for (int i = 0; i < n; i++)
-        sort(b[i].begin(), b[i].end());
-
+        InsertionSort(b[i], b[i].size());
+    
     // 4) Concatenate all buckets into arr[]
     int index = 0;
     for (int i = 0; i < n; i++)
@@ -32,7 +46,9 @@ void bucketSort(float arr[], int n)
 /* Driver program to test above function */
 int main()
 {
-    float arr[] = {0.897, 0.565, 0.656, 0.1234, 0.665, 0.3434};
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
+    double arr[] = {0.657, 0.565, 0.656, 0.1234, 0.655, 0.3434};
     int n = sizeof(arr) / sizeof(arr[0]);
     bucketSort(arr, n);
 
