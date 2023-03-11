@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int range = 1000000;
+
+ // be careful of int and double
 
 void InsertionSort(vector<double> &v, int len)
 {
     for (int outer = 1; outer < v.size(); outer++)
     {
-        double toPlace = v[outer]; // u have to save it as before shifting
+        double toPlace = v[outer];
         int inner = outer - 1;
         while (inner >= 0 and (v[inner] - toPlace)>0.00001) // cannot write v[inner]>v[outer] as v[outer] gets changed after one shift in the inner loop
         {
