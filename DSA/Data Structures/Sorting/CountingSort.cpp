@@ -11,18 +11,19 @@ void CountingSort(int arr[], int len)
     {
         count[arr[i]]++;
     }
-    int sorted[10000000];
+    int sorted[100000];
     // Change count[i] so that count[i] now contains actual
     // position of this character in output array
     for (int i = 1; i <= range; ++i)
         count[i] += count[i - 1];
 
     // Build the output character array
-    for (int i = 0; arr[i]; ++i)
+    for (int i = len-1; i>=0; i--) // running the loop forward will make it unstable
     {
         sorted[count[arr[i]] - 1] = arr[i];
         --count[arr[i]];
     }
+
     for (int i = 0; arr[i]; ++i)
         arr[i] = sorted[i];
 }
@@ -39,5 +40,10 @@ int main()
         cin >> arr[i];
     }
     CountingSort(arr, i);
+    for (i = 0; i < n; i++)
+    {
+        cout << arr[i]<<" ";
+    }
+    cout<<endl;
     return 0;
 }

@@ -1,8 +1,6 @@
-// C++ implementation of Radix Sort
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-// A utility function to get maximum value in arr[]
 int getMax(int arr[], int n)
 {
     int mx = arr[0];
@@ -29,7 +27,7 @@ void countSort(int arr[], int n, int exp)
         count[i] += count[i - 1];
 
     // Build the output array
-    for (i = n - 1; i >= 0; i--)
+    for (i = n - 1; i >= 0; i--) //to make it stable, you have to put stuff from backward
     {
         output[count[(arr[i] / exp) % 10] - 1] = arr[i];
         count[(arr[i] / exp) % 10]--;
@@ -51,7 +49,8 @@ void radixsort(int arr[], int n)
     // Do counting sort for every digit. Note that instead
     // of passing digit number, exp is passed. exp is 10^i
     // where i is current digit number
-    for (int exp = 1; m / exp > 0; exp *= 10)
+    for (int exp = 1; m / exp > 0; exp *= 10) 
+    // till the number of digits of exp becomes becomes larger than that of max
         countSort(arr, n, exp);
 }
 
@@ -62,13 +61,11 @@ void print(int arr[], int n)
         cout << arr[i] << " ";
 }
 
-// Driver Code
 int main()
 {
     int arr[] = {170, 45, 75, 90, 802, 24, 2, 66};
     int n = sizeof(arr) / sizeof(arr[0]);
 
-    // Function Call
     radixsort(arr, n);
     print(arr, n);
     return 0;

@@ -40,9 +40,9 @@ void MergeSort(vector<int> &v, int start, int end)
     if (start < end)
     {
         int mid = (start + end) / 2;
-        MergeSort(v, start, mid);
-        MergeSort(v, mid + 1, end);
-        Merge(v, start, mid, end);
+        MergeSort(v, start, mid); //call one
+        MergeSort(v, mid + 1, end); //call two
+        Merge(v, start, mid, end); //call merge
     }
 }
 
