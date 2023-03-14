@@ -14,7 +14,7 @@ ll maximum_subarray_sum(ll arr[], ll len)
         if(max_curr_sum>max_sum_soFar)
             max_sum_soFar = max_curr_sum;
         if(max_curr_sum<0)
-            max_curr_sum = 0;
+            max_curr_sum = 0; //as the more less negative, the bigger the sum is
     }
     return max_sum_soFar;   
 }

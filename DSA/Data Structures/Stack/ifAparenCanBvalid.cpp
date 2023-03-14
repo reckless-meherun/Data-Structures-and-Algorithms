@@ -4,7 +4,6 @@ typedef long long ll;
 
 bool canBeValid(string s, string locked)
 {
-
     if (s.length() % 2 == 1)
         return false;
 

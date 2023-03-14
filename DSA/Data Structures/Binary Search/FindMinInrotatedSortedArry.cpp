@@ -4,7 +4,6 @@ typedef long long ll;
 
 int findMin(vector<int> &nums)
 {
-
     return findMin(nums, 0, nums.size() - 1);
 }
 

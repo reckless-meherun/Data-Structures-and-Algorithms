@@ -5,12 +5,12 @@ typedef long long ll;
 int partition(vector<int> &arr, int low, int high)
 {
     int pivot_element = arr[high];
-    int j;
-    for (int i = low, j=low; i <= high - 1; i++)
+    int  j=low;
+    for (int i = low; i <= high - 1; i++)
     {
         if (arr[i] <= pivot_element)
         {
-            swap(arr[j], arr[i]);
+            swap(arr[j], arr[i]);      
             j++;
         }
     }
@@ -31,6 +31,8 @@ void quickSort(vector<int> &arr, int low, int high)
 
 int main()
 {
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     int n;
     cin>>n;
     vector<int> v(n);

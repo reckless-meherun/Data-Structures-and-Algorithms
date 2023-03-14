@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
- // be careful of int and double
+// be careful of int and double
 
 void InsertionSort(vector<double> &v, int len)
 {
