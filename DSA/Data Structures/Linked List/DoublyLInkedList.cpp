@@ -5,10 +5,8 @@ typedef long long ll;
 class node
 {
 public:
-    node *prev;
     int data;
-    node *next;
-
+    node *next, *prev;
     node()
     {
         prev = NULL;
@@ -23,14 +21,32 @@ public:
     }
 };
 
-node *first_node = NULL;
-class Doublinkedlist
+class DoublyLinkedList
 {
 public:
-    node *head;
-    Doublinkedlist()
+    node *head, *tail;
+    int size;
+    DoublyLinkedList()
     {
+        size = 0;
         head = NULL;
+        tail = NULL;
+    }
+
+    node *search(int data)
+    {
+        int count = 0;
+        for (node *curr = head; curr != NULL; curr = curr->next)
+        {
+            if (curr->data == data)
+            {
+                cout << "found at index : " << count << endl;
+                return curr;
+            }
+            count++;
+        }
+        cout << "not found" << endl;
+        return NULL;
     }
 
     void insertFirst(int data)
@@ -39,22 +55,34 @@ public:
         temp->next = head;
         head->prev = temp;
         head = temp;
+        size++;
     }
 
-    void insertAfternode(int indx, int data) // gonna insert 'data' after node 'curr'
+    void insertAfterIndex(int ins, int data) // gonna insert 'data' after node 'curr'
     {
         node *curr = head;
-        int count = 1;
-        while (count <= indx)
+        int Index = 0;
+        while (Index != ins)
         {
-            count++;
+            Index++;
             curr = curr->next;
+        }
+        if (curr == tail) // if the indexing is at the last node
+        {
+            node *temp = new node(NULL, data, NULL);
+            curr->next = temp;
+            temp->prev = curr;
+            tail = temp;
+            size++;
+            return;
         }
         node *temp = new node(NULL, data, NULL);
         temp->next = curr->next;
-        temp->prev = curr;
         curr->next->prev = temp;
         curr->next = temp;
+        temp->prev = curr;
+        // be careful about the order so the link doesn't get lost
+        size++;
     }
 
     void insertLast(int data)
@@ -63,81 +91,115 @@ public:
             insertFirst(data);
         else
         {
-            node *curr = head;
-            int count = 0;
-            while (curr->next != NULL)
-            {
-                curr = curr->next;
-                count++;
-            }
-            cout << count << endl;
-            // insertAfternode(count-1, data);
-            node *temp = new node(NULL, data, NULL);
-            curr->next = temp;
-            temp->prev = curr;
-            temp->next = NULL;    
-            first_node = temp;       
+            insertAfterIndex(size - 1, data);
         }
     }
 
     void deleteFirst()
     {
+        if (!head)
+            return;
         node *top = head;
         head = top->next;
-        head->prev=NULL;
-        delete (top);
-    }
-
-    void deleteAfterNode(int del) // delete the del_th element from the linkedlist
-    {
-        node *curr = head;
-        int Index = 0;
-        while (Index != del)
+        if (!head)
         {
-            curr = curr->next;
-            Index++;
+            tail = NULL;
+            size--;
+            return;
         }
-        // delete(curr->next);
-        curr->next->next->prev = curr;
-        curr->next = curr->next->next;                
+        head->prev = NULL;
+        free(top);
+        size--;
     }
 
     void deleteLast()
     {
-        node *curr;
-        for (curr = head; curr->next->next != NULL; curr = curr->next)
+        if (!head)
+            return;
+        node *to_delete = tail;
+        tail = tail->prev;
+        if (!tail)
         {
-
+            head = NULL;
+            size--;
+            return;
         }
-        curr->next = NULL;
-        first_node = curr;
-        delete (curr->next);
+        tail->next = NULL;
+        free(to_delete);
+        size--;
     }
 
-    void printListForward(node *HEAD)
+    void deleteAtIndex(int del) // delete the element at index del (0 indexing) from the DoublyLinkedList
     {
-        if (!HEAD)
+        if (del == 0)
         {
-            cout << "Empty DoubLinkedList" << endl;
+            deleteFirst();
+            return;
+        }
+        node *curr = head;
+        int Index = 0;
+        while (Index != del - 1)
+        {
+            Index++;
+            curr = curr->next;
+        }
+        if (curr->next->next == NULL) // if the indexing is at the last node
+        {
+            deleteLast();
+            return;
+        }
+        cout << "index " << Index << " value " << curr->data << endl;
+        node *to_delete = curr->next;
+        curr->next->next->prev = curr;
+        curr->next = curr->next->next; // cannot write this before as curr->next gets changed
+        free(to_delete);
+        size--;
+    }
+
+    void remove(int val)
+    {
+        node *dummy = new node(NULL, -1, NULL);
+        dummy->next = head;
+        node *curr = dummy;
+        while (curr != NULL and curr->next != NULL)
+        {
+            if (curr->next->data == val)
+            {
+                curr->next = curr->next->next;
+            }
+            else
+            {
+                curr = curr->next;
+            }
+        }
+        head = dummy->next;
+        return;
+    }
+
+    void printListForward()
+    {
+        if (!head)
+        {
+            cout << "Empty DoublyLinkedList" << endl;
         }
         else
         {
-            for (node *curr = HEAD; curr != NULL; curr = curr->next)
+            for (node *curr = head; curr != NULL; curr = curr->next)
             {
                 cout << curr->data << " ";
             }
             cout << endl;
         }
     }
-    void printListBackward(node *HEAD)
+    void printListBackward()
     {
-        if (!HEAD)
+        if (!tail)
         {
-            cout << "Empty DoubLinkedList" << endl;
+            cout << "Empty DoublyLinkedList" << endl;
         }
         else
         {
-            for (node *curr = HEAD; curr != NULL; curr = curr->prev)
+            for (node *curr = tail; curr != NULL; curr = curr->prev)
             {
                 cout << curr->data << " ";
             }
@@ -148,37 +210,60 @@ public:
 
 int main()
 {
-    // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);
-    Doublinkedlist a;
-    
+    DoublyLinkedList a;
     int n;
     cin >> n;
-    int x;
     for (int i = 0; i < n; i++)
     {
+        int x;
         cin >> x;
         if (i == 0)
         {
             a.head = new node(NULL, x, NULL);
-            first_node = a.head;
+            a.tail = a.head;
         }
         else
         {
-            node *temp = a.head;
-            a.head = new node(NULL, x, a.head);
-            temp->prev = a.head;
+            a.tail->next = new node(NULL, x, NULL);
+            a.tail->next->prev = a.tail;
+            a.tail = a.tail->next;
         }
+        a.size++;
     }
-    node *curr = a.head;
 
-    a.insertAfternode(3, 10); //insert after 3rd index
-    a.insertFirst(90);
-    a.insertLast(100);
+    a.printListForward();
+    cout << "Size : " << a.size << endl;
+    cout << endl;
+    a.insertFirst(50);
+    a.printListForward();
+    a.printListBackward();
+    cout << "Size : " << a.size << endl;
+    cout << endl;
     a.deleteFirst();
+    a.printListForward();
+    a.printListBackward();
+    cout << "Size : " << a.size << endl;
+    cout << endl;
+
     a.deleteLast();
-    a.deleteAfterNode(2);
-    a.printListForward(a.head);
-    a.printListBackward(first_node);
+    a.printListForward();
+    a.printListBackward();
+    cout << "Size : " << a.size << endl;
+    cout << endl;
+    a.deleteAtIndex(0);
+    a.printListForward();
+    a.printListBackward();
+    cout << "Size : " << a.size << endl;
+    cout << endl;
+    a.insertAfterIndex(2, 10);
+    a.printListForward();
+    a.printListBackward();
+    cout << "Size : " << a.size << endl;
+    cout << endl;
+    a.insertLast(60);
+    a.printListForward();
+    a.printListBackward();
+    cout << "Size : " << a.size << endl;
+    a.search(5);
     return 0;
 }

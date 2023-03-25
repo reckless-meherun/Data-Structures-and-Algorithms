@@ -23,21 +23,25 @@ class linkedlist
 {
 public:
     node *head, *tail;
+    int size;
     linkedlist()
     {
+        size = 0;
         head = NULL;
         tail = NULL;
     }
 
     node *search(int data)
     {
+        int count = 0;
         for (node *curr = head; curr != NULL; curr = curr->next)
         {
             if (curr->data == data)
             {
-                cout << "found at " << curr << endl;
+                cout << "found at index : " << count << endl;
                 return curr;
             }
+            count++;
         }
         cout << "not found" << endl;
         return NULL;
@@ -48,13 +52,30 @@ public:
         node *temp = new node(data, NULL);
         temp->next = head;
         head = temp;
+        size++;
     }
 
-    void insertAfterNode(node *curr, int data) // gonna insert 'data' after node 'curr'
+    void insertAfterIndex(int ins, int data) // gonna insert 'data' after node 'curr'
     {
+        if (ins >= size)
+        {
+            cout << "Wrong Index to insert after" << endl;
+            return;
+        }
+        node *curr = head;
+        int Index = 0;
+        while (Index != ins)
+        {
+            Index++;
+            curr = curr->next;
+        }
         node *temp = new node(data, NULL);
         temp->next = curr->next;
-        curr->next = temp; // be careful about the order so the link doesn't get lost
+        curr->next = temp;
+        // be careful about the order so the link doesn't get lost
+        if (ins == size - 1)
+            tail = temp;
+        size++;
     }
 
     void insertLast(int data)
@@ -63,42 +84,83 @@ public:
             insertFirst(data);
         else
         {
-            node *curr = head;
-            while (curr->next != NULL)
-                curr = curr->next;
-            insertAfterNode(curr, data);
+            insertAfterIndex(size - 1, data);
         }
     }
+
+    // void deleteFirst()
+    // {
+    //     node *top = head;
+    //     head = top->next;
+    //     delete (top);
+    // }
 
     void deleteFirst()
     {
+        if (!head)
+            return;
         node *top = head;
         head = top->next;
-        delete (top);
+        if (!head)
+        {
+            tail = NULL;
+            size--;
+            return;
+        }
+        free(top);
+        size--;
     }
 
-    void deleteLast()
+    void deleteLast() // this cannot be done in O(1) as it is a singly linked list
     {
-        node *curr;
-        for (curr = head; curr->next->next != NULL; curr = curr->next)
+        if (!head)
+            return;
+        node *curr = head;
+        if (!curr->next)
+        {
+            curr = NULL;
+            head = NULL;
+            tail = NULL; // unless u don't make head and tail NULL, they still are refering to a valid node
+            size--;
+            return;
+        }
+        for (; curr->next->next != NULL; curr = curr->next)
         {
         }
         curr->next = NULL;
-        delete (curr->next);
+        tail = curr;
+        size--;
+        free(curr->next);
     }
 
-    void deleteAfterNode(int del) // delete the del_th element from the linkedlist
+    void deleteAtIndex(int del) // delete the del_th element from the linkedlist
     {
+        if (del >= size)
+        {
+            cout << "Wrong Index to delete" << endl;
+            return;
+        }
+        if (del == 0)
+        {
+            deleteFirst();
+            return;
+        }
         node *curr = head;
         int Index = 0;
-        while (Index != del)
+        while (Index != del - 1)
         {
-            curr = curr->next;
             Index++;
+            curr = curr->next;
+        }
+        if (curr->next->next == NULL) // if the indexing is at the last node
+        {
+            deleteLast();
+            return;
         }
         node *to_delete = curr->next;
         curr->next = curr->next->next;
-        delete(to_delete);
+        free(to_delete);
+        size--;
     }
 
     void remove(int val)
@@ -121,11 +183,11 @@ public:
         return;
     }
 
-    node* reverseList()
+    node *reverseList()
     {
         node *prev_head = head;
         node *temp1 = NULL, *temp2 = NULL;
-        while(prev_head!=NULL)
+        while (prev_head != NULL)
         {
             temp2 = prev_head->next;
             prev_head->next = temp1;
@@ -155,17 +217,15 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
     linkedlist a;
     int n;
-    cin>>n;    
+    cin >> n;
     for (int i = 0; i < n; i++)
     {
         int x;
-        cin>>x;
-        if(i==0)
-        {            
+        cin >> x;
+        if (i == 0)
+        {
             a.head = new node(x, NULL);
             a.tail = a.head;
         }
@@ -174,24 +234,21 @@ int main()
             a.tail->next = new node(x, NULL);
             a.tail = a.tail->next;
         }
+        a.size++; // remember to update this!!!
     }
+    
     a.printList();
-    //a.insertAfterNode(a.head, 3);
-    /* can be used to insert last too,
-    but you have to provide the pointer of the last element :3
-    so u'd better create an insertLast() */
-    // a.head = new node(5, a.head);
-    //a.insertFirst(0);
-    //a.insertLast(9);
-    // a.printList(a.head);
-    //a.deleteLast();
-    // a.printList(a.head);
-    //a.deleteFirst();
-    //a.printList();
-    //a.deleteAfterNode(2);
-    // a.printList();
-    //a.head = a.reverseList();
-    // a.printList(rev_head);
+	a.insertAfterIndex(1, 34); //done
+    a.insertFirst(10); //done
+    a.insertLast(9);// done
+    a.printList();
+    a.deleteLast(); // done
+    a.deleteFirst(); // done
+    a.printList();
+    a.deleteAtIndex(0); //    done
+    a.deleteAtIndex(a.size-1);
+    a.printList();
+    a.head = a.reverseList();
     a.printList();
     return 0;
 }
