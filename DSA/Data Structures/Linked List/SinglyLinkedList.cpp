@@ -88,13 +88,6 @@ public:
         }
     }
 
-    // void deleteFirst()
-    // {
-    //     node *top = head;
-    //     head = top->next;
-    //     delete (top);
-    // }
-
     void deleteFirst()
     {
         if (!head)
@@ -238,7 +231,7 @@ int main()
     }
     
     a.printList();
-	a.insertAfterIndex(1, 34); //done
+    a.insertAfterIndex(1, 34); //done
     a.insertFirst(10); //done
     a.insertLast(9);// done
     a.printList();
