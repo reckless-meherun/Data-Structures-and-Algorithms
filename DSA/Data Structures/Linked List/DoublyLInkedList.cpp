@@ -60,6 +60,11 @@ public:
 
     void insertAfterIndex(int ins, int data) // gonna insert 'data' after node 'curr'
     {
+        if(ins >= size)
+        {
+            cout<< "Wrong index!"<<endl;
+            return;
+        }
         node *curr = head;
         int Index = 0;
         while (Index != ins)
@@ -148,7 +153,7 @@ public:
             deleteLast();
             return;
         }
-        cout << "index " << Index << " value " << curr->data << endl;
+        //cout << "index " << Index << " value " << curr->data << endl;
         node *to_delete = curr->next;
         curr->next->next->prev = curr;
         curr->next = curr->next->next; // cannot write this before as curr->next gets changed

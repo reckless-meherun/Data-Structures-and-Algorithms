@@ -21,7 +21,7 @@ void CountingSort(int arr[], int len)
     for (int i = len-1; i>=0; i--) // running the loop forward will make it unstable
     {
         sorted[count[arr[i]] - 1] = arr[i];
-        --count[arr[i]];
+        --count[arr[i]]; // as the existing rightmost element has been set
     }
 
     for (int i = 0; arr[i]; ++i)

@@ -88,13 +88,6 @@ public:
         }
     }
 
-    // void deleteFirst()
-    // {
-    //     node *top = head;
-    //     head = top->next;
-    //     delete (top);
-    // }
-
     void deleteFirst()
     {
         if (!head)
@@ -217,6 +210,8 @@ public:
 
 int main()
 {
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     linkedlist a;
     int n;
     cin >> n;
@@ -236,17 +231,17 @@ int main()
         }
         a.size++; // remember to update this!!!
     }
-    
+
     a.printList();
-	a.insertAfterIndex(1, 34); //done
-    a.insertFirst(10); //done
-    a.insertLast(9);// done
+    a.insertAfterIndex(1, 34); // done
+    a.insertFirst(10);         // done
+    a.insertLast(9);           // done
     a.printList();
-    a.deleteLast(); // done
+    a.deleteLast();  // done
     a.deleteFirst(); // done
     a.printList();
     a.deleteAtIndex(0); //    done
-    a.deleteAtIndex(a.size-1);
+    a.deleteAtIndex(a.size - 1);
     a.printList();
     a.head = a.reverseList();
     a.printList();
