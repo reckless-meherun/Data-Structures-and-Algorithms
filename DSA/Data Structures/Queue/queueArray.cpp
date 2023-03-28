@@ -1,38 +1,35 @@
 #include<bits/stdc++.h>
 using namespace std;
-int Max = 1000000;
 
 class MyQueue
 {
 public:
-    int *queue;
-    int top;
-    int tail;
-
+    int *queue, top, tail, capacity, length;
+	
     MyQueue()
     {
+    	capacity = 1000000;
         top = 0;
         tail = -1;
-        queue = new int[Max];
+        length=0;
+        queue = new int[capacity];
     }
 
-    bool empty()
-    {        
-        if(top>tail)
-        {
-            top=0;
-            tail=-1;
-            return true;
-        }
-        return false;
+    MyQueue(int _capacity)
+    {
+    	capacity = _capacity;
+        top = 0;
+        tail = -1;
+        length=0;
+        queue = new int[capacity];
     }
 
     void push(int data)
     {
-        if (tail < Max - 1)
+        if (length < capacity )
         {
-            tail++;
-            queue[tail] = data;
+            queue[++tail] = data;
+            length++;
         }
         else
             cout<<"Queue Overflow"<<endl;
@@ -43,45 +40,93 @@ public:
         if(empty())
             cout<<"Empty Queue"<<endl;
         else
-            top++;
+		{
+			top++; 
+			length-- ;
+		}
     }
 
     int front()
     {
+    	if(empty())
+    	{
+    		cout<<"Empty queue; returned : ";
+    		return -1;
+    	}
         return queue[top];
+    }
+    
+    int back()
+    {
+    	if(empty())
+    	{
+    		cout<<"Empty queue; returned : ";
+    		return -1;
+    	}
+    	return queue[tail];
+    }
+    
+    bool empty()
+    {        
+        return length==0;
+    }
+    
+    bool full()
+    {
+    	return length == capacity;
+    }
+    
+    int size()
+    {
+        return length;
     }
 
     void clear()
     {
-        for (int i = 0; i <= tail; i++)
-        {
-            queue[i]=0;
-        }        
+        if(empty())
+            return;        
+        memset(queue, 0, sizeof(queue));       
+        length = 0; 
+        top = 0;
+        tail = -1;
+    }
+
+	 int search_index(int indx)
+    {
+    	if(indx>=length)
+    	{
+    		cout<<"Wrong index; returned : ";
+    		return -1;
+    	}
+    	if(empty())
+    	{
+    		cout<<"Empty queue; returned : ";
+    		return -1;
+    	}
+    	return queue[indx];
     }
 
     void printQueue()
     {
-        for (int i = top; i <= tail; i++)
+    	if(empty())
+    	{
+    		cout<<"Empty queue"<<endl;
+    		return;
+    	}
+    	
+        for (int i = top; i <= tail; i++) // no need to use "till empty" as queue has two pointers: top and tail
         {
             cout<<queue[i]<<" ";
         }
         cout<<endl;
     }
-
-    int size()
-    {
-        if(tail>=top)
-            return tail-top + 1;
-        return 0;
-    }
-
 };
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
-    MyQueue q;
+    // freopen("input.in", "r", stdin);
+    // freopen("output.in", "w", stdout);
+    MyQueue q(10);
     for (int i = 0; i < 5; i++)
     {
         q.push(i);
@@ -93,6 +138,12 @@ int main()
         q.pop();
     }
     cout<<q.size()<<endl;
-    q.printQueue();    
+    q.printQueue();  
+    q.push(19);
+    q.push(50);
+    q.printQueue();
+    cout<<q.back()<<endl;
+    cout<<q.size()<<endl;
+    cout<<q.search_index(3);
     return 0;
 }

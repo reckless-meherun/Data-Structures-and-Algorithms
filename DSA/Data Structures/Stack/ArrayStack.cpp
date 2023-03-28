@@ -5,41 +5,43 @@ typedef long long ll;
 class MyStack
 {
 public:
-    int capacity, length, top;
-    int Stack[1000000];
+    int *Stack, capacity, length, top;
 
     MyStack()
     {
         capacity = 1000000;
         top = -1;
+        length = 0;
+        Stack = new int[capacity];
     }
 
     MyStack(int _capacity)
     {
         capacity = _capacity;
         top = -1;
+        length = 0;
+        Stack = new int[capacity];
     }
 
     void push(int data)
     {
-        if (top >= capacity - 1) /** if top is already in the last index (capacity - 1),
-                                 it has a value in it so cannot push anymore */
-            cout << "Stack overflow" << endl;
-        else                       /** do not increase the top before checking if it's overflow */
+        if (length < capacity) /** do not increase the top before checking if it's overflow */
         {
             Stack[++top] = data;
             length++;
         }
-    }
-
-    int search_index(int indx)
-    {
-        return Stack[indx];
+        else /** if u use top (ঝামেলা): if top is already in the last index (capacity - 1),
+                                it has a value in it so cannot push anymore */
+        {
+            Stack[++top] = data;
+            length++;
+            cout << "Stack overflow" << endl;
+        }
     }
 
     void pop()
     {
-        if (top == -1)
+        if (isEmpty())
             cout << "Empty Stack" << endl;
         else
         {
@@ -50,18 +52,52 @@ public:
 
     int peek()
     {
+        if (isEmpty())
+        {
+            cout << "Empty stack; returned : ";
+            return -1;
+        }
         return Stack[top];
+    }
+
+    bool isEmpty()
+    {
+        return length == 0;
     }
 
     bool isFull()
     {
         return length == capacity;
+    }   
+
+    int size()
+    {
+        return length;
     }
 
-    bool isEmpty()
+    void clear()
     {
-        return top == -1;
+        if (isEmpty())
+            return;
+        memset(Stack, 0, sizeof(Stack));
+        length = 0;
+        top = -1;
     }
+
+    int search_index(int indx)
+    {
+        if (indx >= length)
+        {
+            cout << "Wrong index; returned : ";
+            return -1;
+        }
+        if (isEmpty())
+        {
+            cout << "Empty stack; returned : ";
+            return -1;
+        }
+        return Stack[indx];
+    } 
 
     void printStack()
     {
@@ -73,10 +109,7 @@ public:
         cout << endl;
         top = x; // reset top to its previous value
     }
-    int size()
-    {
-        return length;
-    }
+    
 };
 
 int main()

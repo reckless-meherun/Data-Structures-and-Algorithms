@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 class node
@@ -22,21 +22,25 @@ class linkedlist
 {
 public:
     node *head, *tail;
+    int size;
     linkedlist()
     {
+        size = 0;
         head = NULL;
         tail = NULL;
     }
 
     node *search(int data)
     {
+        int count = 0;
         for (node *curr = head; curr != NULL; curr = curr->next)
         {
             if (curr->data == data)
             {
-                cout << "found at " << curr << endl;
+                cout << "found at index : " << count << endl;
                 return curr;
             }
+            count++;
         }
         cout << "not found" << endl;
         return NULL;
@@ -47,13 +51,30 @@ public:
         node *temp = new node(data, NULL);
         temp->next = head;
         head = temp;
+        size++;
     }
 
-    void insertAfterNode(node *curr, int data) // gonna insert 'data' after node 'curr'
+    void insertAfterIndex(int ins, int data) // gonna insert 'data' after node 'curr'
     {
+        if (ins >= size)
+        {
+            cout << "Wrong Index to insert after" << endl;
+            return;
+        }
+        node *curr = head;
+        int Index = 0;
+        while (Index != ins)
+        {
+            Index++;
+            curr = curr->next;
+        }
         node *temp = new node(data, NULL);
         temp->next = curr->next;
-        curr->next = temp; // be careful about the order so the link doesn't get lost
+        curr->next = temp;
+        // be careful about the order so the link doesn't get lost
+        if (ins == size - 1)
+            tail = temp;
+        size++;
     }
 
     void insertLast(int data)
@@ -62,42 +83,76 @@ public:
             insertFirst(data);
         else
         {
-            node *curr = head;
-            while (curr->next != NULL)
-                curr = curr->next;
-            insertAfterNode(curr, data);
+            insertAfterIndex(size - 1, data);
         }
     }
 
     void deleteFirst()
     {
+        if (!head)
+            return;
         node *top = head;
         head = top->next;
-        delete (top);
+        if (!head)
+        {
+            tail = NULL;
+            size--;
+            return;
+        }
+        free(top);
+        size--;
     }
 
-    void deleteLast()
+    void deleteLast() // this cannot be done in O(1) as it is a singly linked list
     {
-        node *curr;
-        for (curr = head; curr->next->next != NULL; curr = curr->next)
+        if (!head)
+            return;
+        node *curr = head;
+        if (!curr->next)
+        {
+            curr = NULL;
+            head = NULL;
+            tail = NULL; // unless u don't make head and tail NULL, they still are refering to a valid node
+            size--;
+            return;
+        }
+        for (; curr->next->next != NULL; curr = curr->next)
         {
         }
-        curr->next = NULL;
-        delete (curr->next);
+        node *to_delete = curr->next = NULL;
+        tail = curr;
+        size--;
+        free(to_delete);
     }
 
-    void deleteAfterNode(int del) // delete the del_th element from the linkedlist
+    void deleteAtIndex(int del) // delete the del_th element from the linkedlist
     {
+        if (del >= size)
+        {
+            cout << "Wrong Index to delete" << endl;
+            return;
+        }
+        if (del == 0)
+        {
+            deleteFirst();
+            return;
+        }
         node *curr = head;
         int Index = 0;
-        while (Index != del)
+        while (Index != del - 1)
         {
-            curr = curr->next;
             Index++;
+            curr = curr->next;
+        }
+        if (curr->next->next == NULL) // if the indexing is at the last node
+        {
+            deleteLast();
+            return;
         }
         node *to_delete = curr->next;
         curr->next = curr->next->next;
-        delete(to_delete);
+        free(to_delete);
+        size--;
     }
 
     void remove(int val)
@@ -120,11 +175,11 @@ public:
         return;
     }
 
-    node* reverseList()
+    node *reverseList()
     {
         node *prev_head = head;
         node *temp1 = NULL, *temp2 = NULL;
-        while(prev_head!=NULL)
+        while (prev_head != NULL)
         {
             temp2 = prev_head->next;
             prev_head->next = temp1;
@@ -139,7 +194,7 @@ public:
     {
         if (!head)
         {
-            cout << "Empty Queue" << endl;
+            cout << "Empty LinkedList" << endl;
         }
         else
         {
@@ -156,46 +211,74 @@ class MyQueue
 {
 public:
     linkedlist queue;
+    int length;
+
+    MyQueue()
+    {
+        length = 0;
+    }
+
     bool empty()
     {
         return queue.head == NULL;
     }
+
     void push(int data)
     {
-        if(!queue.head)
+        if (!queue.head)
             queue.insertFirst(data);
         else
             queue.insertLast(data);
+        length++;
     }
+
     void pop()
     {
         queue.deleteFirst();
+        length--;
     }
+
     int front()
     {
-        return queue.head->data;
+        if (!queue.head)
+            return queue.head->data;
+        cout<<"Empty queue; returned : ";
+        return -1;
     }
+
+    int back()
+    {
+        if (!queue.tail)
+            return queue.tail->data;
+        cout<<"Empty queue; returned : ";
+        return -1;
+    }
+    
     int size()
     {
-        int count=0;
-        node *curr = queue.head;
-        for (; curr!=NULL ; curr = curr->next)
-        {
-            count++;
-        }
-        return count;
+        return length;
     }
+    
     void printQueue()
     {
+    	if(!queue.head)
+    	{
+    		cout<<"Empty queue"<<endl;
+    		return;
+    	}
         queue.printList();
     }
+    
     void clear()
     {
+        if(!queue.head)
+            return;
         node *curr = queue.head;
-        while(curr)
+        while (curr)
         {
             curr->data = 0;
             curr = curr->next;
+            length--;
         }
     }
 };
@@ -205,15 +288,17 @@ int main()
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
     MyQueue q;
-    for(int i=0; i<5; i++)
+    for (int i = 0; i < 5; i++)
         q.push(i);
     q.printQueue();
     q.pop();
     q.printQueue();
+    cout<<q.size()<<endl;
     while (!q.empty())
     {
         q.pop();
     }
     q.printQueue();
+    cout<<q.size()<<endl;
     return 0;
 }

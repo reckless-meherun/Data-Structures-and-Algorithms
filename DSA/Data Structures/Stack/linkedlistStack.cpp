@@ -268,8 +268,11 @@ public:
             return Stack.tail->data;
         }
     }
+    
     void clear()
     {
+        if(!Stack.head)
+            return;
         Stack.tail = Stack.head;
         while (Stack.tail)
         {
