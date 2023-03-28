@@ -221,8 +221,7 @@ int main()
         cin >> x;
         if (i == 0)
         {
-            a.head = new node(x, NULL);
-            a.tail = a.head;
+            a.head = a.tail = new node(x, NULL);
         }
         else
         {
@@ -233,15 +232,12 @@ int main()
     }
 
     a.printList();
-<<<<<<< HEAD
     a.insertAfterIndex(1, 34); // done
     a.insertFirst(10);         // done
     a.insertLast(9);           // done
-=======
     a.insertAfterIndex(1, 34); //done
     a.insertFirst(10); //done
     a.insertLast(9);// done
->>>>>>> 96f8c856b3f2f387af2b871fb33135402094c4d4
     a.printList();
     a.deleteLast();  // done
     a.deleteFirst(); // done
