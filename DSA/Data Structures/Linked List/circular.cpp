@@ -33,9 +33,21 @@ public:
 
     node *search(int data)
     {
+    	if(!head)
+    	{
+    		return NULL;
+    	}
         int count = 0;
-        for (node *curr = head; curr != NULL; curr = curr->next)
+        if(head->data == data)
         {
+        	cout << "found at index : " << count << endl;
+        	return head;
+        }
+        count++;
+        for (node *curr = head->next; curr != NULL; curr = curr->next)
+        {
+        	if(curr == head)
+            	break;
             if (curr->data == data)
             {
                 cout << "found at index : " << count << endl;
@@ -52,6 +64,7 @@ public:
         node *temp = new node(data, NULL);
         temp->next = head;
         head = temp;
+        tail->next = head;
         size++;
     }
 
@@ -74,7 +87,10 @@ public:
         curr->next = temp;
         // be careful about the order so the link doesn't get lost
         if (ins == size - 1)
+        {
             tail = temp;
+            tail->next = head;
+        }
         size++;
     }
 
@@ -94,6 +110,7 @@ public:
             return;
         node *top = head;
         head = top->next;
+        tail->next = head;
         if (!head)
         {
             tail = NULL;
@@ -109,7 +126,7 @@ public:
         if (!head)
             return;
         node *curr = head;
-        if (!curr->next)
+        if (curr->next == head)
         {
             curr = NULL;
             head = NULL;
@@ -117,11 +134,13 @@ public:
             size--;
             return;
         }
-        for (; curr->next->next != NULL; curr = curr->next)
+        for (; curr->next->next != head; curr = curr->next)
         {
         }
-        node * to_delete = curr->next = NULL;
+        node* to_delete = curr->next;
+        curr->next = head;
         tail = curr;
+        tail->next = head;
         size--;
         free(to_delete);
     }
@@ -145,7 +164,7 @@ public:
             Index++;
             curr = curr->next;
         }
-        if (curr->next->next == NULL) // if the indexing is at the last node
+        if (curr->next->next == head) // if the indexing is at the last node
         {
             deleteLast();
             return;
@@ -199,9 +218,13 @@ public:
         }
         else
         {
-            for (node *curr = head; curr != NULL; curr = curr->next)
+            cout<<head->data<<" ";
+            for (node *curr = head->next; curr != NULL; )
             {
                 cout << curr->data << " ";
+                curr = curr->next;
+                if(curr ==  head->next)
+                    break;
             }
             cout << endl;
         }
@@ -210,8 +233,7 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
+   
     linkedlist a;
     int n;
     cin >> n;
@@ -221,30 +243,40 @@ int main()
         cin >> x;
         if (i == 0)
         {
-            a.head = a.tail = new node(x, NULL);
+            a.head = new node(x, NULL);
+            a.tail = a.head;
+            a.tail->next = a.head;
         }
         else
         {
             a.tail->next = new node(x, NULL);
             a.tail = a.tail->next;
+            a.tail->next = a.head;
         }
         a.size++; // remember to update this!!!
     }
 
     a.printList();
-    a.insertAfterIndex(1, 34); // done
+	a.insertAfterIndex(1, 34); // done
+	a.printList();
     a.insertFirst(10);         // done
+	a.printList();
     a.insertLast(9);           // done
-    a.insertAfterIndex(1, 34); //done
-    a.insertFirst(10); //done
-    a.insertLast(9);// done
     a.printList();
-    a.deleteLast();  // done
     a.deleteFirst(); // done
-    a.printList();
-    a.deleteAtIndex(0); //    done
-    a.deleteAtIndex(a.size - 1);
-    a.printList();
+	a.printList();
+	a.deleteAtIndex(0); //    done
+	a.printList();
+	a.deleteAtIndex(a.size - 1);
+	a.printList();
+	a.deleteLast();  //done
+	a.printList();
+    
+    a.search(2);
+    a.search(5);
+    a.search(34);
+    a.search(6);
+    
     a.head = a.reverseList();
     a.printList();
     return 0;

@@ -79,7 +79,6 @@ public:
     int size;
     int tops = 0;
     int rightmost = 0;
-    int j = 0;
 
     DinnerPlates(int capacity)
     {
@@ -90,7 +89,6 @@ public:
 
     void push(int val)
     {
-
         while (a[tops].size() == size)
         {
             ++tops;

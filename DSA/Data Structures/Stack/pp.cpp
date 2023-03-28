@@ -2,32 +2,56 @@
 using namespace std;
 typedef long long ll;
 
-int scoreOfParentheses(string s)
+void nextGreaterElements(vector<int> &nums)
 {
-    stack<int> st;
-    int score = 0;
-    for (int i = 0; i < s.size(); i++)
+    int len = nums.size();
+    vector<int> ans(len);
+    stack<pair<int, int>>s;
+    bool flag=false;
+    int j=0;
+    for(int i=0; ; i++ )
     {
-        if (s[i] == '(')
-        {
-            st.push(score);
-            score = 0;
-        }
-        else
-        {
-            score = st.top() + max(2 * score, 1);
-            st.pop();
-        }
+    	if(flag==false and i>=len)
+    	{
+    		i%=len;
+    		len--;
+    		flag=true;
+    	}
+    	
+    	while(!s.empty() and nums[i]>s.top().first)
+    	{
+    		cout<<nums[i]<<" for "<<s.top().first<<" at "<<s.top().second<<endl;
+    		ans[s.top().second] = nums[i];
+    		s.pop();
+    	}
+        s.push({nums[i], i});
+       // i++;
+    	if(flag==true and i>=len)
+        	break;
     }
-    return score;
+    while(!s.empty())
+    {
+    	cout<<"-1 for "<<s.top().first<<" at "<<s.top().second<<endl;
+        ans[s.top().second] = -1;
+        s.pop();
+    }
+    for(int i=0; i<len+1; i++)
+    {
+        cout<<ans[i]<<" ";
+    }
 }
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
-    string s;
-    cin >> s;
-    cout << scoreOfParentheses(s) << endl;
+    
+    int n;
+    cin >> n;
+    vector<int> s(n);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> s[i];
+    }
+
+   nextGreaterElements(s) ;
     return 0;
 }
