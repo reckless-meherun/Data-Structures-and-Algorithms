@@ -108,8 +108,7 @@ public:
         }
         cout << endl;
         top = x; // reset top to its previous value
-    }
-    
+    }    
 };
 
 int main()

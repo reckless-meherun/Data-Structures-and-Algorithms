@@ -51,6 +51,13 @@ public:
 
     void insertFirst(int data)
     {
+        if(!head) /** u cannot use head->prev when head is null */
+        {
+        	head = new node(NULL, data, NULL);
+            tail = head;
+            size++;
+            return;
+        }
         node *temp = new node(NULL, data, NULL);
         temp->next = head;
         head->prev = temp;
@@ -218,25 +225,30 @@ int main()
     DoublyLinkedList a;
     int n;
     cin >> n;
+    
+    /** u write either what's commented out or what's written*/
+    
     for (int i = 0; i < n; i++)
     {
         int x;
         cin >> x;
         if (i == 0)
         {
-            a.head = new node(NULL, x, NULL);
-            a.tail = a.head;
+            // a.head = new node(NULL, x, NULL);
+            // a.tail = a.head;
+            a.insertFirst(x);
         }
         else
         {
-            a.tail->next = new node(NULL, x, NULL);
-            a.tail->next->prev = a.tail;
-            a.tail = a.tail->next;
+            // a.tail->next = new node(NULL, x, NULL);
+            // a.tail->next->prev = a.tail;
+            // a.tail = a.tail->next;
+            a.insertLast(x);
         }
-        a.size++;
+       // a.size++;
     }
 
-    a.printListForward();
+	a.printListForward();
     cout << "Size : " << a.size << endl;
     cout << endl;
     a.insertFirst(50);

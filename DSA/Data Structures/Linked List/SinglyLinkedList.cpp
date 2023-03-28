@@ -49,9 +49,16 @@ public:
 
     void insertFirst(int data)
     {
+        if(!head)
+        {
+            head = new node(data, NULL);
+            tail = head;
+            size++;
+        }
         node *temp = new node(data, NULL);
         temp->next = head;
         head = temp;
+        tail = temp;
         size++;
     }
 
@@ -221,14 +228,17 @@ int main()
         cin >> x;
         if (i == 0)
         {
-            a.head = a.tail = new node(x, NULL);
+            // a.head = a.tail = new node(x, NULL);
+            a.insertFirst(x);
         }
         else
         {
-            a.tail->next = new node(x, NULL);
-            a.tail = a.tail->next;
+            // a.tail->next = new node(x, NULL);
+            // a.tail = a.tail->next;
+			a.insertLast(x);
         }
-        a.size++; // remember to update this!!!
+        
+      //a.size++; // remember to update this!!!
     }
 
     a.printList();
@@ -247,5 +257,12 @@ int main()
     a.printList();
     a.head = a.reverseList();
     a.printList();
+    a.insertFirst(5);
+    //a.insertFirst(6);
+    a.insertLast(7);
+    a.insertLast(8);
+    a.insertLast(9);
+   // a.insertFirst(8);
+   a.printList();
     return 0;
 }
