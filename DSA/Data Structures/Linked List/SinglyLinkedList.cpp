@@ -120,10 +120,10 @@ public:
         for (; curr->next->next != NULL; curr = curr->next)
         {
         }
-        curr->next = NULL;
+        node * to_delete = curr->next = NULL;
         tail = curr;
         size--;
-        free(curr->next);
+        free(to_delete);
     }
 
     void deleteAtIndex(int del) // delete the del_th element from the linkedlist
