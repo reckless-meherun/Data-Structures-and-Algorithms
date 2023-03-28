@@ -33,21 +33,21 @@ public:
 
     node *search(int data)
     {
-        if (!head)
-        {
-            return NULL;
-        }
+    	if(!head)
+    	{
+    		return NULL;
+    	}
         int count = 0;
-        if (head->data == data)
+        if(head->data == data)
         {
-            cout << "found at index : " << count << endl;
-            return head;
+        	cout << "found at index : " << count << endl;
+        	return head;
         }
         count++;
         for (node *curr = head->next; curr != NULL; curr = curr->next)
         {
-            if (curr == head)
-                break;
+        	if(curr == head)
+            	break;
             if (curr->data == data)
             {
                 cout << "found at index : " << count << endl;
@@ -137,7 +137,7 @@ public:
         for (; curr->next->next != head; curr = curr->next)
         {
         }
-        node *to_delete = curr->next;
+        node* to_delete = curr->next;
         curr->next = head;
         tail = curr;
         tail->next = head;
@@ -218,12 +218,12 @@ public:
         }
         else
         {
-            cout << head->data << " ";
-            for (node *curr = head->next; curr != NULL;)
+            cout<<head->data<<" ";
+            for (node *curr = head->next; curr != NULL; )
             {
                 cout << curr->data << " ";
                 curr = curr->next;
-                if (curr == head->next)
+                if(curr ==  head->next)
                     break;
             }
             cout << endl;
@@ -233,7 +233,7 @@ public:
 
 int main()
 {
-
+   
     linkedlist a;
     int n;
     cin >> n;
@@ -252,32 +252,33 @@ int main()
             a.tail->next = new node(x, NULL);
             a.tail = a.tail->next;
             a.tail->next = a.head;
-        }        
+        }
         a.size++; // remember to update this!!!
     }
 
     a.printList();
-    a.insertAfterIndex(1, 34); // done
-    a.printList();
-    a.insertFirst(10); // done
-    a.printList();
-    a.insertLast(9); // done
+	a.insertAfterIndex(1, 34); // done
+	a.printList();
+    a.insertFirst(10);         // done
+	a.printList();
+    a.insertLast(9);           // done
     a.printList();
     a.deleteFirst(); // done
-    a.printList();
-    a.deleteAtIndex(0); //    done
-    a.printList();
-    a.deleteAtIndex(a.size - 1);
-    a.printList();
-    a.deleteLast(); // done
-    a.printList();
-
+	a.printList();
+	a.deleteAtIndex(0); //    done
+	a.printList();
+	a.deleteAtIndex(a.size - 1);
+	a.printList();
+	a.deleteLast();  //done
+	a.printList();
+    
     a.search(2);
     a.search(5);
     a.search(34);
     a.search(6);
-
+    
     a.head = a.reverseList();
     a.printList();
+	  a.search(2);
     return 0;
 }
