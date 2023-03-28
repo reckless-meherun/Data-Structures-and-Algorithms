@@ -19,23 +19,44 @@ public:
     }
 };
 
-class circulinkedlist
+class linkedlist
 {
 public:
-    node *head;
-    node *tail;
-
-    circulinkedlist()
+    node *head, *tail;
+    int size;
+    linkedlist()
     {
+        size = 0;
         head = NULL;
         tail = NULL;
     }
 
-    void insertAfterNode(node *curr, int data) // gonna insert 'data' after node 'curr'
+    node *search(int data)
     {
-        node *temp = new node(data, NULL);
-        temp->next = curr->next;
-        curr->next = temp; // be careful about the order so the link doesn't get lost
+    	if(!head)
+    	{
+    		return NULL;
+    	}
+        int count = 0;
+        if(head->data == data)
+        {
+        	cout << "found at index : " << count << endl;
+        	return head;
+        }
+        count++;
+        for (node *curr = head->next; curr != NULL; curr = curr->next)
+        {
+        	if(curr == head)
+            	break;
+            if (curr->data == data)
+            {
+                cout << "found at index : " << count << endl;
+                return curr;
+            }
+            count++;
+        }
+        cout << "not found" << endl;
+        return NULL;
     }
 
     void insertFirst(int data)
@@ -44,44 +65,134 @@ public:
         temp->next = head;
         head = temp;
         tail->next = head;
+        size++;
+    }
+
+    void insertAfterIndex(int ins, int data) // gonna insert 'data' after node 'curr'
+    {
+        if (ins >= size)
+        {
+            cout << "Wrong Index to insert after" << endl;
+            return;
+        }
+        node *curr = head;
+        int Index = 0;
+        while (Index != ins)
+        {
+            Index++;
+            curr = curr->next;
+        }
+        node *temp = new node(data, NULL);
+        temp->next = curr->next;
+        curr->next = temp;
+        // be careful about the order so the link doesn't get lost
+        if (ins == size - 1)
+        {
+            tail = temp;
+            tail->next = head;
+        }
+        size++;
     }
 
     void insertLast(int data)
     {
-        insertAfterNode(tail, data);
+        if (!head)
+            insertFirst(data);
+        else
+        {
+            insertAfterIndex(size - 1, data);
+        }
     }
 
     void deleteFirst()
     {
+        if (!head)
+            return;
         node *top = head;
         head = top->next;
-        delete (top);
         tail->next = head;
-        // tail->next = tail->next->next; // why isn't it working !!
+        if (!head)
+        {
+            tail = NULL;
+            size--;
+            return;
+        }
+        free(top);
+        size--;
     }
 
-    void deleteLast()
+    void deleteLast() // this cannot be done in O(1) as it is a singly linked list
     {
+        if (!head)
+            return;
         node *curr = head;
+        if (curr->next == head)
+        {
+            curr = NULL;
+            head = NULL;
+            tail = NULL; // unless u don't make head and tail NULL, they still are refering to a valid node
+            size--;
+            return;
+        }
         for (; curr->next->next != head; curr = curr->next)
         {
         }
-        node *havetodel = curr->next;
-        curr->next = curr->next->next;
-        delete (havetodel);
+        node* to_delete = curr->next;
+        curr->next = head;
+        tail = curr;
+        tail->next = head;
+        size--;
+        free(to_delete);
     }
 
-    void deleteAfterNode(int del) // delete the del_th element from the linkedlist
+    void deleteAtIndex(int del) // delete the del_th element from the linkedlist
     {
+        if (del >= size)
+        {
+            cout << "Wrong Index to delete" << endl;
+            return;
+        }
+        if (del == 0)
+        {
+            deleteFirst();
+            return;
+        }
         node *curr = head;
         int Index = 0;
-        while (Index != del)
+        while (Index != del - 1)
         {
-            curr = curr->next;
             Index++;
+            curr = curr->next;
         }
-        // delete(curr->next);
+        if (curr->next->next == head) // if the indexing is at the last node
+        {
+            deleteLast();
+            return;
+        }
+        node *to_delete = curr->next;
         curr->next = curr->next->next;
+        free(to_delete);
+        size--;
+    }
+
+    void remove(int val)
+    {
+        node *dummy = new node(-1, NULL);
+        dummy->next = head;
+        node *curr = dummy;
+        while (curr != NULL and curr->next != NULL)
+        {
+            if (curr->next->data == val)
+            {
+                curr->next = curr->next->next;
+            }
+            else
+            {
+                curr = curr->next;
+            }
+        }
+        head = dummy->next;
+        return;
     }
 
     node *reverseList()
@@ -96,32 +207,24 @@ public:
             prev_head = temp2;
         }
         prev_head = temp1;
-        head = prev_head;
         return prev_head;
     }
-    void printList(node *HEAD)
+
+    void printList()
     {
-        if (!HEAD)
+        if (!head)
         {
             cout << "Empty LinkedList" << endl;
         }
         else
         {
-            node *curr = HEAD;
-            cout << curr->data << " ";
-            curr = curr->next;
-            for (; curr != NULL;)
+            cout<<head->data<<" ";
+            for (node *curr = head->next; curr != NULL; )
             {
                 cout << curr->data << " ";
-                if (curr->next == HEAD)
-                {
-                    cout << endl;
-                    return;
-                }
-                else
-                {
-                    curr = curr->next;
-                }
+                curr = curr->next;
+                if(curr ==  head->next)
+                    break;
             }
             cout << endl;
         }
@@ -130,9 +233,8 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
-    circulinkedlist a;
+   
+    linkedlist a;
     int n;
     cin >> n;
     for (int i = 0; i < n; i++)
@@ -143,20 +245,40 @@ int main()
         {
             a.head = new node(x, NULL);
             a.tail = a.head;
+            a.tail->next = a.head;
         }
         else
         {
-            a.head = new node(x, a.head);
+            a.tail->next = new node(x, NULL);
+            a.tail = a.tail->next;
+            a.tail->next = a.head;
         }
+        a.size++; // remember to update this!!!
     }
-    a.tail->next = a.head;    
-    a.insertFirst(10);
-    a.insertLast(20);
-    a.printList(a.head);
-    a.printList(a.head->next->next); // to prove that it's a circular linked list
-    a.deleteFirst();
-    a.deleteLast();
-    a.deleteAfterNode(2);
-    a.printList(a.head);    
+
+    a.printList();
+	a.insertAfterIndex(1, 34); // done
+	a.printList();
+    a.insertFirst(10);         // done
+	a.printList();
+    a.insertLast(9);           // done
+    a.printList();
+    a.deleteFirst(); // done
+	a.printList();
+	a.deleteAtIndex(0); //    done
+	a.printList();
+	a.deleteAtIndex(a.size - 1);
+	a.printList();
+	a.deleteLast();  //done
+	a.printList();
+    
+    a.search(2);
+    a.search(5);
+    a.search(34);
+    a.search(6);
+    
+    a.head = a.reverseList();
+    a.printList();
+	  a.search(2);
     return 0;
 }
