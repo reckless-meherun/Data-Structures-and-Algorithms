@@ -6,28 +6,28 @@ class MyQueue
 {
 public:
     int *queue;
-    int top;
-    int tail;
-    int len;
-    int n;
+    int front;
+    int rear;
+    int total_elements;
+    int capacity;
 
     MyQueue(int x = Max)
     {
-        top = 0;
-        tail = -1;
+        front = 0;
+        rear = -1;
         queue = new int[x];
-        len = 0;
-        n=x;
+        total_elements = 0;
+        capacity=x;
     }
 
     bool empty()
     {
-        return len == 0;
+        return total_elements == 0;
     }
 
     bool overflow()
     {
-        return len == n;
+        return total_elements == capacity;
     }
 
     void push(int data)
@@ -38,9 +38,9 @@ public:
         }
         else
         {
-            tail++;
-            queue[tail %= n] = data;
-            len++;
+            rear++;
+            queue[rear %= capacity] = data;
+            total_elements++;
         }
     }
 
@@ -50,19 +50,19 @@ public:
             cout << "Empty Queue" << endl;
         else
         {
-            (top %= n)++;
-            len--;
+            (front %= capacity)++;
+            total_elements--;
         }
     }
 
     int front()
     {
-        return queue[top];
+        return queue[front];
     }
 
     void clear()
     {
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < capacity; i++)
         {
             queue[i] = 0;
         }
@@ -75,19 +75,19 @@ public:
             cout << "Empty Queue" << endl;
             return;
         }
-        int i=top;
-        while (i != tail)
+        int i=front;
+        while (i != rear)
         {            
-            cout << queue[i%n] << " ";
+            cout << queue[i%capacity] << " ";
             i++;
-            i%=n;
+            i%=capacity;
         }
-        cout<<queue[tail]<<endl;
+        cout<<queue[rear]<<endl;
     }
 
     int size()
     {
-        return len;
+        return total_elements;
     }
 };
 
