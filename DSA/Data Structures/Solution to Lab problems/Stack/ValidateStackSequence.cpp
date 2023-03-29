@@ -5,22 +5,24 @@ typedef long long ll;
 bool validateStackSequences(vector<int> &pushed, vector<int> &popped)
 {
     stack<int> s;
-    int i = 0, j=0;
-    for (; i < pushed.size(); )
+    int i = 0, j = 0;
+    for (; i < pushed.size();)
     {
         s.push(pushed[i]);
         i++;
-        while(!s.empty() and popped[j] == s.top())
+        while (!s.empty() and popped[j] == s.top())
         {
             s.pop();
             j++;
         }
-    }    
-    
+    }
+
     while (!s.empty())
     {
-        if(s.top() != popped[j])
-            {return false;}
+        if (s.top() != popped[j])
+        {
+            return false;
+        }
         s.pop();
         j++;
     }
@@ -43,9 +45,9 @@ int main()
     {
         cin >> popped[i];
     }
-    if(validateStackSequences(pushed, popped))
-    	cout<<"true"<<endl;
+    if (validateStackSequences(pushed, popped))
+        cout << "true" << endl;
     else
-    	cout<<"false"<<endl;
+        cout << "false" << endl;
     return 0;
 }

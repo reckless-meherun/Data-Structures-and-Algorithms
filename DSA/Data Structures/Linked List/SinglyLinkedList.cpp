@@ -49,7 +49,7 @@ public:
 
     void insertFirst(int data)
     {
-        if(!head)
+        if (!head)
         {
             head = new node(data, NULL);
             tail = head;
@@ -127,7 +127,7 @@ public:
         for (; curr->next->next != NULL; curr = curr->next)
         {
         }
-        node * to_delete = curr->next = NULL;
+        node *to_delete = curr->next = NULL;
         tail = curr;
         size--;
         free(to_delete);
@@ -213,6 +213,32 @@ public:
             cout << endl;
         }
     }
+    void sortList()
+    {
+        node *temp = head;
+
+        // Traverse the List
+        while (temp)
+        {
+            node *min = temp;
+            node *r = temp->next;
+
+            // Traverse the unsorted sublist
+            while (r)
+            {
+                if (min->data > r->data)
+                    min = r;
+
+                r = r->next;
+            }
+
+            // Swap Data
+            int x = temp->data;
+            temp->data = min->data;
+            min->data = x;
+            temp = temp->next;
+        }
+    }
 };
 
 int main()
@@ -228,41 +254,43 @@ int main()
         cin >> x;
         if (i == 0)
         {
-            // a.head = a.tail = new node(x, NULL);
-            a.insertFirst(x);
+            a.head = a.tail = new node(x, NULL);
+            // a.insertFirst(x);
         }
         else
         {
-            // a.tail->next = new node(x, NULL);
-            // a.tail = a.tail->next;
-			a.insertLast(x);
+            a.tail->next = new node(x, NULL);
+            a.tail = a.tail->next;
+            //  a.insertLast(x);
         }
-        
-      //a.size++; // remember to update this!!!
+
+        a.size++; // remember to update this!!!
     }
 
     a.printList();
-    a.insertAfterIndex(1, 34); // done
-    a.insertFirst(10);         // done
-    a.insertLast(9);           // done
-    a.insertAfterIndex(1, 34); //done
-    a.insertFirst(10); //done
-    a.insertLast(9);// done
+    // a.insertAfterIndex(1, 34); // done
+    // a.insertFirst(10);         // done
+    // a.insertLast(9);           // done
+    // a.insertAfterIndex(1, 34); // done
+    // a.insertFirst(10);         // done
+    // a.insertLast(9);           // done
+    // a.printList();
+    // a.deleteLast();  // done
+    // a.deleteFirst(); // done
+    // a.printList();
+    // a.deleteAtIndex(0); //    done
+    // a.deleteAtIndex(a.size - 1);
+    // a.printList();
+    // a.head = a.reverseList();
+    // a.printList();
+    // a.insertFirst(5);
+    // // a.insertFirst(6);
+    // a.insertLast(7);
+    // a.insertLast(8);
+    // a.insertLast(9);
+    // // a.insertFirst(8);
+    // a.printList();
+    a.sortList();
     a.printList();
-    a.deleteLast();  // done
-    a.deleteFirst(); // done
-    a.printList();
-    a.deleteAtIndex(0); //    done
-    a.deleteAtIndex(a.size - 1);
-    a.printList();
-    a.head = a.reverseList();
-    a.printList();
-    a.insertFirst(5);
-    //a.insertFirst(6);
-    a.insertLast(7);
-    a.insertLast(8);
-    a.insertLast(9);
-   // a.insertFirst(8);
-   a.printList();
     return 0;
 }

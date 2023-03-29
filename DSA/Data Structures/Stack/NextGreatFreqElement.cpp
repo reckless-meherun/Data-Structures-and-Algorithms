@@ -5,10 +5,12 @@ typedef long long ll;
 void NGF(int num[], int n)
 {
     map<int, int> freq;
+
     for (int i = 0; i < n; i++)
     {
         freq[num[i]]++;
     }
+    
     int f[10000];
     for (int i = 0; i < n; i++)
     {

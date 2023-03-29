@@ -248,26 +248,26 @@ public:
 
 int check_precedence(char oper)
 {
-    if(oper=='/')
+    if (oper == '/')
         return 4;
-    if(oper=='*')
+    if (oper == '*')
         return 4;
-    if(oper=='+')
+    if (oper == '+')
         return 3;
-    if(oper=='-')
+    if (oper == '-')
         return 3;
     return 0;
 }
 
 int main()
 {
-    //stack<char> s;
+    // stack<char> s;
     MyStack s;
     string infix;
-    cin >> infix;
+    cin >> infix; // take vector<string> if infix contains space
 
-    string postfix="";
-    
+    string postfix = "";
+
     for (int i = 0; i < infix.length(); i++)
     {
         if (infix[i] == '(' or infix[i] == '{' or infix[i] == '[')
@@ -276,7 +276,7 @@ int main()
         }
         else if (infix[i] == ')')
         {
-            while(s.top()!='(')
+            while (s.top() != '(')
             {
                 postfix += s.top();
                 s.pop();
@@ -285,7 +285,7 @@ int main()
         }
         else if (infix[i] == '}')
         {
-            while(s.top()!='{')
+            while (s.top() != '{')
             {
                 postfix += s.top();
                 s.pop();
@@ -294,7 +294,7 @@ int main()
         }
         else if (infix[i] == ']')
         {
-            while(s.top()!='[')
+            while (s.top() != '[')
             {
                 postfix += s.top();
                 s.pop();
@@ -306,23 +306,23 @@ int main()
             postfix += infix[i];
         }
         else
-        {        
-            while (!s.empty() and (check_precedence(s.top())>=check_precedence(infix[i])))
+        {
+            while (!s.empty() and (check_precedence(s.top()) >= check_precedence(infix[i])))
             {
                 postfix += s.top();
                 s.pop();
             }
-            s.push(infix[i]);            
+            s.push(infix[i]);
         }
     }
 
-    while(!s.empty())
+    while (!s.empty())
     {
         postfix += s.top();
         s.pop();
     }
 
-    cout<<"Postfix notation: "<<postfix<<endl;
+    cout << "Postfix notation: " << postfix << endl;
 
     return 0;
 }

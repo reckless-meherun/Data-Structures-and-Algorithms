@@ -9,7 +9,7 @@ vector<int> nextGreaterElements(vector<int> &nums)
     stack<int> s;
     for (int i = 2 * n - 1; i >= 0; i--)
     {
-        while (s.empty() == false && s.top() <= nums[i % n])
+        while (!s.empty() and s.top() <= nums[i % n])
             s.pop();
         if (i < n)
         {
