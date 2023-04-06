@@ -1,11 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
+
+void InsertionSort(vector<double> &v, int len);
 
 class node
 {
 public:
-    int data;
+    double data;
     node *next;
     node()
     {
@@ -31,7 +32,7 @@ public:
         tail = NULL;
     }
 
-    node *search(int data)
+    node *search(double data)
     {
         int count = 0;
         for (node *curr = head; curr != NULL; curr = curr->next)
@@ -47,7 +48,7 @@ public:
         return NULL;
     }
 
-    void insertFirst(int data)
+    void insertFirst(double data)
     {
         if (!head)
         {
@@ -62,7 +63,7 @@ public:
         size++;
     }
 
-    void insertAfterIndex(int ins, int data) // gonna insert 'data' after node 'curr'
+    void insertAfterIndex(int ins, double data) // gonna insert 'data' after node 'curr'
     {
         if (ins >= size)
         {
@@ -85,7 +86,7 @@ public:
         size++;
     }
 
-    void insertLast(int data)
+    void insertLast(double data)
     {
         if (!head)
             insertFirst(data);
@@ -213,7 +214,29 @@ public:
             cout << endl;
         }
     }
-    void sortList()
+
+    int search_index(int indx)
+    {
+        if (indx >= size)
+        {
+            cout << "invalid" << endl;
+            return -1;
+        }
+        if (!head)
+        {
+            cout << "empty, returned -1" << endl;
+            return -1;
+        }
+        node *curr = head;
+        int i = 0;
+        while (i != indx)
+        {
+            i++;
+            curr = curr->next;
+        }
+        return curr->data;
+    }
+    void bucketsortLL(linkedlist &l, int len)
     {
         node *temp = head;
 
@@ -239,72 +262,203 @@ public:
             temp = temp->next;
         }
     }
-    void selectionSort()
+
+    int find_max()
     {
-        node *curr1 = head;
-        for (; curr1->next!=NULL; curr1 = curr1->next)
+        if (!head)
         {
-            for (node *curr2 = curr1->next; curr2!=NULL; curr2 = curr2->next)
+            cout << "empty, returned -1" << endl;
+            return -1;
+        }
+        node *curr = head;
+        int Max = INT_MIN;
+        int i = 0;
+        while (curr)
+        {
+            if (curr->data > Max)
             {
-                if(curr1->data > curr2->data)
-                {
-                    swap(curr1->data, curr2->data);
-                }
-            }            
-        }        
+                Max = curr->data;
+            }
+            i++;
+            curr = curr->next;
+        }
+        return Max;
+    }
+
+    int find_min()
+    {
+        if (!head)
+        {
+            cout << "empty, returned -1" << endl;
+            return -1;
+        }
+        node *curr = head;
+        int Min = INT_MAX;
+        int i = 0;
+        while (curr)
+        {
+            if (curr->data < Min)
+            {
+                Min = curr->data;
+            }
+            i++;
+            curr = curr->next;
+        }
+        return Min;
     }
 };
+
+void BucketSortLL(linkedlist &arr, int len)
+{    
+    double Max = arr.find_max();
+    double Min = arr.find_min();
+
+    // range (for buckets)
+    double range = (Max - Min) / 15;
+
+    vector<vector<double>> temp;
+
+    // create empty buckets
+    for (int i = 0; i < 15; i++)
+    {
+        temp.push_back(vector<double>());
+    }
+
+    // scatter the array elements into the correct bucket
+    for (int i = 0; i < 150; i++)
+    {
+        double diff = (arr.search_index(i) - Min) / range - int((arr.search_index(i) - Min) / range);
+
+        // append the boundary elements to the lower array
+        if (diff == 0 && arr.search_index(i) != Min)
+        {
+            temp[int((arr.search_index(i) - Min) / range) - 1]
+                .push_back(arr.search_index(i));
+        }
+        else
+        {
+            temp[int((arr.search_index(i) - Min) / range)].push_back(
+                arr.search_index(i));
+        }
+    }
+
+    // Sort each bucket individually
+    for (int i = 0; i < temp.size(); i++)
+    {
+        if (!temp[i].empty())
+        {
+            InsertionSort(temp[i], temp[i].size());
+        }
+    }
+
+    // Gather sorted elements to the original array
+    int k = 0;
+    for (vector<double> &lst : temp)
+    {
+        if (!lst.empty())
+        {
+            for (double i : lst)
+            {
+                arr.insertAfterIndex(k-1, i);
+                k++;
+            }
+        }
+    }
+}
+
+void bucketSortLL(linkedlist &l, int len)
+{
+    l.bucketsortLL(l, len);
+    // vector<double> b[n];
+
+    // for (int i = 0; i < 15; i++)
+    // {
+    //     int bi = 15 * arr[i];
+    //     b[bi].push_back(arr[i]);
+    // }
+
+    // for (int i = 0; i < n; i++)
+    //     InsertionSort(b[i], b[i].size());
+
+    // int index = 0;
+    // for (int i = 0; i < n; i++)
+    //     for (int j = 0; j < b[i].size(); j++)
+    //         arr[index++] = b[i][j];
+}
+
+void InsertionSort(vector<double> &v, int len)
+{
+    for (int outer = 1; outer < v.size(); outer++)
+    {
+        double toPlace = v[outer];
+        int inner = outer - 1;
+        while (inner >= 0 and (v[inner] - toPlace) > 0.00001) // cannot write v[inner]>v[outer] as v[outer] gets changed after one shift in the inner loop
+        {
+            v[inner + 1] = v[inner];
+            inner--;
+        }
+        v[inner + 1] = toPlace;
+    }
+}
+
+// void BucketSortLL(linkedlist &l)
+// {
+//    // l.printList();
+//     vector<int> b[15];
+//     for (int i = 0; i < 15; i++)
+//     {
+//         cout<<l.search_index(i)<<endl;
+//         int bi = 15*l.search_index(i);
+//         b[bi].push_back(l.search_index(i));
+//     }
+
+//     for (int i = 0; i < 5; i++)
+//     {
+//         sort(b[i].begin(), b[i].end());
+//     }
+
+//     int indx=0;
+
+//     node *curr=l.head;
+
+//     for(int i=0; i<5; i++)
+//     {
+//         for(int j=0; i<b[i].size(); i++)
+//         {
+//             //v[indx++]=b[i][j];
+//             curr->data = b[i][j];
+//             curr = curr->next;
+//         }
+//     }
+// }
 
 int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
+    double arr[10000];
+
     linkedlist a;
-    int n;
-    cin >> n;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < 15; i++)
     {
-        int x;
-        cin >> x;
+        double x = rand() / 100000.0;
+
         if (i == 0)
         {
-            a.head = a.tail = new node(x, NULL);
-            // a.insertFirst(x);
+            a.head = new node(x, NULL);
+            a.tail = a.head;
+            a.tail->next = NULL;
         }
         else
         {
             a.tail->next = new node(x, NULL);
             a.tail = a.tail->next;
-            //  a.insertLast(x);
         }
-
-        a.size++; // remember to update this!!!
+        a.size++;   
     }
 
     a.printList();
-    // a.insertAfterIndex(1, 34); // done
-    // a.insertFirst(10);         // done
-    // a.insertLast(9);           // done
-    // a.insertAfterIndex(1, 34); // done
-    // a.insertFirst(10);         // done
-    // a.insertLast(9);           // done
-    // a.printList();
-    // a.deleteLast();  // done
-    // a.deleteFirst(); // done
-    // a.printList();
-    // a.deleteAtIndex(0); //    done
-    // a.deleteAtIndex(a.size - 1);
-    // a.printList();
-    // a.head = a.reverseList();
-    // a.printList();
-    // a.insertFirst(5);
-    // // a.insertFirst(6);
-    // a.insertLast(7);
-    // a.insertLast(8);
-    // a.insertLast(9);
-    // // a.insertFirst(8);
-    // a.printList();
-    a.sortList();
+    bucketSortLL(a, 150);
+    cout << endl;
     a.printList();
-    return 0;
 }

@@ -31,27 +31,50 @@ public:
         tail = NULL;
     }
 
-    node *search(int data)
+    int search(int data)
     {
         int count = 0;
         for (node *curr = head; curr != NULL; curr = curr->next)
         {
             if (curr->data == data)
             {
-                cout << "found at index : " << count << endl;
-                return curr;
+                // cout << "found at index : " << count << endl;
+                return count;
             }
             count++;
         }
-        cout << "not found" << endl;
-        return NULL;
+        // cout << "not found" << endl;
+        return -1;
+    }
+
+    int searchAtIndex(int indx)
+    {
+        int count = 0;
+        for (node *curr = head; curr != NULL; curr = curr->next)
+        {
+            if (count == indx)
+            {
+                // cout << "found at index : " << count << endl;
+                return curr->data;
+            }
+            count++;
+        }
+        // cout << "not found" << endl;
+        return -1;
     }
 
     void insertFirst(int data)
     {
+        // if (!head)
+        // {
+        //     head = new node(data, NULL);
+        //     tail = head;
+        //     size++;
+        // }
         node *temp = new node(data, NULL);
         temp->next = head;
         head = temp;
+        tail = temp;
         size++;
     }
 
@@ -206,6 +229,47 @@ public:
             cout << endl;
         }
     }
+
+    void sortList()
+    {
+        node *temp = head;
+
+        // Traverse the List
+        while (temp)
+        {
+            node *min = temp;
+            node *r = temp->next;
+
+            // Traverse the unsorted sublist
+            while (r)
+            {
+                if (min->data > r->data)
+                    min = r;
+
+                r = r->next;
+            }
+
+            // Swap Data
+            int x = temp->data;
+            temp->data = min->data;
+            min->data = x;
+            temp = temp->next;
+        }
+    }
+    void selectionSort()
+    {
+        node *curr1 = head;
+        for (; curr1->next != NULL; curr1 = curr1->next)
+        {
+            for (node *curr2 = curr1->next; curr2 != NULL; curr2 = curr2->next)
+            {
+                if (curr1->data > curr2->data)
+                {
+                    swap(curr1->data, curr2->data);
+                }
+            }
+        }
+    }
 };
 
 class MyStack
@@ -225,18 +289,18 @@ public:
         capacity = _capacity;
         length = 0;
     }
-    
-    bool isEmpty()
+
+    bool empty()
     {
         return Stack.head == NULL;
     }
-    bool isFull()
+    bool full()
     {
         return length == capacity;
     }
     void push(int val)
     {
-        if (isFull())
+        if (full())
         {
             cout << "Stack overflow" << endl;
             return;
@@ -252,9 +316,9 @@ public:
         Stack.deleteLast();
         length--;
     }
-    int peek()
+    int top()
     {
-        if (isEmpty())
+        if (empty())
         {
             cout << "Empty Stack" << endl;
             return ' ';
@@ -269,10 +333,10 @@ public:
             return Stack.tail->data;
         }
     }
-    
+
     void clear()
     {
-        if(!Stack.head)
+        if (!Stack.head)
             return;
         Stack.tail = Stack.head;
         while (Stack.tail)
@@ -284,7 +348,7 @@ public:
     }
     void printStack()
     {
-        if (isEmpty())
+        if (empty())
             cout << "Empty Stack" << endl;
         else
             Stack.printList();
@@ -295,23 +359,53 @@ public:
     }
 };
 
+void NGE(linkedlist &num, int n)
+{
+    vector<int> ans(n, -1);
+    stack<pair<int, int>> store;
+    // store.push(num.searchAtIndex(0));
+    for (int i = 0; i < n; i++)
+    {
+        while (!store.empty() and num.searchAtIndex(i) > store.top().first)
+        {
+            // cout << num.searchAtIndex(i) << " is next greater to " << store.top() << endl;
+            ans[store.top().second] = num.searchAtIndex(i);
+            store.pop();
+        }
+        store.push({num.searchAtIndex(i), i});
+    }
+    // while (!store.empty())
+    // {
+    //     cout << -1 << " is next greater to " << store.top() << endl;
+    //     store.pop();
+    // }
+    for (auto v : ans)
+        cout << v << " ";
+    cout << endl;
+}
+
 int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
-    MyStack s(10);
-
-    for (int i = 0; i < 10; i++)
+    linkedlist l;
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
     {
-        s.push(i);
+        int x;
+        cin >> x;
+        if (i == 0)
+        {
+            l.insertFirst(x);
+        }
+        else
+        {
+            l.insertLast(x);
+        }
     }
 
-    s.printStack();
-    s.pop();
-    s.push(1);
-    s.push(2);
-    s.printStack();
-    cout << s.size() << endl;
+    NGE(l, n);
 
     return 0;
 }

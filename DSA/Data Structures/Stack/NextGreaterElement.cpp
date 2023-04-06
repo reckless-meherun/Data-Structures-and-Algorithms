@@ -255,6 +255,6 @@ int main()
     }
 
     NGE(num, n);
-
+    
     return 0;
 }

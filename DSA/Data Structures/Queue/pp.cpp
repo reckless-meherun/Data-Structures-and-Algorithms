@@ -47,5 +47,6 @@ int main()
         cin >> nums[i];
     }
     maxSubarraySumCircular(nums);
+    deque<int> dq;
     return 0;
 }

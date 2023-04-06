@@ -33,8 +33,6 @@ public:
         else /** if u use top (ঝামেলা): if top is already in the last index (capacity - 1),
                                 it has a value in it so cannot push anymore */
         {
-            Stack[++top] = data;
-            length++;
             cout << "Stack overflow" << endl;
         }
     }

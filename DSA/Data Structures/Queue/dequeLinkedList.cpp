@@ -51,9 +51,9 @@ public:
 
     void insertFirst(int data)
     {
-        if(!head) /** u cannot use head->prev when head is null */
+        if (!head) /** u cannot use head->prev when head is null */
         {
-        	head = new node(NULL, data, NULL);
+            head = new node(NULL, data, NULL);
             tail = head;
             size++;
             return;
@@ -67,9 +67,9 @@ public:
 
     void insertAfterIndex(int ins, int data) // gonna insert 'data' after node 'curr'
     {
-        if(ins >= size)
+        if (ins >= size)
         {
-            cout<< "Wrong index!"<<endl;
+            cout << "Wrong index!" << endl;
             return;
         }
         node *curr = head;
@@ -160,7 +160,7 @@ public:
             deleteLast();
             return;
         }
-        //cout << "index " << Index << " value " << curr->data << endl;
+        // cout << "index " << Index << " value " << curr->data << endl;
         node *to_delete = curr->next;
         curr->next->next->prev = curr;
         curr->next = curr->next->next; // cannot write this before as curr->next gets changed
@@ -219,6 +219,9 @@ public:
         }
     }
 };
+
+
+
 class MyDeque
 {
 public:
@@ -252,9 +255,9 @@ public:
 
     void popFront()
     {
-        if(!deque.head)
+        if (!deque.head)
         {
-            cout<<"Empty deque"<<endl;
+            cout << "Empty deque" << endl;
             return;
         }
         deque.deleteFirst();
@@ -263,9 +266,9 @@ public:
 
     void popRear()
     {
-        if(!deque.head)
+        if (!deque.head)
         {
-            cout<<"Empty deque"<<endl;
+            cout << "Empty deque" << endl;
             return;
         }
         deque.deleteLast();
@@ -333,21 +336,21 @@ int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
-	MyDeque q;
+    MyDeque q;
     for (int i = 0; i < 5; i++)
         q.pushRear(i);
-        
+
     q.printDequeForward();
     q.popRear();
     q.popRear();
     q.printDequeBackward();
-    cout<<q.size()<<endl;
+    cout << q.size() << endl;
     while (!q.empty())
     {
         q.popRear();
     }
     q.printDequeForward();
     q.printDequeBackward();
-    cout<<q.size()<<endl;
+    cout << q.size() << endl;
     return 0;
 }

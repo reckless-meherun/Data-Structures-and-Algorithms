@@ -17,7 +17,7 @@ public:
         rear = -1;
         queue = new int[x];
         total_elements = 0;
-        capacity=x;
+        capacity = x;
     }
 
     bool empty()
@@ -66,6 +66,8 @@ public:
         {
             queue[i] = 0;
         }
+        front = 0;
+        rear = -1;
     }
 
     void printQueue()
@@ -75,14 +77,14 @@ public:
             cout << "Empty Queue" << endl;
             return;
         }
-        int i=front;
+        int i = front;
         while (i != rear)
-        {            
-            cout << queue[i%capacity] << " ";
+        {
+            cout << queue[i % capacity] << " ";
             i++;
-            i%=capacity;
+            i %= capacity;
         }
-        cout<<queue[rear]<<endl;
+        cout << queue[rear] << endl;
     }
 
     int size()
@@ -105,6 +107,6 @@ int main()
     q.printQueue();
     q.push(5);
     q.printQueue();
-    //cout<<q.size()<<endl;
+    // cout<<q.size()<<endl;
     return 0;
 }
