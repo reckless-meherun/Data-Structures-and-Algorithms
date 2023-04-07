@@ -39,10 +39,42 @@ public:
 
     int getMinimum()
     {
-        return heap[0];
+        if(size>0)
+            return heap[0];
+        cout<<"Empty heap and returned -1 "<<endl;
+        return -1;
     }
 
-    void insertData(int data)
+    void upHeapify(int indx)
+    {
+        // heapify from the leaves to root
+        while (indx != 0 and heap[parent(indx)] > heap[indx])
+        {
+            swap(heap[indx], heap[parent(indx)]);
+            indx = parent(indx);
+        }
+    }
+
+    void downHeapify(int indx) // from ith index to leaves
+    {
+        int leftChildIndex = leftChild(indx);
+        int rightChildIndex = rightChild(indx);
+        int smallest = indx;
+
+        if (leftChildIndex < size and heap[leftChildIndex] < heap[smallest])
+            smallest = leftChildIndex;
+
+        if (rightChildIndex < size and heap[rightChildIndex] < heap[smallest])
+            smallest = rightChildIndex;
+
+        if (smallest != indx)
+        {
+            swap(heap[smallest], heap[indx]);
+            downHeapify(smallest);
+        }
+    }
+
+    void insert(int data)
     {
         if (size == capacity)
         {
@@ -54,42 +86,13 @@ public:
         heap[size - 1] = data;
         int indx = size - 1;
 
-        // heapify from the leaves to root
-        while (indx != 0 and heap[parent(indx)] > heap[indx])
-        {
-            swap(heap[indx], heap[parent(indx)]);
-            indx = parent(indx);
-        }
+        upHeapify(indx);
     }
 
     void decreaseData(int indx, int new_data) // cannot replace with a larger data
     {
         heap[indx] = new_data;
-        // heapify from index i to root
-        while (indx != 0 and heap[parent(indx)] > heap[indx])
-        {
-            swap(heap[indx], heap[parent(indx)]);
-            indx = parent(indx);
-        }
-    }
-
-    void heapify(int indx) // from ith index to leaves
-    {
-        int leftChildIndex = leftChild(indx);
-        int rightChildIndex = rightChild(indx);
-        int smallest = indx;
-
-        if (leftChildIndex < size and heap[leftChildIndex] < heap[indx])
-            smallest = leftChildIndex;
-
-        if (rightChildIndex < size and heap[rightChildIndex] < heap[smallest])
-            smallest = rightChildIndex;
-
-        if (smallest != indx)
-        {
-            swap(heap[smallest], heap[indx]);
-            heapify(smallest);
-        }
+        upHeapify(indx);
     }
 
     int extractMin()
@@ -107,7 +110,7 @@ public:
         int root = heap[0];
         heap[0] = heap[size - 1];
         size--;
-        heapify(0);
+        downHeapify(0);
 
         return root;
     }
@@ -143,12 +146,12 @@ int main()
     minHeap heap(20);
     for (int i = 10; i >= 0; i--)
     {
-        heap.insertData(i);
+        heap.insert(i);
     }
     heap.printHeap();
-    heap.insertData(3);
-    heap.insertData(15);
-    heap.insertData(45);
+    heap.insert(3);
+    heap.insert(15);
+    heap.insert(45);
     heap.printHeap();
     cout << heap.extractMin() << " ";
     cout << heap.getMinimum() << " ";
