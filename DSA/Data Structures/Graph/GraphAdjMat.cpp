@@ -3,14 +3,13 @@ using namespace std;
 typedef long long ll;
 
 int adjMat[100][100];
-int n, m; // n= number of vertices, m = number of edges
-// the matrix will be nxn
+int vertices, edges; 
 
 void defineGraph()
 {
     int u, v;
 
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < edges; i++)
     {
         cin >> u >> v;
         adjMat[u][v] = true;
@@ -32,9 +31,9 @@ void removeEdge(int u, int v)
 
 void printGraph()
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < vertices; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < vertices; j++)
         {
             cout << adjMat[i][j] << " ";
         }
@@ -48,7 +47,7 @@ int main()
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
 
-    cin >> n >> m;
+    cin >> vertices >> edges;
     defineGraph();
     printGraph();
     addEdge(3,2);
