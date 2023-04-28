@@ -2,57 +2,71 @@
 using namespace std;
 typedef long long ll;
 
-int adjMat[100][100];
-int vertices, edges; 
-
-void defineGraph()
+class graph
 {
-    int u, v;
+    int vertices;
+    int edges;
+    bool directed;
+    int **adjMat;
+    int *prev;
+    int *distance;
 
-    for (int i = 0; i < edges; i++)
+public:
+    graph(int vertices, int edges, bool ifDirected)
     {
-        cin >> u >> v;
-        adjMat[u][v] = true;
-        adjMat[v][u] = true;
-    }
-}
-
-void addEdge(int u, int v)
-{
-    adjMat[u][v] = true;
-    adjMat[v][u] = true;
-}
-
-void removeEdge(int u, int v)
-{
-    adjMat[u][v] = false;
-    adjMat[v][u] = false;
-}
-
-void printGraph()
-{
-    for (int i = 0; i < vertices; i++)
-    {
-        for (int j = 0; j < vertices; j++)
+        this->vertices = vertices;
+        this->edges = edges;
+        adjMat = new int *[this->vertices + 1];
+        for (int i = 0; i <= vertices; i++)
         {
-            cout << adjMat[i][j] << " ";
+            adjMat[i] = new int[vertices + 1];
         }
-        cout << endl;
+        directed = ifDirected;
+        prev = new int[vertices + 1];
+        distance = new int[vertices + 1];
     }
-    cout<<endl;
-}
+
+    void defineGraph()
+    {
+        for (int i = 0; i < edges; i++)
+        {
+            int u, v;
+            cin >> u >> v;
+            addEdge(u, v);
+        }
+    }
+
+    void addEdge(int u, int v)
+    {
+        adjMat[u][v] = true;
+        if (!directed)
+            adjMat[v][u] = true;
+    }
+
+    void removeEdge(int u, int v)
+    {
+        adjMat[u][v] = false;
+        adjMat[v][u] = false;
+    }
+
+    void printGraph()
+    {
+        for (int i = 0; i < vertices; i++)
+        {
+            for (int j = 0; j < vertices; j++)
+                cout << adjMat[i][j] << " ";
+            cout << endl;
+        }
+    }
+};
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
+    // freopen("input.in", "r", stdin);
+    // freopen("output.in", "w", stdout);
 
-    cin >> vertices >> edges;
-    defineGraph();
-    printGraph();
-    addEdge(3,2);
-    printGraph();
-    removeEdge(0,1);
-    printGraph();
+    graph g(4, 4, false);
+    g.defineGraph();
+    g.printGraph();
     return 0;
 }

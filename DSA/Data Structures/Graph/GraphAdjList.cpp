@@ -2,51 +2,72 @@
 using namespace std;
 typedef long long ll;
 
-int vertices, edges;
-
-void addEdge(vector<int> adjList[], int u, int v)
+class graph
 {
-    if (u < vertices and v < vertices)
-    {
-        adjList[u].push_back(v);
-        adjList[v].push_back(u);
-    }
-    else
-    {
-        cout<<"Graph if full"<<endl;
-    }
-}
+    int vertices;
+    int edges;
+    bool directed;
+    vector<list<int>> adjList;
 
-void defineGraph(vector<int> adjList[])
-{
-    for(int i=0; i<edges; i++)
-    {
-        int u, v;
-        cin>>u>>v;
-        //cout<<u<<" "<<v;
-        addEdge(adjList, u,v);
-    }
-}
+    int *prev;
+    int *distance;
 
-void printGraph(vector<int> adjList[])
-{
-	cout<<"v : edges"<<endl;
-    for (int i = 0; i < vertices; i++)
+public:
+    graph(int vertices, int edges, bool ifDirected)
     {
-        cout<<i<<" : ";
-        for(auto v: adjList[i])
-            cout<<v<<" ";
-        cout<<endl;
-    }    
-}
+        this->vertices = vertices;
+        this->edges = edges;
+        adjList.resize(vertices);
+        directed = ifDirected;
+
+        prev = new int[vertices + 1];
+        distance = new int[vertices + 1];
+    }
+
+    void defineGraph()
+    {
+        for (int i = 0; i < edges; i++)
+        {
+            int u, v;
+            cin >> u >> v;
+            addEdge(u, v);
+        }
+    }
+
+    void addEdge(int u, int v)
+    {
+        ;
+        if (!directed)
+            adjList[v].push_back(u);
+    }
+
+    void removeEdge(int u, int v)
+    {
+        adjList[u].remove(v);        
+    }
+
+    void printGraph()
+    {
+        for (int i = 0; i < vertices; i++)
+        {
+            cout << i << " : ";
+            for (auto v : adjList[i])
+            {
+                cout << v << " ";
+            }
+            cout << endl;
+        }
+    }
+};
 
 int main()
 {
     // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);    
-    cin>>vertices>>edges;
-    vector<int> adjList[vertices];
-    defineGraph(adjList);
-    printGraph(adjList);    
+    // freopen("output.in", "w", stdout);
+    graph g(4, 4, false);
+    g.defineGraph();
+    g.printGraph();
+    g.removeEdge(1,2);
+    g.printGraph();
     return 0;
 }

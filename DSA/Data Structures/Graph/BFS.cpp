@@ -48,6 +48,11 @@ public:
             adjList[v].push_back(u);
     }
 
+    void removeEdge(int u, int v)
+    {
+        adjList[u].remove(v);
+    }
+
     void BFS(int source)
     {
         COLORS color[vertices + 1];
@@ -75,11 +80,13 @@ public:
             grey_ver.pop();
             for (auto v : adjList[u])
             {
-            	if(color[v] == white)
-                {color[v] = grey;
-                distance[v] = distance[u] + 1;
-                prev[v] = u;
-                grey_ver.push(v);}
+                if (color[v] == white)
+                {
+                    color[v] = grey;
+                    distance[v] = distance[u] + 1;
+                    prev[v] = u;
+                    grey_ver.push(v);
+                }
             }
             color[u] = black; // cause it has been fully explored
         }
