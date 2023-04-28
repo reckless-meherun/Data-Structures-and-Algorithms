@@ -47,7 +47,6 @@ int main()
     cin>>vertices>>edges;
     vector<int> adjList[vertices];
     defineGraph(adjList);
-    printGraph(adjList);
-    
+    printGraph(adjList);    
     return 0;
 }
