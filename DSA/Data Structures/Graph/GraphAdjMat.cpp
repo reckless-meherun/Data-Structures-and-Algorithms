@@ -16,11 +16,14 @@ public:
     {
         this->vertices = vertices;
         this->edges = edges;
-        adjMat = new int *[this->vertices + 1];
+
+        /** have to locate memory for the container arrays first, then we can declare some size of array for each array */
+        adjMat = new int *[this->vertices + 1];        
         for (int i = 0; i <= vertices; i++)
         {
             adjMat[i] = new int[vertices + 1];
         }
+        
         directed = ifDirected;
         prev = new int[vertices + 1];
         distance = new int[vertices + 1];
