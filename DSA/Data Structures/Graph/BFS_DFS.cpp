@@ -15,8 +15,8 @@ class graph
     int edges;
     bool directed;
     vector<list<int>> adjList;
-
-    int *prev;
+    COLORS *color;
+    int *parent;
     int *distance;
 
 public:
@@ -24,20 +24,21 @@ public:
     {
         this->vertices = vertices;
         this->edges = edges;
-        adjList.resize(vertices);
+        adjList.resize(vertices+1);
         directed = ifDirected;
-
-        prev = new int[vertices + 1];
+        color = new COLORS[vertices+1];
+        parent = new int[vertices + 1];
         distance = new int[vertices + 1];
     }
 
     void defineGraph()
     {
-        for (int i = 0; i < edges; i++)
+        for (int i = 1; i <= edges; i++)
         {
             int u, v;
             cin >> u >> v;
             addEdge(u, v);
+            cout<<u<<" "<<v<<endl;
         }
     }
 
@@ -55,15 +56,15 @@ public:
 
     void BFS(int source)
     {
-        COLORS color[vertices + 1];
+        // COLORS color[vertices + 1];
 
         // initialize loop
-        for (int i = 0; i < vertices; i++)
+        for (int i = 1; i <= vertices; i++)
         {
             for (auto v : adjList[i])
             {
                 color[v] = white;
-                prev[v] = INT_MIN;
+                parent[v] = INT_MIN;
                 distance[v] = INT_MAX;
             }
         }
@@ -84,12 +85,60 @@ public:
                 {
                     color[v] = grey;
                     distance[v] = distance[u] + 1;
-                    prev[v] = u;
+                    parent[v] = u;
                     grey_ver.push(v);
                 }
             }
             color[u] = black; // cause it has been fully explored
         }
+    }
+
+    void DFS(int source)
+    {
+        // COLORS color[vertices + 1];
+
+        // initialize loop
+        for (int i = 1; i <= vertices; i++)
+        {
+            for (auto v : adjList[i])
+            {
+                color[v] = white;
+                parent[v] = INT_MIN;
+                distance[v] = INT_MAX;
+            }
+        }
+
+        for (int u = 1; u <= vertices; u++)
+        {
+            if (color[u] == white)
+            {
+                DFS_Visit(u);
+            }
+        }
+    }
+
+    void DFS_Visit(int u)
+    {
+        /** Action on a vertex (u) after entering the vertex */
+        color[u] = grey;
+        cout<<"Vertex : "<<u<<endl;
+        for (auto v : adjList[u])
+        {
+            cout<<"Parent : "<<u<<" Child : "<<v<<endl;
+            /** Action on ANY child (v) of vertex (u) before entering the child */
+            if (color[v] == white)
+            {
+                /** Action on an unvisited/white child (v) of vertex (u) before entering the child */
+                color[v] = grey;
+                distance[v] = distance[u] + 1;
+                parent[v] = u;
+                DFS_Visit(v);
+                /** Action on the visited child (v) of vertex (u) after leaving the child */
+            }
+            /** Action on ANY VISITED child (v) of vertex (u) after leaving the child */
+        }
+        /** Action on a vertex (u) before leaving the vertex */
+        color[u] = black;
     }
 
     void printShortestPath(int source, int destination)
@@ -98,20 +147,20 @@ public:
         {
             cout << source << " ";
         }
-        else if (prev[destination] == INT_MIN)
+        else if (parent[destination] == INT_MIN)
         {
             cout << "No path" << endl;
         }
         else
         {
-            printShortestPath(source, prev[destination]);
+            printShortestPath(source, parent[destination]);
             cout << destination << " ";
         }
     }
 
     void printGraph()
     {
-        for (int i = 0; i < vertices; i++)
+        for (int i = 1; i <= vertices; i++)
         {
             cout << i << " : ";
             for (auto v : adjList[i])
@@ -127,10 +176,12 @@ int main()
 {
     // freopen("input.in", "r", stdin);
     // freopen("output.in", "w", stdout);
-    graph g(4, 4, false);
+    graph g(6, 8, false);
     g.defineGraph();
     g.printGraph();
-    g.BFS(2);
-    g.printShortestPath(2, 0);
+    g.BFS(1);
+    g.DFS(1);
+    g.printShortestPath(2, 1);
+    
     return 0;
 }
