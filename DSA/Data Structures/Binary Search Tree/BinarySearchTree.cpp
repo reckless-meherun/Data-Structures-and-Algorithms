@@ -208,10 +208,7 @@ public:
         {
             node *to_swap = findMin(to_delete->right); // find inorder successor
             to_delete->val = to_swap->val;
-            if (!isLeaf(to_swap))
-            {
-                to_swap->parent->left = to_swap->right;
-            }
+            to_swap->parent->right = to_swap->right;
             free(to_swap);
         }
     }

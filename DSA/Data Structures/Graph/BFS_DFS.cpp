@@ -56,8 +56,6 @@ public:
 
     void BFS(int source)
     {
-        // COLORS color[vertices + 1];
-
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
@@ -95,8 +93,6 @@ public:
 
     void DFS(int source)
     {
-        // COLORS color[vertices + 1];
-
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
@@ -143,12 +139,13 @@ public:
 
     void printShortestPath(int source, int destination)
     {
+        //cout<<source<<" "<<destination<<endl;
         if (source == destination)
         {
             cout << source << " ";
         }
         else if (parent[destination] == INT_MIN)
-        {
+        {    
             cout << "No path" << endl;
         }
         else
