@@ -2,6 +2,8 @@
 using namespace std;
 typedef long long ll;
 
+int diffArray[150 + 1];
+
 class node
 {
 public:
@@ -498,6 +500,19 @@ public:
     }
 };
 
+void showDiffArray()
+{
+    cout << endl
+         << "The difference array between sorted inputStack and sorted sLink : " << endl;
+    for (int i = 0; i < 150; i++)
+    {
+        if (diffArray)
+            diffArray[i] = 0;
+        cout << diffArray[i] << " ";
+    }
+    cout << endl;
+}
+
 int main()
 {
     freopen("input.in", "r", stdin);
@@ -506,7 +521,6 @@ int main()
     MyStack inputStack(150);
     MyStack tempStack(150);
     linkedlist sLink;
-    int diffArray[150 + 1];
 
     for (int i = 0; i < 150; i++)
     {
@@ -571,16 +585,7 @@ int main()
     }
     cout << endl;
 
-    cout << endl
-         << "The difference array between sorted inputStack and sorted sLink : " << endl;
-    for (int i = 0; i < 150; i++)
-    {
-        cout << diffArray[i] << " ";
-        // if(diffArray[i]!=0)
-        // {
-        // 	cout<<" the different index : "<<i<<endl;
-        // }
-    }
-    cout << endl;
+    showDiffArray();
+
     return 0;
 }
