@@ -1,70 +1,117 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+
 using namespace std;
-typedef long long ll;
+class Node{
+public:
+    int value;
+    Node* next;
 
-int main()
-{
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
-    queue<int> q1;
-    queue<int> q2;
-    int n;
-    cin >> n;
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        cin >> x;
-        q1.push(x);
+    Node(int value, Node* next=nullptr){
+        this->value=value;
+        this->next = next;
     }
-    int target_sum;
-    cin >> target_sum;
-    int sum = 0;
-    bool found = false;
+};
 
-    while (!q1.empty())
-    {
-        if (sum == target_sum)
-        {
-            found = true;
-            break;
+
+class Queue{
+private:
+    Node* front;
+    Node* rear;
+    int size;
+
+public:
+
+    Queue(){
+        this->front = nullptr;
+        this->rear = nullptr;
+        this->size=0;
+    }
+
+    int get_size(){
+        return this->size;
+    }
+
+    void enqueue(int value){
+        Node* newNode = new Node(value);
+        if(front==nullptr){
+            front=newNode;
+            rear = newNode;
+            this->size++;
+            return;
         }
-        else if (sum < target_sum)
-        {
-            sum += q1.front();
-            q2.push(q1.front());
-            q1.pop();
-        }
-        else
-        {
-            // break;
-            while (!q2.empty() and (sum - q2.front()) > target_sum)
-            {
-                sum -= q2.front();
-                q2.pop();
-            }
-            if (!q2.empty() and sum > target_sum)
-            {
-                sum -= q2.front();
-                q2.pop();
-            }
-            if (sum == target_sum)
-            {
-                found = true;
-                break;
-            }
-        }
+        rear->next = newNode;
+        rear = rear->next;
+        this->size++;
+    }
+
+    void dequeue(){
+        if(front==nullptr) return;
+        Node* temp = front;
+        front = front->next;
+        this->size--;
+        delete temp;
+    }
+
+    int peek(){
+        if(front==nullptr) return INT_MIN;
+        return front->value;
+    }
+
+    void print(){
+        Node* currNode = this->front;
+
+        while(currNode!=nullptr){
+            cout<<currNode->value<<" -> ";
+            currNode = currNode->next;
+        }cout<<'\n';
         
     }
+};
 
-    if(found)
-    {
-        while(!q2.empty())
-        {
-            cout<<q2.front()<<" ";
-            q2.pop();
+
+pair<int,int> smallestSubsequence(Queue q, int target) {
+    int n = q.get_size();
+    vector<int> prefixSum(n+1);
+    for (int i = 1; i <= n; i++) {
+        prefixSum[i] = prefixSum[i-1] + q.peek();
+        q.dequeue();
+    }
+
+    int minLength = n;
+    pair<int, int> minIndices = {0, n-1};
+
+    for (int i = 0; i < n; i++) {
+        for (int j = i+1; j <= n; j++) {
+            int sum = prefixSum[j] - prefixSum[i];
+            if (sum >= target && (j-i) < minLength) {
+                minLength = j-i;
+                minIndices = {i, j-1};
+            }
         }
     }
-    else
-        cout<<"Not found"<<endl;
+
+    return {prefixSum[minIndices.first+1] - prefixSum[minIndices.first],prefixSum[minIndices.second+1] - prefixSum[minIndices.second]};
+   
+}
+
+int main() {
+
+    freopen("in.txt","r",stdin);
+    freopen("out.txt","w",stdout);
+    Queue q;
+    int n, target;  cin>>n>>target;
+    for (int i = 0; i < n; i++)
+    {
+        int a;  cin>>a;
+        q.enqueue(a);
+    }
+    
+    auto result = smallestSubsequence(q, target);
+    cout<<result.first<<" "<<result.second<<'\n';
+    
+
     return 0;
 }
+
