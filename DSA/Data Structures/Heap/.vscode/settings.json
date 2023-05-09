@@ -3,6 +3,7 @@
         "iostream": "cpp",
         "string_view": "cpp",
         "regex": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "new": "cpp"
     }
 }
