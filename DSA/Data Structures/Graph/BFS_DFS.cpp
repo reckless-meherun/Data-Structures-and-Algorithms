@@ -171,8 +171,8 @@ public:
 
 int main()
 {
-    // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     graph g(6, 8, false);
     g.defineGraph();
     g.printGraph();
