@@ -61,8 +61,8 @@ public:
 
 int main()
 {
-    // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     dsu d(4);
     d.Union(2,3);
     d.Union(1,0);
