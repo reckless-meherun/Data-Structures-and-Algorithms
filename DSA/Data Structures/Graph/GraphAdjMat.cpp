@@ -65,8 +65,8 @@ public:
 
 int main()
 {
-    // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
 
     graph g(4, 4, false);
     g.defineGraph();

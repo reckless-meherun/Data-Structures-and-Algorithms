@@ -112,9 +112,8 @@ pair<int, int> smallestSubsequence(Queue q, int target)
 
 int main()
 {
-
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     Queue q;
     int n, target;
     cin >> n >> target;

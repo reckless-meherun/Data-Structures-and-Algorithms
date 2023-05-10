@@ -198,8 +198,8 @@ public:
 
 int main()
 {
-    // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     minHeap h;
 
     for (int i = 0; i < 5; i++)

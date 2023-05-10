@@ -365,8 +365,8 @@ public:
 
 int main()
 {
-    // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     avlTree b;
     int n;
     cin >> n;
