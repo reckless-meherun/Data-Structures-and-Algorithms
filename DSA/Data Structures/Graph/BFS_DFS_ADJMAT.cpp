@@ -61,7 +61,7 @@ int main()
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
 
-        int n,
+    int n,
         m;
     cin >> n >> m;
 
@@ -71,9 +71,8 @@ int main()
         cin >> u >> v;
         adj[u][v] = adj[v][u] = 1;
     }
-    
-    bfs(1,2);
-    
+
+    bfs(1, 2);
 
     return 0;
 }

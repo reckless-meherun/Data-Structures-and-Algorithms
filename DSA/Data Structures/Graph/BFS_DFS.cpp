@@ -2,6 +2,76 @@
 using namespace std;
 typedef long long ll;
 
+class Node{
+public:
+    int value;
+    Node* next;
+
+    Node(int value, Node* next=nullptr){
+        this->value=value;
+        this->next = next;
+    }
+};
+
+
+class Queue{
+private:
+    Node* front;
+    Node* rear;
+    int size;
+
+public:
+
+    Queue(){
+        this->front = nullptr;
+        this->rear = nullptr;
+        this->size=0;
+    }
+
+    int get_size(){
+        return this->size;
+    }
+
+    void enqueue(int value){
+        Node* newNode = new Node(value);
+        if(front==nullptr){
+            front=newNode;
+            rear = newNode;
+            this->size++;
+            return;
+        }
+        rear->next = newNode;
+        rear = rear->next;
+        this->size++;
+    }
+
+    void dequeue(){
+        if(front==nullptr) return;
+        Node* temp = front;
+        front = front->next;
+        this->size--;
+        delete temp;
+    }
+    bool empty(){
+        return this->size==0;
+    }
+
+    int peek(){
+        if(front==nullptr) return INT_MIN;
+        return front->value;
+    }
+
+    void print(){
+        Node* currNode = this->front;
+
+        while(currNode!=nullptr){
+            cout<<currNode->value<<" -> ";
+            currNode = currNode->next;
+        }cout<<'\n';
+        
+    }
+};
+
 enum COLORS
 {
     white = 0, // not visited (not explored)
@@ -67,16 +137,20 @@ public:
             }
         }
 
-        queue<int> grey_ver; // vertices that are grey/visited
+        //queue<int> grey_ver; // vertices that are grey/visited
+        Queue grey_ver;
 
         color[source] = grey;
         distance[source] = 0;
-        grey_ver.push(source);
+        //grey_ver.push(source);
+        grey_ver.enqueue(source);
 
         while (!grey_ver.empty())
         {
-            int u = grey_ver.front();
-            grey_ver.pop();
+            // int u = grey_ver.front();
+            int u = grey_ver.peek();
+            // grey_ver.pop();
+            grey_ver.dequeue();
             for (auto v : adjList[u])
             {
                 if (color[v] == white)
@@ -84,7 +158,8 @@ public:
                     color[v] = grey;
                     distance[v] = distance[u] + 1;
                     parent[v] = u;
-                    grey_ver.push(v);
+                    //grey_ver.push(v);
+                    grey_ver.enqueue(v);
                 }
             }
             color[u] = black; // cause it has been fully explored
@@ -173,12 +248,12 @@ int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
-    graph g(6, 8, false);
+    graph g(4, 4, false); //starts from 1
     g.defineGraph();
     g.printGraph();
     g.BFS(1);
     g.DFS(1);
-    g.printShortestPath(2, 1);
+    g.printShortestPath(1, 2);
     
     return 0;
 }
