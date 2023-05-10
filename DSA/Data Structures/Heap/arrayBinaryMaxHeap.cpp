@@ -2,20 +2,20 @@
 using namespace std;
 typedef long long ll;
 
-class minHeap
+class maxHeap
 {
 public:
     int *heap; // the array
     int capacity;
     int size;
 
-    minHeap()
+    maxHeap()
     {
         capacity = 1000000;
         size = 0;
         heap = new int[capacity];
     }
-    minHeap(int _capacity)
+    maxHeap(int _capacity)
     {
         capacity = _capacity;
         size = 0;
@@ -37,7 +37,7 @@ public:
         return (2 * indx + 2);
     }
 
-    int getMinimum()
+    int getMaximum()
     {
         if(size>0)
             return heap[0];
@@ -48,7 +48,7 @@ public:
     void upHeapify(int indx)
     {
         // heapify from the leaves to root
-        while (indx != 0 and heap[parent(indx)] > heap[indx])
+        while (indx != 0 and heap[parent(indx)] < heap[indx])
         {
             swap(heap[indx], heap[parent(indx)]);
             indx = parent(indx);
@@ -59,18 +59,18 @@ public:
     {
         int leftChildIndex = leftChild(indx);
         int rightChildIndex = rightChild(indx);
-        int smallest = indx;
+        int largest = indx;
 
-        if (leftChildIndex < size and heap[leftChildIndex] < heap[smallest])
-            smallest = leftChildIndex;
+        if (leftChildIndex < size and heap[leftChildIndex] > heap[largest])
+            largest = leftChildIndex;
 
-        if (rightChildIndex < size and heap[rightChildIndex] < heap[smallest])
-            smallest = rightChildIndex;
+        if (rightChildIndex < size and heap[rightChildIndex] > heap[largest])
+            largest = rightChildIndex;
 
-        if (smallest != indx)
+        if (largest != indx)
         {
-            swap(heap[smallest], heap[indx]);
-            downHeapify(smallest);
+            swap(heap[largest], heap[indx]);
+            downHeapify(largest);
         }
     }
 
@@ -89,17 +89,17 @@ public:
         upHeapify(indx);
     }
 
-    void decreaseData(int indx, int new_data) // cannot replace with a larger data
+    void increaseData(int indx, int new_data) // cannot replace with a larger data
     {
         heap[indx] = new_data;
         upHeapify(indx);
     }
 
-    int extractMin()
+    int extractMax()
     {
         if (size <= 0)
         {
-            return INT_MAX;
+            return INT_MIN;
         }
         if (size == 1)
         {
@@ -122,8 +122,8 @@ public:
             cout << "wrong index" << endl;
             return;
         }
-        decreaseData(indx, INT_MIN);
-        extractMin();
+        increaseData(indx, INT_MIN);
+        extractMax();
     }
 
     void printHeap()
@@ -141,14 +141,14 @@ public:
 
 void heapSort(int arr[], int n)
 {
-    minHeap mxhp(n);
+    maxHeap mxhp(n);
     for (int i = 0; i <n; i++)
     {
         mxhp.insert(arr[i]);
     }
     for (int i = 0; i <n; i++)
     {
-        arr[i] = mxhp.extractMin();
+        arr[i] = mxhp.extractMax();
     }
 }
 
@@ -156,20 +156,20 @@ int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
-    // minHeap heap(20);
-    // for (int i = 10; i >= 0; i--)
-    // {
-    //     heap.insert(i);
-    // }
-    // heap.printHeap();
-    // heap.insert(3);
-    // heap.insert(15);
-    // heap.insert(45);
-    // heap.printHeap();
-    // cout << heap.extractMin() << " ";
-    // cout << heap.getMinimum() << " ";
-    // heap.decreaseData(2, 1);
-    // cout << heap.getMinimum();
+    maxHeap heap(20);
+    for (int i = 10; i >= 0; i--)
+    {
+        heap.insert(i);
+    }
+    heap.printHeap();
+    heap.insert(3);
+    heap.insert(15);
+    heap.insert(45);
+    heap.printHeap();
+    cout << heap.extractMax() << " ";
+    cout << heap.getMaximum() << " ";
+    heap.increaseData(2, 1);
+    cout << heap.getMaximum();
 
     int arr[100];
     for(int i=0; i<6; i++)
