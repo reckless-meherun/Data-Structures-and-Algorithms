@@ -244,6 +244,9 @@ int main()
 {
     // freopen("input.in", "r", stdin);
     // freopen("output.in", "w", stdout);
+    
+    /** BFS DFS might act weird in case of directed graph */
+
     graph g(5, 6, false); //starts from 1
     g.defineGraph();
     g.printGraph();
