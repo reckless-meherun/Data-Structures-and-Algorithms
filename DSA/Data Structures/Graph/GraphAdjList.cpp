@@ -78,7 +78,7 @@ public:
 
         /** can be done with binary search as well */
         /** inD = 0;
-        for (int i = 0; i < vertices; i++)
+        for (int i = 1; i <= vertices; i++)
         {
             sort(adjList[i].begin(), adjList[i].end());
             if(binary_search(adjList[i].begin(), adjList[i].end(), u)) 
