@@ -187,7 +187,8 @@ public:
             }
         }
     }
-
+    
+private:
     void DFS_Visit(int u)
     {
         /** Action on a vertex (u) after entering the vertex */
@@ -212,6 +213,7 @@ public:
         color[u] = black;
     }
 
+public:
     void printShortestPath(int source, int destination)
     {
         //cout<<source<<" "<<destination<<endl;
@@ -246,14 +248,17 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
-    graph g(4, 4, false); //starts from 1
+    // freopen("input.in", "r", stdin);
+    // freopen("output.in", "w", stdout);
+    graph g(5, 6, false); //starts from 1
     g.defineGraph();
     g.printGraph();
-    g.BFS(1);
+    g.BFS(3);
+	
+	cout<<"Shortest path : ";
+    /** u have to use the same source here, the one u chose to do BFS with; different source won't work, why? simulate and think */
+    g.printShortestPath(3, 4);
     g.DFS(1);
-    g.printShortestPath(1, 2);
     
     return 0;
 }
