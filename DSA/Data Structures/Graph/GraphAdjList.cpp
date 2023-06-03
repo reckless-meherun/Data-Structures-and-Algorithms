@@ -65,7 +65,7 @@ public:
             return outDegree(u);
 
         int inD = 0;
-        for (int i = 0; i < vertices; i++)
+        for (int i = 1; i <= vertices; i++)
         {
             for (auto v : adjList[i]) /** inDegree : how many times u is in the lists of each vertex list */
             {
