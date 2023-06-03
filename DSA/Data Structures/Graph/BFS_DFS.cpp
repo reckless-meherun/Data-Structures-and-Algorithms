@@ -253,11 +253,11 @@ int main()
     graph g(5, 6, false); //starts from 1
     g.defineGraph();
     g.printGraph();
-    g.BFS(3);
-	
+    g.BFS(3);	
 	cout<<"Shortest path : ";
     /** u have to use the same source here, the one u chose to do BFS with; different source won't work, why? simulate and think */
     g.printShortestPath(3, 4);
+    /** u cannot use DFS in between BFS and printing any shortest path because that changes the graph totally */
     g.DFS(1);
     
     return 0;
