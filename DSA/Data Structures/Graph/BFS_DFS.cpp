@@ -178,14 +178,8 @@ public:
                 distance[v] = INT_MAX;
             }
         }
-
-        for (int u = 1; u <= vertices; u++)
-        {
-            if (color[u] == white)
-            {
-                DFS_Visit(u);
-            }
-        }
+        
+        DFS_Visit(source); // u don't need to run an extra loop, the recursion will visit all the vertices automatically
     }
     
 private:
@@ -196,7 +190,7 @@ private:
         cout<<"Vertex : "<<u<<endl;
         for (auto v : adjList[u])
         {
-            cout<<"Parent : "<<u<<" Child : "<<v<<endl;
+            //cout<<"Parent : "<<u<<" Child : "<<v<<endl;
             /** Action on ANY child (v) of vertex (u) before entering the child */
             if (color[v] == white)
             {
@@ -259,7 +253,8 @@ int main()
     g.printShortestPath(3, 4);
     cout<<endl;
     /** u cannot use DFS in between BFS and printing any shortest path because that changes the graph totally */
-    g.DFS(1);
+    g.DFS(3);
+    g.printShortestPath(3, 4);
     
     return 0;
 }
