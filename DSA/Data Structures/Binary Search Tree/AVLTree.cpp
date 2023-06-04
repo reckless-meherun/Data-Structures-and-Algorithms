@@ -183,7 +183,8 @@ private:
             }
         }
 
-        if (!curr)
+        if (!curr) /** this step will be executed after all the REMOVING process are done, when
+                    the node from the leaf is removed and before starting balancing the tree */
             return;
 
         curr->height = height(curr);
@@ -381,6 +382,6 @@ int main()
     b.deleteNode(7);
     cout << endl;
     b.inorder();
-    
+
     return 0;
 }
