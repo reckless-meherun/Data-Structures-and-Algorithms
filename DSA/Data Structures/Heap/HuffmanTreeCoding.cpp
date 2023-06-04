@@ -1,200 +1,209 @@
+// implementation of huffman coding using minheap
+
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
 
-
-const int N = 1e7 + 10, mod = 1e9 + 7;
-
-class HeapNode
+class Node
 {
 public:
-    char data;
-    int freq;
-    HeapNode *left;
-    HeapNode *right;
+    char ch;
+    unsigned int freq;
+    Node *left;
+    Node *right;
 
-    HeapNode(char data, int freq)
+    Node(char ch, unsigned int freq)
     {
-        this->data = data;
+        this->ch = ch;
         this->freq = freq;
-        this->left = this->right = NULL;
+        left = NULL;
+        right = NULL;
     }
-
-    bool isLeaf();
 };
-
-bool HeapNode::isLeaf()
-{
-    return !left && !right;
-}
 
 class MinHeap
 {
+
 public:
-    int size, capacity;
-    HeapNode **arr;
+    Node **heapArr;
+    unsigned size;
+    unsigned capacity;
 
-    MinHeap(int capacity)
+    int parent(int indx)
     {
-        this->capacity = capacity;
+        return (indx - 1) / 2;
+    }
+
+    int left(int indx)
+    {
+        return 2 * indx + 1;
+    }
+
+    int right(int indx)
+    {
+        return 2 * indx + 2;
+    }
+
+    void createMinHeap(unsigned capacity)
+    {
         this->size = 0;
+        this->capacity = capacity;
 
-        arr = new HeapNode *[capacity];
+        heapArr = new Node *[capacity];
     }
 
-    MinHeap(char data[], int freq[], int size)
+    bool isSizeOne()
     {
-        this->capacity = size;
-        arr = new HeapNode *[capacity];
-        for (int i = 0; i < size; i++)
-        {
-            arr[i] = new HeapNode(data[i], freq[i]);
-        }
-
-        this->size = size;
-        buildHeap();
+        return size == 1 ? true : false;
     }
 
-    void minHeapify(int indx);
-    bool isSizeOne();
-    HeapNode *extractMin();
-    void insertNode(HeapNode *node);
-    void buildHeap();
+    void downHeapify(int indx)
+    {
+        int smallest = indx;
+        int l = left(indx);
+        int r = right(indx);
+
+        if (l < size && heapArr[l]->freq < heapArr[smallest]->freq)
+            smallest = l;
+
+        if (r < size && heapArr[r]->freq < heapArr[smallest]->freq)
+            smallest = r;
+
+        if (smallest != indx)
+        {
+            swap(heapArr[smallest], heapArr[indx]);
+            downHeapify(smallest);
+        }
+    }
+
+    Node *extractMin()
+    {
+        Node *temp = heapArr[0];
+
+        heapArr[0] = heapArr[size - 1];
+
+        size--;
+
+        downHeapify(0);
+
+        return temp;
+    }
+
+    void upHeapify(int indx)
+    {
+        // heapify from the leaves to root
+        while (indx != 0 and heapArr[parent(indx)]->freq > heapArr[indx]->freq)
+        {
+            swap(heapArr[indx], heapArr[parent(indx)]);
+            indx = parent(indx);
+        }
+    }
+
+    void insert(Node *node)
+    {
+        size++;
+        int i = size - 1;
+
+        heapArr[i] = node;
+
+        upHeapify(i);
+    }
 };
 
-void swapNode(HeapNode **other, HeapNode **another)
+MinHeap buildMinHeap(char data[], int freq[], int size)
 {
-    HeapNode *temp = *other;
-    *other = *another;
-    *another = temp;
-}
+    // MinHeap *minheap = new MinHeap();
+    MinHeap minheap;
 
-void MinHeap::minHeapify(int indx)
-{
-    int smallest = indx;
-    int left = 2 * indx + 1;
-    int right = 2 * indx + 2;
+    minheap.createMinHeap(size);
 
-    if (left < this->size and this->arr[left]->freq < this->arr[smallest]->freq)
+    for (int i = 0; i < size; i++)
     {
-        smallest = left;
-    }
-    if (right < this->size and this->arr[right]->freq < this->arr[smallest]->freq)
-    {
-        smallest = right;
+        minheap.heapArr[i] = new Node(data[i], freq[i]);
     }
 
-    if (smallest != indx)
-    {
-        swapNode(&arr[smallest], &arr[indx]);
-        minHeapify(smallest);
-    }
+    minheap.size = size;
+
+    return minheap;
 }
 
-bool MinHeap::isSizeOne()
+bool isLeaf(Node *node)
 {
-    return size == 1;
+    return !(node->left) && !(node->right);
 }
 
-HeapNode *MinHeap::extractMin()
+class HuffmanCoding
 {
-    HeapNode *temp = arr[0];
-    arr[0] = arr[size - 1];
-    size--;
-    minHeapify(0);
-    return temp;
-}
-
-void MinHeap::insertNode(HeapNode *node)
-{
-    size++;
-    int i = size - 1;
-
-    while (i and node->freq < arr[(i - 1) / 2]->freq)
+public:
+    Node *buildHuffmanTree(char data[], int freq[], int size)
     {
-        arr[i] = arr[(i - 1) / 2];
-        i = (i - 1) / 2;
-    }
-    arr[i] = node;
-}
+        MinHeap mh = buildMinHeap(data, freq, size);
 
-void MinHeap::buildHeap()
-{
-    int n = size - 1;
-    for (int i = (n - 1) / 2; i >= 0; i--)
-    {
-        minHeapify(i);
-    }
-}
+        Node *left, *right, *top;
 
-HeapNode *buildHuffmanTree(char data[], int freq[], int size)
-{
-    HeapNode *left;
-    HeapNode *right;
-    HeapNode *top;
+        while (!mh.isSizeOne())
+        {
+            left = mh.extractMin();
 
-    MinHeap *minHeap = new MinHeap(data, freq, size);
+            right = mh.extractMin();
 
-    while (!minHeap->isSizeOne())
-    {
-        left = minHeap->extractMin();
-        right = minHeap->extractMin();
+            top = new Node('$', left->freq + right->freq);
 
-        top = new HeapNode('$', left->freq + right->freq);
-        top->left = left;
-        top->right = right;
+            top->left = left;
 
-        minHeap->insertNode(top);
-    }
-    return minHeap->extractMin();
-}
+            top->right = right;
 
-void printArr(int arr[], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        cout << arr[i];
-    }
-    cout << '\n';
-}
+            mh.insert(top);
+        }
 
-void printCodes(HeapNode *root, int arr[], int top)
-{
-    if (root->left)
-    {
-        arr[top] = 0;
-        printCodes(root->left, arr, top + 1);
-    }
-    if (root->right)
-    {
-        arr[top] = 1;
-        printCodes(root->right, arr, top + 1);
+        return mh.heapArr[0];
     }
 
-    if (root->isLeaf())
+    void printCodes(Node *root, int arr[], int top)
     {
-        cout << root->data << ": ";
-        printArr(arr, top);
-    }
-}
+        if (root->left)
+        {
+            arr[top] = 0;
+            printCodes(root->left, arr, top + 1);
+        }
 
-void printHuffmanCodes(char data[], int freq[], int size)
-{
-    HeapNode *root = buildHuffmanTree(data, freq, size);
-    int arr[100000], top = 0;
-    printCodes(root, arr, top);
-}
+        if (root->right)
+        {
+            arr[top] = 1;
+            printCodes(root->right, arr, top + 1);
+        }
+
+        if (isLeaf(root))
+        {
+            cout << root->ch << ": ";
+            for (int i = 0; i < top; i++)
+            {
+                cout << arr[i];
+            }
+            cout << endl;
+        }
+    }
+
+    void HuffmanCodes(char data[], int freq[], int size)
+    {
+        Node *root = buildHuffmanTree(data, freq, size);
+
+        int arr[2 * size];
+        int top = 0;
+
+        printCodes(root, arr, top);
+    }
+};
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
     char arr[] = {'a', 'b', 'c', 'd', 'e', 'f'};
     int freq[] = {5, 9, 12, 13, 16, 45};
 
     int size = sizeof(arr) / sizeof(arr[0]);
 
-    printHuffmanCodes(arr, freq, size);
+    HuffmanCoding hc = HuffmanCoding();
+
+    hc.HuffmanCodes(arr, freq, size);
 
     return 0;
 }

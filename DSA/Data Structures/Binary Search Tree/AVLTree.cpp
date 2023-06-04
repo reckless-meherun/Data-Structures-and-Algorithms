@@ -183,7 +183,7 @@ private:
             }
         }
 
-        if (!curr) /** this step will be executed after all the REMOVING process are done, when
+        if (!curr) /** this step will be executed after all the REMOVING processes are done, when
                     the node from the leaf is removed and before starting balancing the tree */
             return;
 
