@@ -23,7 +23,7 @@ void countSort(int arr[], int n, int exp)
 
     // Change count[i] so that count[i] now contains actual
     //  position of this digit in output[]
-    for (i = 1; i < 10; i++)
+    for (i = 0; i < 10; i++)
         count[i] += count[i - 1];
 
     // Build the output array
