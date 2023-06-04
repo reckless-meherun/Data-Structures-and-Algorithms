@@ -28,6 +28,13 @@ public:
     unsigned size;
     unsigned capacity;
 
+    MinHeap(unsigned capacity)
+    {
+        this->size = 0;
+        this->capacity = capacity;
+        heapArr = new Node *[capacity];
+    }
+
     int parent(int indx)
     {
         return (indx - 1) / 2;
@@ -41,14 +48,6 @@ public:
     int right(int indx)
     {
         return 2 * indx + 2;
-    }
-
-    void createMinHeap(unsigned capacity)
-    {
-        this->size = 0;
-        this->capacity = capacity;
-
-        heapArr = new Node *[capacity];
     }
 
     bool isSizeOne()
@@ -111,17 +110,14 @@ public:
 
 MinHeap buildMinHeap(char data[], int freq[], int size)
 {
-    // MinHeap *minheap = new MinHeap();
-    MinHeap minheap;
+    MinHeap minheap(size);
 
-    minheap.createMinHeap(size);
-
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < size; i++) /** create a node in each index of the minheap array */
     {
         minheap.heapArr[i] = new Node(data[i], freq[i]);
     }
 
-    minheap.size = size;
+    minheap.size = size; // 'cause initially the size was defined 0 
 
     return minheap;
 }
