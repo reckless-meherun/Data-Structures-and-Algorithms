@@ -160,57 +160,64 @@ public:
         return !curr->left or !curr->right;
     }
 
+private:
+    void delete_rec(node *curr, int val)
+    {
+        if (!curr)
+            return;
+        if (val < curr->val)
+            delete_rec(curr->left, val);
+        else if (val > curr->val)
+            delete_rec(curr->right, val);
+        else
+        {
+            if (hasOneNode(curr)) // has only one node
+            {
+                if (curr->left)
+                {
+                    if (isRoot(curr)) // if the node is the root
+                    {
+                        root = root->left;
+                        free(root);
+                        return;
+                    }
+                    if (curr->parent->left == curr)
+                        curr->parent->left = curr->left;
+                    else if (curr->parent->right == curr)
+                        curr->parent->right = curr->left;
+                }
+                else
+                {
+                    if (isRoot(curr))
+                    {
+                        root = root->right;
+                        free(root);
+                        return;
+                    }
+                    if (curr->parent->left == curr)
+                        curr->parent->left = curr->right;
+                    else if (curr->parent->right == curr)
+                        curr->parent->right = curr->right;
+                }
+                free(curr);
+            }
+
+            else // has both nodes
+            {
+                node *to_swap = findMin(curr->right); // find inorder successor
+
+                curr->val = to_swap->val;
+                // to_swap->parent->right = to_swap->right;
+                // free(to_swap);
+                delete_rec(curr->right, to_swap->val);
+            }
+        }
+    }
+    
+public:
     void deleteNode(int val)
     {
-        node *to_delete = search(val);
-
-        // if (isLeaf(to_delete)) // if the node is a leaf
-        // {
-        //     cout << "it's a leaf" << endl;
-        //     to_delete = NULL;
-        //     if (!to_delete)
-        //         cout << "made null in delete function" << endl;
-        //     return;
-        // }
-
-        if (hasOneNode(to_delete)) // has only one node
-        {
-            if (to_delete->left)
-            {
-                if (isRoot(to_delete)) // if the node is the root
-                {
-                    root = root->left;
-                    free(root);
-                    return;
-                }
-                if (to_delete->parent->left == to_delete)
-                    to_delete->parent->left = to_delete->left;
-                else if (to_delete->parent->right == to_delete)
-                    to_delete->parent->right = to_delete->left;
-            }
-            else
-            {
-                if (isRoot(to_delete))
-                {
-                    root = root->right;
-                    free(root);
-                    return;
-                }
-                if (to_delete->parent->left == to_delete)
-                    to_delete->parent->left = to_delete->right;
-                else if (to_delete->parent->right == to_delete)
-                    to_delete->parent->right = to_delete->right;
-            }
-            free(to_delete);
-        }
-
-        else // has both nodes
-        {
-            node *to_swap = findMin(to_delete->right); // find inorder successor
-            to_delete->val = to_swap->val;
-            to_swap->parent->right = to_swap->right;
-            free(to_swap);
-        }
+    	delete_rec(root, val);
     }
 
     void preorderTraverse(node *curr)
@@ -252,8 +259,8 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
+    // freopen("input.in", "r", stdin);
+    // freopen("output.in", "w", stdout);
     bst b;
     int n;
     cin >> n;
@@ -263,6 +270,9 @@ int main()
         cin >> x;
         b.insert(x);
     }
+    b.inorderTraverse(b.root);
+    b.deleteNode(6);
+    cout<<endl;
     b.inorderTraverse(b.root);
     return 0;
 }

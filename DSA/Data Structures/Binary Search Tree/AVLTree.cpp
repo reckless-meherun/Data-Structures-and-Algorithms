@@ -177,8 +177,9 @@ private:
                 node *to_swap = findMin(curr->right); // find inorder successor
 
                 curr->val = to_swap->val;
-                to_swap->parent->right = to_swap->right;
-                free(to_swap);
+                // to_swap->parent->right = to_swap->right;
+                // free(to_swap);
+                delete_rec(curr->right, to_swap->val);
             }
         }
 
@@ -365,8 +366,8 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
+    // freopen("input.in", "r", stdin);
+    // freopen("output.in", "w", stdout);
     avlTree b;
     int n;
     cin >> n;
@@ -377,7 +378,7 @@ int main()
         b.insert(x);
     }
     b.inorder();
-    b.deleteNode(15);
+    b.deleteNode(7);
     cout << endl;
     b.inorder();
     
