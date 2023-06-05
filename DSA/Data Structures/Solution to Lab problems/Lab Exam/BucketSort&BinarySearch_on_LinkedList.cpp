@@ -337,22 +337,16 @@ public:
 
         for (int i = 0; i < 15; i++)
         {
-            if (!temp[i].empty())
-            {
-                sort(temp[i].begin(), temp[i].end());
-            }
+            sort(temp[i].begin(), temp[i].end());
         }
-        
+
         node *curr = head;
         for (vector<double> &a : temp)
         {
-            if (!a.empty())
+            for (double b : a)
             {
-                for (double b : a)
-                {
-                    curr->data = b;
-                    curr = curr->next;
-                }
+                curr->data = b;
+                curr = curr->next;
             }
         }
     }
