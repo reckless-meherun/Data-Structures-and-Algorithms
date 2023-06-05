@@ -316,23 +316,16 @@ public:
 
     void bucketSort()
     {
-        int maxElm = findMax();
-        int minElm = findMin();
-        int range = (maxElm - minElm) / 15;
-        vector<vector<int>> temp;
-
-        for (int i = 0; i < 25; i++)
-        {
-            temp.push_back(vector<int>());
-        }
+        double maxElm = findMax();
+        double minElm = findMin();
+        double range = (maxElm - minElm) / 15;
+        vector<double> temp[15];
 
         for (int i = 0; i < size; i++)
         {
-            int elem = searchAtIndex(i);
-            int diff = (int)(elem - minElm) / range - (int)(elem - minElm) / range;
-            // cout<<"elem "<<elem<<" minElem "<<minElm<<endl;
-            // 	cout<<"index "<<(int)((elem - minElm)/range)-1<<endl;
-            if (diff == 0 and elem != minElm)
+            double elem = searchAtIndex(i);
+            double diff = (elem - minElm) / range - (int)(elem - minElm) / range;
+            if (diff == 0 and elem == maxElm)
             {
                 temp[(int)((elem - minElm) / range) - 1].push_back(elem);
             }
@@ -342,20 +335,20 @@ public:
             }
         }
 
-        for (int i = 0; i < temp.size(); i++)
+        for (int i = 0; i < 15; i++)
         {
-            if (!temp.empty())
+            if (!temp[i].empty())
             {
                 sort(temp[i].begin(), temp[i].end());
             }
         }
-
+        
         node *curr = head;
-        for (vector<int> &a : temp)
+        for (vector<double> &a : temp)
         {
             if (!a.empty())
             {
-                for (int b : a)
+                for (double b : a)
                 {
                     curr->data = b;
                     curr = curr->next;
@@ -516,8 +509,8 @@ void showDiffArray()
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
+    // freopen("input.in", "r", stdin);
+    // freopen("output.in", "w", stdout);
 
     MyStack inputStack(150);
     MyStack tempStack(150);

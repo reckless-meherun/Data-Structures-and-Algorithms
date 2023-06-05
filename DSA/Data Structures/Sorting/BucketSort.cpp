@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// be careful of int and double
+/** be careful of int and double */
 
 void InsertionSort(vector<double> &v, int len)
 {
@@ -9,7 +9,7 @@ void InsertionSort(vector<double> &v, int len)
     {
         double toPlace = v[outer];
         int inner = outer - 1;
-        while (inner >= 0 and (v[inner] - toPlace)>0.00001) // cannot write v[inner]>v[outer] as v[outer] gets changed after one shift in the inner loop
+        while (inner >= 0 and (v[inner] - toPlace) > 0.00001) // cannot write v[inner]>v[outer] as v[outer] gets changed after one shift in the inner loop
         {
             v[inner + 1] = v[inner];
             inner--;
@@ -18,40 +18,74 @@ void InsertionSort(vector<double> &v, int len)
     }
 }
 
-// Function to sort arr[] of
-// size n using bucket sort
-void bucketSort(double arr[], int n)
+double findMax(double arr[], int len)
 {
-    // 1) Create n empty buckets
-    vector<double> b[n];
-
-    // 2) Put array elements
-    // in different buckets
-    for (int i = 0; i < n; i++)
+    double Max = arr[0];
+    for (int i = 0; i < len; i++)
     {
-        int bi = n * arr[i]; // Index in bucket
-        b[bi].push_back(arr[i]);
+        if (arr[i] - Max > 0.00000001)
+            Max = arr[i];
     }
-
-    // 3) Sort individual buckets
-    for (int i = 0; i < n; i++)
-        InsertionSort(b[i], b[i].size());
-    
-    // 4) Concatenate all buckets into arr[]
-    int index = 0;
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < b[i].size(); j++)
-            arr[index++] = b[i][j];
+    return Max;
 }
 
-/* Driver program to test above function */
+double findMin(double arr[], int len)
+{
+    double Min = arr[0];
+    for (int i = 0; i < len; i++)
+    {
+        if (arr[i] - Min < 0.00000001)
+            Min = arr[i];
+    }
+    return Min;
+}
+
+void bucketSort(double arr[], int totalElem, int totalBuck)
+{
+    double MaxElem = findMax(arr, totalElem);
+    double MinElem = findMin(arr, totalElem);
+
+    double bucketRange = (MaxElem - MinElem) / totalBuck;
+    vector<double> bucket[totalBuck];
+
+    for (int i = 0; i < totalElem; i++)
+    {
+        double buckIndex = (arr[i] - MinElem) / bucketRange;
+        double diference = buckIndex - (int)buckIndex;
+
+        if (diference == 0 and arr[i] == MaxElem)
+        {
+            bucket[(int)buckIndex - 1].push_back(arr[i]);
+            continue;
+        }
+
+        bucket[(int)buckIndex].push_back(arr[i]);
+    }
+
+    for (int i = 0; i < totalBuck; i++)
+    {
+        InsertionSort(bucket[i], bucket[i].size());
+    }
+
+    int k = 0;
+
+    for (int i = 0; i < totalBuck; i++)
+    {
+        for (int j = 0; j < bucket[i].size(); j++)
+        {
+            arr[k++] = bucket[i][j];
+        }
+    }
+}
+
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
-    double arr[] = {0.657, 0.565, 0.656, 0.1234, 0.655, 0.3434};
+    // freopen("input.in", "r", stdin);
+    // freopen("output.in", "w", stdout);
+    double arr[] = {1, 21, 0.656, 0.1234, 0.655, 0.3434};
     int n = sizeof(arr) / sizeof(arr[0]);
-    bucketSort(arr, n);
+    int k = 3;
+    bucketSort(arr, n, k);
 
     cout << "Sorted array is \n";
     for (int i = 0; i < n; i++)
