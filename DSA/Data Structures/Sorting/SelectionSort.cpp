@@ -6,7 +6,7 @@ void SelectionSort(vector<int> &v, int len)
 {
     for (int outer = 0; outer < len - 1; outer++) // or outer = len-1; outer>0; outer--
     {
-        for (int inner = outer + 1; inner < len ; inner++) // or inner = 0; inner < outer; inner++
+        for (int inner = outer + 1; inner < len; inner++) // or inner = 0; inner < outer; inner++
         {
             if (v[outer] > v[inner]) // "<"" makes u set the smallest element first
             {
@@ -21,7 +21,7 @@ void SelectionSort_WithmidIndex(vector<int> &v, int len)
     for (int outer = 0; outer < len - 1; outer++) // or outer = len-1; outer>0; outer--
     {
         int min_index = outer;
-        for (int inner = outer + 1; inner < len ; inner++) // or inner = 0; inner < outer; inner++
+        for (int inner = outer + 1; inner < len; inner++) // or inner = 0; inner < outer; inner++
         {
             if (v[min_index] > v[inner]) // "<"" makes u set the smallest element first
             {
@@ -49,6 +49,6 @@ int main()
     for (int i = 0; i < n; i++)
     {
         cout << v[i] << " ";
-    }
+    }    
     return 0;
 }

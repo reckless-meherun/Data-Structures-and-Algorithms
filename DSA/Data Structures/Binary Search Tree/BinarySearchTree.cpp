@@ -255,6 +255,44 @@ public:
         }
         cout << curr->val << " ";
     }
+    int less = 0;
+    int greater = 0;
+    
+    int lowerValuesCount(int x)
+    {
+    	if(!root)
+    		return 0;
+    	lowerGreater_rec(root, x);
+    	int l = less;
+    	less = 0;
+    	return l;
+    }
+    
+    int greaterValuesCount(int x)
+    {
+    	if(!root)
+    		return 0;
+    	lowerGreater_rec(root, x);
+    	int g = greater;
+    	greater = 0;
+    	return g;
+    }
+    
+    void lowerGreater_rec(node *curr, int val)
+    {
+        if (curr->left)
+        {
+            lowerGreater_rec(curr->left, val);
+        }
+        if(curr->val <= val)
+        	less++;
+        else
+        	greater++;
+        if (curr->right)
+        {
+        	lowerGreater_rec(curr->right, val);
+        }
+    }
 };
 
 int main()
@@ -274,5 +312,6 @@ int main()
     b.deleteNode(6);
     cout<<endl;
     b.inorderTraverse(b.root);
+    cout<<endl<<b.lowerValuesCount(10)<<endl;
     return 0;
 }
