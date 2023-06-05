@@ -9,8 +9,10 @@ void bubbleSort(vector<int> &v, int len)
     {
         swapped = false;
         for (int inner = 0; inner < len - 1 - outer; inner++) // or inner = 0; inner < outer; inner++
+        /** the alternate conditions in pair don't change the internal states while sorting */
         {
             if (v[inner] > v[inner + 1]) // "<"" makes u set the smallest element first
+            /** but this changes the internal states, makes 'em opposite */
             {
                 swap(v[inner], v[inner + 1]);
                 swapped = true;
