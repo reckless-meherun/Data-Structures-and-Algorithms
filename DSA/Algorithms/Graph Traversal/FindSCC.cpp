@@ -69,6 +69,7 @@ public:
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
+            color[i] = white;
             for (auto v : adjList[i])
             {
                 color[v] = white;
@@ -126,7 +127,7 @@ public:
 
         for (auto a : ordered_node)
         {
-            // if(a.first == 2) cout<<"color of 2 "<<color[a.first]<<endl;
+            // if(a.first == 5) cout<<"color of 5 "<<color[a.first]<<endl;
             if (color[a.first] == white)
             {
                 // cout<<"white node "<<a.first<<endl;
