@@ -242,8 +242,8 @@ public:
 
 int main()
 {
-    // freopen("input.in", "r", stdin);
-    // freopen("output.in", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.in", "w", stdout);
     
     /** BFS DFS might act weird in case of directed graph */
 

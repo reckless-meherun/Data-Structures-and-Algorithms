@@ -248,7 +248,7 @@ public:
 
     int back()
     {
-        if (!queue.tail)
+        if (queue.tail)
             return queue.tail->data;
         cout<<"Empty queue; returned : ";
         return -1;

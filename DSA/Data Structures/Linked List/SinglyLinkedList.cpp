@@ -54,6 +54,7 @@ public:
             head = new node(data, NULL);
             tail = head;
             size++;
+            return;
         }
         node *temp = new node(data, NULL);
         temp->next = head;

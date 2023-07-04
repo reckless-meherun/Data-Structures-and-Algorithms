@@ -201,7 +201,7 @@ private:
         }
         else if (bf < -1) // right height is longer
         {
-            if (val > curr->left->val)
+            if (val > curr->right->val)
                 curr = rightRotate(curr);
             else
             {

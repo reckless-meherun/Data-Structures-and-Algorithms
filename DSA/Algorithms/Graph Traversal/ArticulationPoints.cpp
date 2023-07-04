@@ -69,6 +69,7 @@ public:
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
+            color[i] = white;
             for (auto v : adjList[i])
             {
                 color[v] = white;
@@ -111,6 +112,7 @@ public:
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
+            color[i] = white;
             for (auto v : adjList[i])
             {
                 color[v] = white;
@@ -127,6 +129,7 @@ public:
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
+            color[i] = white;
             for (auto v : adjList[i])
             {
                 color[v] = white;
@@ -147,7 +150,7 @@ private:
         /** Action on a vertex (u) after entering the vertex */
         color[u] = grey;
         cout << "entering Vertex : " << u << " pre V : " << time << endl;
-        startingTime[u] = time;
+        startingTime[u] = low[u] = time;
         time++;
         int children = 0;
 
@@ -289,6 +292,10 @@ public:
     vector<bool> findArticulationPoints()
     {
         DFS();
+        for (int i = 1; i <= vertices; i++)
+            if (articulationPoints[i])
+                cout << i << " ";
+        cout << "\n";
         return articulationPoints;
     }
 
@@ -321,10 +328,6 @@ int main()
     // g.printLowValues();
 
     vector<bool> v = g.findArticulationPoints();
-    for (int i = 1; i <= 6; i++)
-        if (v[i])
-            cout << i << " ";
-    cout << "\n";
 
     return 0;
 }
