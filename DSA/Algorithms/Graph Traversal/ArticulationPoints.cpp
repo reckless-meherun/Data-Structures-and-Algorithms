@@ -64,7 +64,7 @@ public:
         adjList[u].remove(v);
     }
 
-    void BFS(int source)
+    void initialize()
     {
         // initialize loop
         for (int i = 1; i <= vertices; i++)
@@ -75,8 +75,14 @@ public:
                 color[v] = white;
                 parent[v] = INT_MIN;
                 distance[v] = INT_MAX;
+                low[v] = INT_MAX;
             }
         }
+    }
+
+    void BFS(int source)
+    {
+        initialize();
 
         queue<int> grey_ver; // vertices that are grey/visited
         // Queue grey_ver;
@@ -107,39 +113,17 @@ public:
         }
     }
 
-    void DFS_FromSource(int source)
+    void DFS(int source) // in case the graph is not a forest (all connected)
     {
-        // initialize loop
-        for (int i = 1; i <= vertices; i++)
-        {
-            color[i] = white;
-            for (auto v : adjList[i])
-            {
-                color[v] = white;
-                parent[v] = INT_MIN;
-                distance[v] = INT_MAX;
-                low[v] = INT_MAX;
-            }
-        }
+        initialize();
         DFS_Visit(source); // u don't need to run an extra loop, the recursion will visit all the vertices automatically
     }
 
-    void DFS()
+    void DFS() // in case the graph is a forest (disconnected)
     {
-        // initialize loop
-        for (int i = 1; i <= vertices; i++)
-        {
-            color[i] = white;
-            for (auto v : adjList[i])
-            {
-                color[v] = white;
-                parent[v] = INT_MIN;
-                distance[v] = INT_MAX;
-                low[v] = INT_MAX;
-            }
-        }
+        initialize();
 
-        for (int i = 1; i <= vertices; i++) // in case the graph is a forest (disconnected)
+        for (int i = 1; i <= vertices; i++)
             if (color[i] == white)
                 DFS_Visit(i);
     }
@@ -276,7 +260,7 @@ public:
 
     void findSCC(int source)
     {
-        DFS_FromSource(source);
+        DFS(source);
         vector<pair<int, int>> orderedNodes = topologicalSort();
         transpose();
         // cout<<orderedNodes[0].first<<endl;
@@ -284,7 +268,7 @@ public:
         cout << "hmmmm followings are the SCC" << endl;
         for (int i = 0; i <= 5; i++)
         {
-            DFS_FromSource(orderedNodes[i].first);
+            DFS(orderedNodes[i].first);
             cout << "\n";
         }
     }
@@ -324,7 +308,7 @@ int main()
     // g.printGraph();
 
     // g.findSCC(1);
-    // g.DFS_FromSource(1);
+    // g.DFS(1);
     // g.printLowValues();
 
     vector<bool> v = g.findArticulationPoints();

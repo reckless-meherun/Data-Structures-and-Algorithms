@@ -21,6 +21,7 @@ class graph
     int *startingTime;
     int *finishingTime;
     vector<int> low;
+    vector<bool> articulationPoints;
     int time;
 
 public:
@@ -36,6 +37,7 @@ public:
         startingTime = new int[vertices + 1];
         finishingTime = new int[vertices + 1];
         low.resize(vertices + 1);
+        articulationPoints.resize(vertices + 1);
         time = 1;
     }
 
@@ -62,7 +64,7 @@ public:
         adjList[u].remove(v);
     }
 
-    void BFS(int source)
+    void initialize()
     {
         // initialize loop
         for (int i = 1; i <= vertices; i++)
@@ -72,8 +74,14 @@ public:
                 color[v] = white;
                 parent[v] = INT_MIN;
                 distance[v] = INT_MAX;
+                low[v] = INT_MAX;
             }
         }
+    }
+
+    void BFS(int source)
+    {
+        initialize();
 
         queue<int> grey_ver; // vertices that are grey/visited
         // Queue grey_ver;
@@ -104,43 +112,24 @@ public:
         }
     }
 
-    void DFS_FromSource(int source)
+    void DFS(int source)
     {
-        // initialize loop
-        for (int i = 1; i <= vertices; i++)
-        {
-            for (auto v : adjList[i])
-            {
-                color[v] = white;
-                parent[v] = INT_MIN;
-                distance[v] = INT_MAX;
-                low[v] = INT_MAX;
-            }
-        }
+        initialize();
         DFS_Visit(source); // u don't need to run an extra loop, the recursion will visit all the vertices automatically
     }
 
     void DFS(vector<pair<int, int>> &ordered_node)
     {
-        // initialize loop
-        for (int i = 1; i <= vertices; i++)
-        {
-            color[i] = white;
-            for (auto v : adjList[i])
-            {
-                color[v] = white;
-                parent[v] = INT_MIN;
-                distance[v] = INT_MAX;
-                low[v] = INT_MAX;
-            }
-        }
-        
+        initialize();
+
+        // printGraph();
+
         for (auto a : ordered_node)
         {
-            if(a.first == 2) cout<<"color of 2 "<<color[a.first]<<endl;
+            // if(a.first == 2) cout<<"color of 2 "<<color[a.first]<<endl;
             if (color[a.first] == white)
             {
-                cout<<"white node "<<a.first<<endl;
+                // cout<<"white node "<<a.first<<endl;
                 DFS_Visit(a.first);
                 cout << "\n";
             }
@@ -149,17 +138,7 @@ public:
 
     void DFS()
     {
-        // initialize loop
-        for (int i = 1; i <= vertices; i++)
-        {
-            for (auto v : adjList[i])
-            {
-                color[v] = white;
-                parent[v] = INT_MIN;
-                distance[v] = INT_MAX;
-                low[v] = INT_MAX;
-            }
-        }
+        initialize();
 
         for (int i = 1; i <= vertices; i++) // in case the graph is a forest (disconnected)
             if (color[i] == white)
@@ -179,10 +158,10 @@ private:
         {
             // cout << "Parent : " << u << " Child : " << v << endl;
             /** Action on ANY child (v) of vertex (u) before entering the child */
-            if(v==4) cout<<endl<<4<<endl;
+
             if (color[v] == white)
             {
-                
+
                 /** Action on an unvisited/white child (v) of vertex (u) before entering the child */
                 color[v] = grey;
                 distance[v] = distance[u] + 1;
@@ -194,11 +173,11 @@ private:
                 /** Action on the visited child (v) of vertex (u) after leaving the child */
                 low[u] = min(low[v], low[u]);
 
-                // if (parent[u] == INT_MIN and children > 1) // case 1 : u is a root
-                //     articulationPoints[u] = true;
+                if (parent[u] == INT_MIN and children > 1) // case 1 : u is a root
+                    articulationPoints[u] = true;
 
-                // if (parent[u] != INT_MIN and low[v] >= startingTime[u]) // case 2 : at least one component will get separated
-                //     articulationPoints[u] = true;
+                if (parent[u] != INT_MIN and low[v] >= startingTime[u]) // case 2 : at least one component will get separated
+                    articulationPoints[u] = true;
             }
             /** Action on ANY VISITED child (v) of vertex (u) after leaving the child */
             else if (v != parent[u]) // visited but ignore child to parent edge
@@ -301,7 +280,8 @@ public:
         DFS();
         vector<pair<int, int>> orderedNodes = topologicalSort();
         transpose();
-        cout << "hmmmm followings are the SCC" << endl;
+        cout << "\nhmmmm followings are the SCC\n"
+             << endl;
         DFS(orderedNodes);
     }
 
@@ -318,20 +298,9 @@ int main()
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
 
-    graph g(5, 6, true); // starts from 1
+    graph g(5, 5, true); // starts from 1
     g.defineGraph();
-    // g.printGraph();
-
-    // g.DFS(3);
-    // g.printStartingTime();
-    // g.printFinishingTime();
-    // g.transpose();
-    // cout << endl;
-    // g.printGraph();
-
     g.findSCC();
-    // g.DFS_FromSource(1);
-    // g.printLowValues();
 
     return 0;
 }
