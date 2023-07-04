@@ -184,7 +184,7 @@ private:
     {
         /** Action on a vertex (u) after entering the vertex */
         color[u] = grey;
-        cout << "entering Vertex : " << u << " pre V : " << time << endl;
+      //  cout << "entering Vertex : " << u << " pre V : " << time << endl;
         startingTime[u] = low[u] = time;
         time++;
         int children = 0;
@@ -220,7 +220,7 @@ private:
         /** Action on a vertex (u) before leaving the vertex */
         color[u] = black;
         finishingTime[u] = time;
-        cout << "leaving Vertex : " << u << " post V : " << time << endl;
+       // cout << "leaving Vertex : " << u << " post V : " << time << endl;
         time++;
     }
 
@@ -341,7 +341,7 @@ public:
         }
         else
         {
-            vector<bool> visited1(vertices+1);
+            vector<bool> visited1(vertices + 1);
             DFS(1);
             for (int i = 1; i <= vertices; i++)
             {
@@ -349,7 +349,7 @@ public:
                     visited1[i] = true;
             }
             transpose();
-            vector<bool> visited2(vertices+1);
+            vector<bool> visited2(vertices + 1);
             DFS(1);
             for (int i = 1; i <= vertices; i++)
             {
@@ -390,14 +390,14 @@ private:
         {
             for (int i = 1; i <= vertices; i++)
             {
-                //cout << "indegree " << inDegree(i) << " outdegree " << outDegree(i) << endl;
+                // cout << "indegree " << inDegree(i) << " outdegree " << outDegree(i) << endl;
                 if (inDegree(i) - outDegree(i) == 1)
                     positive++;
                 else if (outDegree(i) - inDegree(i) == 1)
                     negative++;
                 else if (inDegree(i) != outDegree(i))
                     return 0;
-                //cout << "going for " << i << endl;
+                // cout << "going for " << i << endl;
             }
 
             if (positive == 0 and negative == 0)
@@ -437,6 +437,10 @@ int main()
 
     graph g(5, 6, true); // starts from 1
     g.defineGraph();
+    if (g.isConnected())
+        cout << "connected\n";
+    else
+        cout << "not connected\n";
     g.isEularian();
 
     return 0;
