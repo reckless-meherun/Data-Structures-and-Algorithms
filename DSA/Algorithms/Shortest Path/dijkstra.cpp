@@ -2,14 +2,14 @@
 using namespace std;
 typedef long long ll;
 
+typedef pair<int, int> iPair;
+
 enum COLORS
 {
     white = 0, // not visited (not explored)
     grey = 1,  // visited but their neighbours are not visited (partially explored)
     black = 2  // visited along with all the neighbours (fully explored)
 };
-
-typedef pair<int, int> iPair;
 
 class graph
 {
@@ -123,32 +123,28 @@ public:
             }
         }
 
-        priority_queue<iPair, vector<iPair>, greater<iPair>> pq;
-        pq.push(make_pair(0, source));
+        priority_queue<iPair, vector<iPair>> minHeap;
+        minHeap.push(make_pair(source, 0));
         distance[source] = 0;
-        color[source] = grey;
-        while (!pq.empty())
+        while (!minHeap.empty())
         {
-            int u = pq.top().second;
-            pq.pop();
+            int u = minHeap.top().first; // first is the vertex, second is the distance
+            minHeap.pop();
 
             for (auto v : adjList[u])
             {
-                if (color[v.first] == white)
+                if (distance[v.first] > distance[u] + v.second)
                 {
-                    color[v.first] = grey;
-                    if (distance[v.first] > distance[u] + v.second)
-                    {
-                        distance[v.first] = distance[u] + v.second;
-                        pq.push(make_pair(distance[v.first], v.first));
-                        parent[v.first] = u;
-                    }
+                    distance[v.first] = distance[u] + v.second;
+                    minHeap.push(make_pair(v.first, distance[v.first])); // v.first = vertex and v.second = edge weight between u and v.first
+                    parent[v.first] = u;
                 }
             }
-            color[u] = black;
         }
-        for(int i=1; i<=vertices; i++)
-            cout<<distance[i]<<"\n";
+
+        cout << "Shortest path from source to vertices through dijkstra\n";
+        for (int i = 1; i <= vertices; i++)
+            cout << source << " to " << i << " - > " << distance[i] << "\n";
     }
 };
 
@@ -158,8 +154,8 @@ int main()
     freopen("output.in", "w", stdout);
     graph g(9, 14, false); // starts from 1
     g.defineGraph();
-    //g.printGraph();
+    // g.printGraph();
     g.dijkstra(1);
-    //g.printShortestPath(3,1);
+    // g.printShortestPath(3,1);
     return 0;
 }
