@@ -142,7 +142,7 @@ public:
             }
         }
 
-        cout << "Shortest path from source to vertices through dijkstra\n";
+        cout << "\nShortest path from source to vertices through dijkstra\n";
         for (int i = 1; i <= vertices; i++)
             cout << source << " to " << i << " - > " << distance[i] << "\n";
     }
@@ -154,7 +154,7 @@ int main()
     freopen("output.in", "w", stdout);
     graph g(9, 14, false); // starts from 1
     g.defineGraph();
-    // g.printGraph();
+    g.printGraph();
     g.dijkstra(1);
     // g.printShortestPath(3,1);
     return 0;
