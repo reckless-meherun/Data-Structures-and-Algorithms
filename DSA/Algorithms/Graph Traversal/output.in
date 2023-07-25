@@ -1,2 +1,51 @@
-connected
-eularian
+entering Vertex : 1 pre V : 1
+entering Vertex : 3 pre V : 2
+entering Vertex : 2 pre V : 3
+leaving Vertex : 2 post V : 4
+leaving Vertex : 3 post V : 5
+entering Vertex : 4 pre V : 6
+entering Vertex : 5 pre V : 7
+leaving Vertex : 5 post V : 8
+leaving Vertex : 4 post V : 9
+leaving Vertex : 1 post V : 10
+
+topological sort : vertex - finishing time 
+1 10
+4 9
+5 8
+3 5
+2 4
+
+hmmmm followings are the SCC
+
+entering Vertex : 1 pre V : 11
+entering Vertex : 2 pre V : 12
+entering Vertex : 3 pre V : 13
+leaving Vertex : 3 post V : 14
+leaving Vertex : 2 post V : 15
+entering Vertex : 5 pre V : 16
+entering Vertex : 4 pre V : 17
+leaving Vertex : 4 post V : 18
+leaving Vertex : 5 post V : 19
+leaving Vertex : 1 post V : 20
+
+here 
+entering Vertex : 1 pre V : 21
+entering Vertex : 3 pre V : 22
+entering Vertex : 2 pre V : 23
+leaving Vertex : 2 post V : 24
+leaving Vertex : 3 post V : 25
+entering Vertex : 4 pre V : 26
+entering Vertex : 5 pre V : 27
+leaving Vertex : 5 post V : 28
+leaving Vertex : 4 post V : 29
+leaving Vertex : 1 post V : 30
+
+topological sort : vertex - finishing time 
+1 30
+4 29
+5 28
+3 25
+2 24
+cycle found
+here end

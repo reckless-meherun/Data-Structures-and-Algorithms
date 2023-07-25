@@ -23,6 +23,8 @@ class graph
     vector<int> low;
     vector<bool> articulationPoints;
     int time;
+    stack<int> topoOrderStack;
+    bool hasCycle;
 
 public:
     graph(int vertices, int edges, bool ifDirected)
@@ -39,6 +41,7 @@ public:
         low.resize(vertices + 1);
         articulationPoints.resize(vertices + 1);
         time = 1;
+        hasCycle = false;
     }
 
     void defineGraph()
@@ -159,7 +162,8 @@ private:
         {
             // cout << "Parent : " << u << " Child : " << v << endl;
             /** Action on ANY child (v) of vertex (u) before entering the child */
-
+            if (color[v] == grey)
+                hasCycle = true;
             if (color[v] == white)
             {
 
@@ -259,31 +263,71 @@ private:
         return a.second >= b.second;
     }
 
+    int pos[1000000];
+
 public:
     vector<pair<int, int>> topologicalSort()
     {
+        for (int i = 1; i <= vertices; i++)
+        {
+            startingTime[i] = 0;
+            finishingTime[i] = 0;
+        }
+        DFS();
+        int indx = 0;
         vector<pair<int, int>> sortedFinishTime;
         for (int i = 1; i <= vertices; i++)
         {
             sortedFinishTime.push_back(make_pair(i, finishingTime[i]));
         }
         sort(sortedFinishTime.begin(), sortedFinishTime.end(), cmp);
-        cout << endl;
+        cout << endl
+             << "topological sort : vertex - finishing time \n";
+
+        while (!topoOrderStack.empty()) // have to do it
+            topoOrderStack.pop();
+            
         for (auto v : sortedFinishTime)
         {
             cout << v.first << " " << v.second << "\n";
+            topoOrderStack.push(v.first);
+            pos[v.first] = indx;
+            indx++;
         }
         return sortedFinishTime;
     }
 
+    bool detectCycleWithTopoSort()
+    {
+        topologicalSort();
+        int arr[vertices + 1];
+        int i = 1;
+        while (!topoOrderStack.empty())
+        {
+            arr[i++] = topoOrderStack.top();
+            topoOrderStack.pop();
+        }
+        for (int i = 1; i <= vertices; i++)
+        {
+            for (auto v : adjList[i])
+            {
+                if (pos[i] > pos[v])
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     void findSCC()
     {
-        DFS();
         vector<pair<int, int>> orderedNodes = topologicalSort();
         transpose();
         cout << "\nhmmmm followings are the SCC\n"
              << endl;
         DFS(orderedNodes);
+        transpose();
     }
 
     void printLowValues()
@@ -292,6 +336,11 @@ public:
             cout << i << " : " << low[i] << "\n";
         cout << "\n";
     }
+
+    bool isCycle()
+    {
+        return hasCycle;
+    }
 };
 
 int main()
@@ -299,9 +348,27 @@ int main()
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
 
-    graph g(5, 5, true); // starts from 1
+    graph g(5, 6, true); // starts from 1
     g.defineGraph();
+
+    // g.DFS();
     g.findSCC();
+    cout << "here \n";
+    if (g.detectCycleWithTopoSort())
+        cout << "cycle found" << endl;
+    else
+        cout << "no cycle found" << endl;
+    cout << "here end\n";
+    // if (g.isCycle())
+    //     cout << "cycle found" << endl;
+    // else
+    //     cout << "no cycle found" << endl;
 
     return 0;
 }
+
+// 1 2
+// 2 3
+// 3 4
+// 3 1
+// 1 3
