@@ -8,6 +8,7 @@ entering Vertex : 5 pre V : 7
 leaving Vertex : 5 post V : 8
 leaving Vertex : 4 post V : 9
 leaving Vertex : 1 post V : 10
+the sorting is not topological
 
 topological sort : vertex - finishing time 
 1 10
@@ -40,6 +41,7 @@ entering Vertex : 5 pre V : 27
 leaving Vertex : 5 post V : 28
 leaving Vertex : 4 post V : 29
 leaving Vertex : 1 post V : 30
+the sorting is not topological
 
 topological sort : vertex - finishing time 
 1 30

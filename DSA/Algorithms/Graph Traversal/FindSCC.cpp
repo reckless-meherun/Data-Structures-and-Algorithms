@@ -274,6 +274,7 @@ public:
             finishingTime[i] = 0;
         }
         DFS();
+        if(hasCycle) cout<<"the sorting is not topological"<<endl;
         int indx = 0;
         vector<pair<int, int>> sortedFinishTime;
         for (int i = 1; i <= vertices; i++)
@@ -286,7 +287,7 @@ public:
 
         while (!topoOrderStack.empty()) // have to do it
             topoOrderStack.pop();
-            
+
         for (auto v : sortedFinishTime)
         {
             cout << v.first << " " << v.second << "\n";
