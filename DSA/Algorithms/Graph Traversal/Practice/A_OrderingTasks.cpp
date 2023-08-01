@@ -1,3 +1,5 @@
+//accepted
+
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -21,29 +23,32 @@ class graph
     int *startingTime;
     int *finishingTime;
     vector<int> low;
-    vector<pair<int, int>> bridges;
+    vector<bool> articulationPoints;
     int time;
+    stack<int> topoOrderStack;
+    bool hasCycle;
 
 public:
     graph(int vertices, int edges, bool ifDirected)
     {
         this->vertices = vertices;
         this->edges = edges;
-        adjList.resize(vertices);
+        adjList.resize(vertices + 1);
         directed = ifDirected;
-        color = new COLORS[vertices];
-        parent = new int[vertices];
-        distance = new int[vertices];
-        startingTime = new int[vertices];
-        finishingTime = new int[vertices];
-        low.resize(vertices);
-        // bridges.resize(vertices); // highest number of bridge can be n-1 when there are n vertices
+        color = new COLORS[vertices + 1];
+        parent = new int[vertices + 1];
+        distance = new int[vertices + 1];
+        startingTime = new int[vertices + 1];
+        finishingTime = new int[vertices + 1];
+        low.resize(vertices + 1);
+        articulationPoints.resize(vertices + 1);
         time = 1;
+        hasCycle = false;
     }
 
     void defineGraph()
     {
-        for (int i = 0; i < edges; i++)
+        for (int i = 1; i <= edges; i++)
         {
             int u, v;
             cin >> u >> v;
@@ -67,7 +72,7 @@ public:
     void initialize()
     {
         // initialize loop
-        for (int i = 0; i < vertices; i++)
+        for (int i = 1; i <= vertices; i++)
         {
             color[i] = white;
             for (auto v : adjList[i])
@@ -80,50 +85,35 @@ public:
         }
     }
 
-    void BFS(int source)
-    {
-        initialize();
-
-        queue<int> grey_ver; // vertices that are grey/visited
-        // Queue grey_ver;
-
-        color[source] = grey;
-        distance[source] = 0;
-        grey_ver.push(source);
-        // grey_ver.enqueue(source);
-
-        while (!grey_ver.empty())
-        {
-            int u = grey_ver.front();
-            // int u = grey_ver.peek();
-            grey_ver.pop();
-            // grey_ver.dequeue();
-            for (auto v : adjList[u])
-            {
-                if (color[v] == white)
-                {
-                    color[v] = grey;
-                    distance[v] = distance[u] + 1;
-                    parent[v] = u;
-                    grey_ver.push(v);
-                    // grey_ver.enqueue(v);
-                }
-            }
-            color[u] = black; // cause it has been fully explored
-        }
-    }
-
     void DFS(int source)
     {
         initialize();
         DFS_Visit(source); // u don't need to run an extra loop, the recursion will visit all the vertices automatically
     }
 
+    void DFS(vector<pair<int, int>> &ordered_node)
+    {
+        initialize();
+
+        // printGraph();
+
+        for (auto a : ordered_node)
+        {
+            // if(a.first == 5) cout<<"color of 5 "<<color[a.first]<<endl;
+            if (color[a.first] == white)
+            {
+                // cout<<"white node "<<a.first<<endl;
+                DFS_Visit(a.first);
+                // cout << "\n";
+            }
+        }
+    }
+
     void DFS()
     {
         initialize();
 
-        for (int i = 0; i < vertices; i++) // in case the graph is a forest (disconnected)
+        for (int i = 1; i <= vertices; i++) // in case the graph is a forest (disconnected)
             if (color[i] == white)
                 DFS_Visit(i);
     }
@@ -137,14 +127,15 @@ private:
         startingTime[u] = low[u] = time;
         time++;
         int children = 0;
-
         for (auto v : adjList[u])
         {
-            // cout<<"Parent : "<<u<<" Child : "<<v<<endl;
+            // //cout << "Parent : " << u << " Child : " << v << endl;
             /** Action on ANY child (v) of vertex (u) before entering the child */
-
+            if (color[v] == grey)
+                hasCycle = true;
             if (color[v] == white)
             {
+
                 /** Action on an unvisited/white child (v) of vertex (u) before entering the child */
                 color[v] = grey;
                 distance[v] = distance[u] + 1;
@@ -156,8 +147,11 @@ private:
                 /** Action on the visited child (v) of vertex (u) after leaving the child */
                 low[u] = min(low[v], low[u]);
 
-                if (low[v] > startingTime[u])
-                    bridges.push_back({u, v});
+                if (parent[u] == INT_MIN and children > 1) // case 1 : u is a root
+                    articulationPoints[u] = true;
+
+                if (parent[u] != INT_MIN and low[v] >= startingTime[u]) // case 2 : at least one component will get separated
+                    articulationPoints[u] = true;
             }
             /** Action on ANY VISITED child (v) of vertex (u) after leaving the child */
             else if (v != parent[u]) // visited but ignore child to parent edge
@@ -172,46 +166,30 @@ private:
 
     void printGraph()
     {
-        for (int i = 0; i < vertices; i++)
+        for (int i = 1; i <= vertices; i++)
         {
-            cout << i << " : ";
+            // cout << i << " : ";
             for (auto v : adjList[i])
             {
-                cout << v << " ";
+                // cout << v << " ";
             }
-            cout << endl;
+            // cout << endl;
         }
     }
 
-    void printStartingTime()
-    {
-        cout << "\nentering time \n";
-        for (int i = 0; i < vertices; i++)
-            cout << i << " : " << startingTime[i] << "\n";
-    }
+    // void printStartingTime()
+    // {
+    //     //cout << "\nentering time \n";
+    //     for (int i = 1; i <= vertices; i++)
+    //         //cout << i << " : " << startingTime[i] << "\n";
+    // }
 
-    void printFinishingTime()
-    {
-        cout << "\nleaving time \n";
-        for (int i = 0; i < vertices; i++)
-            cout << i << " : " << finishingTime[i] << "\n";
-    }
-
-    void transpose()
-    {
-        vector<list<int>> adjList2(vertices);
-        if (directed)
-        {
-            for (int i = 0; i < vertices; i++)
-            {
-                for (auto v : adjList[i])
-                {
-                    adjList2[v].push_back(i);
-                }
-            }
-            adjList = adjList2;
-        }
-    }
+    // void printFinishingTime()
+    // {
+    //     //cout << "\nleaving time \n";
+    //     for (int i = 1; i <= vertices; i++)
+    //         //cout << i << " : " << finishingTime[i] << "\n";
+    // }
 
 private:
     static bool cmp(pair<int, int> &a, pair<int, int> &b) // this is inside graph class that's why u gotta use static here
@@ -219,64 +197,62 @@ private:
         return a.second >= b.second;
     }
 
+    int pos[1000000];
+
 public:
     vector<pair<int, int>> topologicalSort()
     {
+        for (int i = 1; i <= vertices; i++)
+        {
+            startingTime[i] = 0;
+            finishingTime[i] = 0;
+        }
+        DFS();
+        if (hasCycle)
+            cout << "the sorting is not topological" << endl;
+        int indx = 0;
         vector<pair<int, int>> sortedFinishTime;
-        for (int i = 0; i < vertices; i++)
+        for (int i = 1; i <= vertices; i++)
         {
             sortedFinishTime.push_back(make_pair(i, finishingTime[i]));
         }
         sort(sortedFinishTime.begin(), sortedFinishTime.end(), cmp);
-        cout << endl;
+        // //cout << endl
+        //      << "topological sort : vertex - finishing time \n";
+
+        while (!topoOrderStack.empty()) // have to do it
+            topoOrderStack.pop();
+
         for (auto v : sortedFinishTime)
         {
-            cout << v.first << " " << v.second << "\n";
+            ////cout << v.first << " " << v.second << "\n";
+            topoOrderStack.push(v.first);
+            pos[v.first] = indx;
+            indx++;
         }
         return sortedFinishTime;
-    }
-
-    void findSCC(int source)
-    {
-        DFS(source);
-        vector<pair<int, int>> orderedNodes = topologicalSort();
-        transpose();
-        // cout<<orderedNodes[0].first<<endl;
-        // g.printGraph();
-        // cout << "hmmmm followings are the SCC" << endl;
-        for (int i = 0; i < vertices; i++)
-        {
-            DFS(orderedNodes[i].first);
-            cout << "\n";
-        }
-    }
-
-    vector<pair<int, int>> findBridges()
-    {
-        DFS();
-        for (auto v : bridges)
-            cout << v.first << " " << v.second << "\n";
-        cout << "\n";
-        return bridges;
-    }
-
-    void printLowValues()
-    {
-        for (int i = 0; i < vertices; i++)
-            cout << i << " : " << low[i] << "\n";
-        cout << "\n";
     }
 };
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    int n, m;
+    while (1)
+    {
+        cin >> n >> m;
+        if (m == 0 and n == 0)
+            break;
+        graph g(n, m, true); // starts from 1
+        g.defineGraph();
 
-    graph g(2, 2, false); // starts from 1
-    g.defineGraph();
+        vector<pair<int, int>> ans = g.topologicalSort();
 
-    vector<pair<int, int>> v = g.findBridges();
+        for (auto a : ans)
+        {
+            cout << a.first << " ";
+        }
+        cout << endl;
+    }
 
     return 0;
 }

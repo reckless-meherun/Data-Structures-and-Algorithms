@@ -25,6 +25,7 @@ class graph
     int time;
     stack<int> topoOrderStack;
     bool hasCycle;
+    int totalSCC=0;
 
 public:
     graph(int vertices, int edges, bool ifDirected)
@@ -136,6 +137,7 @@ public:
                 // cout<<"white node "<<a.first<<endl;
                 DFS_Visit(a.first);
                 cout << "\n";
+                totalSCC++;
             }
         }
     }
@@ -331,6 +333,12 @@ public:
         transpose();
     }
 
+    int totalNumberSCC()
+    {
+        findSCC();
+        return totalSCC;
+    }
+
     void printLowValues()
     {
         for (int i = 1; i <= vertices; i++)
@@ -346,25 +354,16 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
-
-    graph g(5, 6, true); // starts from 1
-    g.defineGraph();
-
-    // g.DFS();
-    g.findSCC();
-    cout << "here \n";
-    if (g.detectCycleWithTopoSort())
-        cout << "cycle found" << endl;
-    else
-        cout << "no cycle found" << endl;
-    cout << "here end\n";
-    // if (g.isCycle())
-    //     cout << "cycle found" << endl;
-    // else
-    //     cout << "no cycle found" << endl;
-
+    int test;
+    cin >> test;
+    while (test--)
+    {
+        int m, n;
+        cin >> m >> n;
+        graph g(m, n, true); // starts from 1
+        g.defineGraph();
+        cout << g.totalNumberSCC() << endl;
+    }
     return 0;
 }
 

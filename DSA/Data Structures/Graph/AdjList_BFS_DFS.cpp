@@ -2,40 +2,45 @@
 using namespace std;
 typedef long long ll;
 
-class Node{
+class Node
+{
 public:
     int value;
-    Node* next;
+    Node *next;
 
-    Node(int value, Node* next=nullptr){
-        this->value=value;
+    Node(int value, Node *next = nullptr)
+    {
+        this->value = value;
         this->next = next;
     }
 };
 
-
-class Queue{
+class Queue
+{
 private:
-    Node* front;
-    Node* rear;
+    Node *front;
+    Node *rear;
     int size;
 
 public:
-
-    Queue(){
+    Queue()
+    {
         this->front = nullptr;
         this->rear = nullptr;
-        this->size=0;
+        this->size = 0;
     }
 
-    int get_size(){
+    int get_size()
+    {
         return this->size;
     }
 
-    void enqueue(int value){
-        Node* newNode = new Node(value);
-        if(front==nullptr){
-            front=newNode;
+    void enqueue(int value)
+    {
+        Node *newNode = new Node(value);
+        if (front == nullptr)
+        {
+            front = newNode;
             rear = newNode;
             this->size++;
             return;
@@ -45,30 +50,37 @@ public:
         this->size++;
     }
 
-    void dequeue(){
-        if(front==nullptr) return;
-        Node* temp = front;
+    void dequeue()
+    {
+        if (front == nullptr)
+            return;
+        Node *temp = front;
         front = front->next;
         this->size--;
         delete temp;
     }
-    bool empty(){
-        return this->size==0;
+    bool empty()
+    {
+        return this->size == 0;
     }
 
-    int peek(){
-        if(front==nullptr) return INT_MIN;
+    int peek()
+    {
+        if (front == nullptr)
+            return INT_MIN;
         return front->value;
     }
 
-    void print(){
-        Node* currNode = this->front;
+    void print()
+    {
+        Node *currNode = this->front;
 
-        while(currNode!=nullptr){
-            cout<<currNode->value<<" -> ";
+        while (currNode != nullptr)
+        {
+            cout << currNode->value << " -> ";
             currNode = currNode->next;
-        }cout<<'\n';
-        
+        }
+        cout << '\n';
     }
 };
 
@@ -94,9 +106,9 @@ public:
     {
         this->vertices = vertices;
         this->edges = edges;
-        adjList.resize(vertices+1);
+        adjList.resize(vertices + 1);
         directed = ifDirected;
-        color = new COLORS[vertices+1];
+        color = new COLORS[vertices + 1];
         parent = new int[vertices + 1];
         distance = new int[vertices + 1];
     }
@@ -108,7 +120,7 @@ public:
             int u, v;
             cin >> u >> v;
             addEdge(u, v);
-            cout<<u<<" "<<v<<endl;
+            cout << u << " " << v << endl;
         }
     }
 
@@ -129,6 +141,7 @@ public:
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
+            color[i] = white;
             for (auto v : adjList[i])
             {
                 color[v] = white;
@@ -137,12 +150,12 @@ public:
             }
         }
 
-        //queue<int> grey_ver; // vertices that are grey/visited
+        // queue<int> grey_ver; // vertices that are grey/visited
         Queue grey_ver;
 
         color[source] = grey;
         distance[source] = 0;
-        //grey_ver.push(source);
+        // grey_ver.push(source);
         grey_ver.enqueue(source);
 
         while (!grey_ver.empty())
@@ -158,7 +171,7 @@ public:
                     color[v] = grey;
                     distance[v] = distance[u] + 1;
                     parent[v] = u;
-                    //grey_ver.push(v);
+                    // grey_ver.push(v);
                     grey_ver.enqueue(v);
                 }
             }
@@ -171,6 +184,7 @@ public:
         // initialize loop
         for (int i = 1; i <= vertices; i++)
         {
+            color[i] = white;
             for (auto v : adjList[i])
             {
                 color[v] = white;
@@ -178,19 +192,19 @@ public:
                 distance[v] = INT_MAX;
             }
         }
-        
+
         DFS_Visit(source); // u don't need to run an extra loop, the recursion will visit all the vertices automatically
     }
-    
+
 private:
     void DFS_Visit(int u)
     {
         /** Action on a vertex (u) after entering the vertex */
         color[u] = grey;
-        cout<<"Vertex : "<<u<<endl;
+        cout << "Vertex : " << u << endl;
         for (auto v : adjList[u])
         {
-            //cout<<"Parent : "<<u<<" Child : "<<v<<endl;
+            // cout<<"Parent : "<<u<<" Child : "<<v<<endl;
             /** Action on ANY child (v) of vertex (u) before entering the child */
             if (color[v] == white)
             {
@@ -210,13 +224,13 @@ private:
 public:
     void printShortestPath(int source, int destination)
     {
-        //cout<<source<<" "<<destination<<endl;
+        // cout<<source<<" "<<destination<<endl;
         if (source == destination)
         {
             cout << source << " ";
         }
         else if (parent[destination] == INT_MIN)
-        {    
+        {
             cout << "No path" << endl;
         }
         else
@@ -244,20 +258,20 @@ int main()
 {
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
-    
+
     /** BFS DFS might act weird in case of directed graph */
 
-    graph g(5, 6, false); //starts from 1
+    graph g(5, 6, false); // starts from 1
     g.defineGraph();
     g.printGraph();
-    g.BFS(3);	
-	cout<<"Shortest path : ";
+    g.BFS(3);
+    cout << "Shortest path : ";
     /** u have to use the same source here, the one u chose to do BFS with; different source won't work, why? simulate and think */
     g.printShortestPath(3, 4);
-    cout<<endl;
+    cout << endl;
     /** u cannot use DFS in between BFS and printing any shortest path because that changes the graph totally */
     g.DFS(3);
     g.printShortestPath(3, 4);
-    
+
     return 0;
 }

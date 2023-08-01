@@ -126,6 +126,7 @@ public:
         mst = new bool[vertices + 1];
         key = new int[vertices + 1];
         // vector<vector<int>> minEdges(vertices+1);
+        vector<int> minEdge[edges+1];
 
         for (int i = 1; i <= vertices; i++)
         {
@@ -155,7 +156,7 @@ public:
                     key[v.first] = v.second;
                     parent[v.first] = u;
                     cost += v.second;
-                    // minEdges[u][v.first] = v.second;
+                    minEdge[u][v.first] = v.second;
                 }
             }
         }
@@ -163,15 +164,16 @@ public:
         //     cout<<parent[i]<<" ";
 
         cout << "Cost : " << cost << endl;
-        printMST();
+        printMST(minEdge);
     }
 
-    void printMST()
+private:
+    void printMST(vector<int> minEdge[])
     {
         cout << "edges \t weight\n";
         for (int i = 2; i <= vertices; i++)
         {
-            cout << parent[i] << " - " << i << " \t \n";
+            cout << parent[i] << " - " << i << " \t "<<minEdge[parent[i]][i]<<"\n";
         }
     }
 };

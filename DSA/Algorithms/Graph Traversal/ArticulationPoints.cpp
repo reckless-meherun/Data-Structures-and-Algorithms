@@ -293,8 +293,15 @@ public:
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
+    while(1)
+    {
+        int N;
+        cin>>N;
+        while(N--)
+        {
+            
+        }
+    }
 
     graph g(6, 6, false); // starts from 1
     g.defineGraph();
