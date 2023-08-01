@@ -68,6 +68,35 @@ public:
         }
     }
 
+    //input like below
+
+    // int t;  scanf("%d",&t);
+    // // int temp;   cin>>temp;
+    // for (int r = 1; r <= t; r++)
+    // {
+    //     cout<<"Case "<<r<<": \n";
+
+    //     int V;  scanf("%d",&V);
+    //     // printf("V= %d\n",V);
+    //     vector<int> adj[V];
+
+    //     for (int i = 0; i < V; i++)
+    //     {
+    //         int u, tot_edge;
+    //         char temp;
+    //         scanf("%d%c%c%d%c",&u,&temp,&temp,&tot_edge,&temp);
+    //         // cin>>u>>tot_edge;
+            
+
+    //         for (int j = 0; j < tot_edge; j++)
+    //         {
+    //             int v;  scanf("%d",&v);
+    //             adj[u].push_back(v);
+    //         }
+            
+    //     }
+    // }
+
     void addEdge(int u, int v)
     {
         adjList[u].push_back(v);
