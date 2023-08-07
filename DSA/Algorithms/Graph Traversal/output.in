@@ -1,0 +1,26 @@
+1 : 2 3 
+2 : 1 3 
+3 : 1 2 4 
+4 : 3 5 6 
+5 : 4 6 
+6 : 5 4 
+entering Vertex : 1 pre V : 1
+entering Vertex : 2 pre V : 2
+entering Vertex : 3 pre V : 3
+entering Vertex : 4 pre V : 4
+entering Vertex : 5 pre V : 5
+entering Vertex : 6 pre V : 6
+leaving Vertex : 6 post V : 7
+leaving Vertex : 5 post V : 8
+leaving Vertex : 4 post V : 9
+leaving Vertex : 3 post V : 10
+leaving Vertex : 2 post V : 11
+leaving Vertex : 1 post V : 12
+3 4 
+1 : 1
+2 : 1
+3 : 1
+4 : 4
+5 : 4
+6 : 4
+

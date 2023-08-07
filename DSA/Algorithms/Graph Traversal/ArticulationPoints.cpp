@@ -293,17 +293,7 @@ public:
 
 int main()
 {
-    while(1)
-    {
-        int N;
-        cin>>N;
-        while(N--)
-        {
-            
-        }
-    }
-
-    graph g(6, 6, false); // starts from 1
+    graph g(6, 7, false); // starts from 1
     g.defineGraph();
     g.printGraph();
 
@@ -319,6 +309,7 @@ int main()
     // g.printLowValues();
 
     vector<bool> v = g.findArticulationPoints();
+    g.printLowValues();
 
     return 0;
 }

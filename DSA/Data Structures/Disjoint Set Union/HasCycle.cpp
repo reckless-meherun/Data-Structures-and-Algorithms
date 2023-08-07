@@ -49,7 +49,6 @@ int DisjointSet::find(int i)
 {
     if (parent[i] == i)
         return i;
-
     return parent[i] = find(parent[i]); // path compression
 }
 

@@ -26,8 +26,8 @@ public:
     }
     void make(int a)
     {
-        parent[a]=a;
-        rank[a]=1;
+        parent[a] = a;
+        rank[a] = 1;
     }
     int findRoot(int v)
     {
@@ -39,14 +39,14 @@ public:
     {
         a = findRoot(a);
         b = findRoot(b);
-        //cout<<a<<" "<<b<<endl;
+        // cout<<a<<" "<<b<<endl;
         if (a == b)
             return;
-        if(rank[a]<rank[b])
+        if (rank[a] < rank[b])
         {
             parent[a] = b;
         }
-        else if(rank[a]>rank[b])
+        else if (rank[a] > rank[b])
         {
             parent[b] = a;
         }
@@ -55,21 +55,20 @@ public:
             parent[b] = a;
             rank[a]++;
         }
-        //cout<<a<<" "<<b<<endl;
+        // cout<<a<<" "<<b<<endl;
     }
 };
 
 int main()
 {
-    freopen("input.in", "r", stdin);
-    freopen("output.in", "w", stdout);
     dsu d(4);
-    d.Union(2,3);
-    d.Union(1,0);
-     cout<<d.findRoot(0);
-    cout<<d.findRoot(2);
-    cout<<d.findRoot(3);
-    cout<<d.findRoot(1);
+    d.Union(2, 3);
+    d.Union(1, 0);
+    d.Union(2, 0);
+    cout << d.findRoot(0) << "\n";
+    cout << d.findRoot(2) << "\n";
+    cout << d.findRoot(3) << "\n";
+    cout << d.findRoot(1) << "\n";
 
     return 0;
 }
