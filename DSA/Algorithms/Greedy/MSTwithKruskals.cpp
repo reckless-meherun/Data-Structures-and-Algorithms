@@ -45,7 +45,6 @@ public:
     {
         a = findRoot(a);
         b = findRoot(b);
-        // cout<<a<<" "<<b<<endl;
         if (a == b)
             return;
         if (rank[a] < rank[b])
@@ -61,7 +60,6 @@ public:
             parent[b] = a;
             rank[a]++;
         }
-        // cout<<a<<" "<<b<<endl;
     }
 
     bool hasCycle(int u, int v)
@@ -119,52 +117,6 @@ public:
             adjList[v].push_back({u, weight});
     }
 
-    // void removeEdge(int u, int v)
-    // {
-    //     adjList[u].remove({v, weight});
-    // }
-
-    // bool isConnected(int u, int v)
-    // {
-    //     // sort(adjList[u].begin(), adjList[u].end());
-    //     adjList[u].sort();
-    //     adjList[v].sort();
-    //     return (binary_search(adjList[u].begin(), adjList[u].end(), v)) or (binary_search(adjList[v].begin(), adjList[v].end(), u));
-    // }
-
-    int outDegree(int u)
-    {
-        return adjList[u].size();
-    }
-
-    int inDegree(int u)
-    {
-        if (!directed)
-            return outDegree(u);
-
-        int inD = 0;
-        for (int i = 0; i < vertices; i++)
-        {
-            for (auto v : adjList[i]) /** inDegree : how many times u is in the lists of each vertex list */
-            {
-                if (v.first == u)
-                    inD++;
-            }
-        }
-
-        return inD;
-
-        /** can be done with binary search as well */
-        /** inD = 0;
-        for (int i = 0; i < vertices; i++)
-        {
-            sort(adjList[i].begin(), adjList[i].end());
-            if(binary_search(adjList[i].begin(), adjList[i].end(), u))
-                inD++;
-        }
-        return inD; */
-    }
-
     void printGraph()
     {
         for (int i = 0; i < vertices; i++)
@@ -204,6 +156,7 @@ public:
         printMST(minEdge);
     }
 
+private:
     void printMST(vector<triplet> minEdge)
     {
         for (auto a : minEdge)
@@ -212,6 +165,7 @@ public:
         }
     }
 
+public:
     void printEdgelist()
     {
         for(auto a: edgeList)
@@ -228,6 +182,5 @@ int main()
     g.printGraph();
     cout<<"\n";
     g.mstKruskals();
-    //g.printEdgelist();
     return 0;
 }
