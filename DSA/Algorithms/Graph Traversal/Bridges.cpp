@@ -273,7 +273,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    graph g(2, 2, false); // starts from 1
+    graph g(8, 8, false); // starts from 1
     g.defineGraph();
 
     vector<pair<int, int>> v = g.findBridges();

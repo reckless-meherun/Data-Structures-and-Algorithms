@@ -384,7 +384,7 @@ private:
                 if (outDegree(i) & 1)
                     oddVertex++;
             }
-            return (oddVertex > 2) ? 0 : ((oddVertex == 0) ? 2 : 1); // of semi-eularian, return 1; if eularian, return 2}
+            return (oddVertex > 2) ? 0 : ((oddVertex == 0) ? 2 : 1); // if semi-eularian, return 1; if eularian, return 2}
         }
         else
         {
