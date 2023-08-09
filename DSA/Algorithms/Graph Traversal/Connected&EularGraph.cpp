@@ -43,7 +43,7 @@ public:
 
     void defineGraph()
     {
-        for (int i = 1; i <= edges; i++)
+        for (int i = 0; i < edges; i++)
         {
             int u, v;
             cin >> u >> v;
@@ -75,7 +75,7 @@ public:
             return outDegree(u);
 
         int inD = 0;
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
         {
             for (auto v : adjList[i]) /** inDegree : how many times u is in the lists of each vertex list */
             {
@@ -88,7 +88,7 @@ public:
 
         /** can be done with binary search as well */
         /** inD = 0;
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
         {
             sort(adjList[i].begin(), adjList[i].end());
             if(binary_search(adjList[i].begin(), adjList[i].end(), u))
@@ -100,7 +100,7 @@ public:
     void initialize()
     {
         // initialize loop
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
         {
             color[i] = white;
             for (auto v : adjList[i])
@@ -174,7 +174,7 @@ public:
     {
         initialize();
 
-        for (int i = 1; i <= vertices; i++) // in case the graph is a forest (disconnected)
+        for (int i = 0; i < vertices; i++) // in case the graph is a forest (disconnected)
             if (color[i] == white)
                 DFS_Visit(i);
     }
@@ -184,7 +184,7 @@ private:
     {
         /** Action on a vertex (u) after entering the vertex */
         color[u] = grey;
-      //  cout << "entering Vertex : " << u << " pre V : " << time << endl;
+        //  cout << "entering Vertex : " << u << " pre V : " << time << endl;
         startingTime[u] = low[u] = time;
         time++;
         int children = 0;
@@ -220,7 +220,7 @@ private:
         /** Action on a vertex (u) before leaving the vertex */
         color[u] = black;
         finishingTime[u] = time;
-       // cout << "leaving Vertex : " << u << " post V : " << time << endl;
+        // cout << "leaving Vertex : " << u << " post V : " << time << endl;
         time++;
     }
 
@@ -245,7 +245,7 @@ public:
 
     void printGraph()
     {
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
         {
             cout << i << " : ";
             for (auto v : adjList[i])
@@ -259,14 +259,14 @@ public:
     void printStartingTime()
     {
         cout << "\nentering time \n";
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
             cout << i << " : " << startingTime[i] << "\n";
     }
 
     void printFinishingTime()
     {
         cout << "\nleaving time \n";
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
             cout << i << " : " << finishingTime[i] << "\n";
     }
 
@@ -275,7 +275,7 @@ public:
         vector<list<int>> adjList2(vertices + 1);
         if (directed)
         {
-            for (int i = 1; i <= vertices; i++)
+            for (int i = 0; i < vertices; i++)
             {
                 for (auto v : adjList[i])
                 {
@@ -296,7 +296,7 @@ public:
     vector<pair<int, int>> topologicalSort()
     {
         vector<pair<int, int>> sortedFinishTime;
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
         {
             sortedFinishTime.push_back(make_pair(i, finishingTime[i]));
         }
@@ -322,7 +322,7 @@ public:
 
     void printLowValues()
     {
-        for (int i = 1; i <= vertices; i++)
+        for (int i = 0; i < vertices; i++)
             cout << i << " : " << low[i] << "\n";
         cout << "\n";
     }
@@ -332,7 +332,7 @@ public:
         if (!directed)
         {
             DFS(1);
-            for (int i = 1; i <= vertices; i++)
+            for (int i = 0; i < vertices; i++)
             {
                 if (color[i] == white and adjList[i].size() > 0) // adjList[i].size() == 0 won't work 'cause if the node is white and it has no child, the graph could be eular because there is no children in that other component
                     return false;
@@ -343,7 +343,7 @@ public:
         {
             vector<bool> visited1(vertices + 1);
             DFS(1);
-            for (int i = 1; i <= vertices; i++)
+            for (int i = 0; i < vertices; i++)
             {
                 if (color[i] != white)
                     visited1[i] = true;
@@ -351,13 +351,13 @@ public:
             transpose();
             vector<bool> visited2(vertices + 1);
             DFS(1);
-            for (int i = 1; i <= vertices; i++)
+            for (int i = 0; i < vertices; i++)
             {
                 if (color[i] != white)
                     visited2[i] = true;
             }
 
-            for (int i = 1; i <= vertices; i++)
+            for (int i = 0; i < vertices; i++)
             {
                 if (!visited1[i] and !visited2[i])
                 {
@@ -371,6 +371,17 @@ public:
     }
 
 private:
+    int findOddVertex()
+    {
+        for (int i = 0; i < vertices; i++)
+        {
+            if (outDegree(i) & 1)
+                return i;
+        }
+        cout<<"no odd vertex\n";
+        return -1;
+    }
+
     int findEularPathOrCircuit()
     {
         if (!isConnected())
@@ -379,7 +390,7 @@ private:
 
         if (!directed)
         {
-            for (int i = 1; i <= vertices; i++)
+            for (int i = 0; i < vertices; i++)
             {
                 if (outDegree(i) & 1)
                     oddVertex++;
@@ -388,7 +399,7 @@ private:
         }
         else
         {
-            for (int i = 1; i <= vertices; i++)
+            for (int i = 0; i < vertices; i++)
             {
                 // cout << "indegree " << inDegree(i) << " outdegree " << outDegree(i) << endl;
                 if (inDegree(i) - outDegree(i) == 1)
@@ -408,25 +419,65 @@ private:
         }
     }
 
+    vector<int> findPath(int source, vector<list<int>> &graphCopy, vector<int> &eularPath)
+    {
+        while (!graphCopy[source].empty())
+        {
+            int v = graphCopy[source].back();
+            graphCopy[source].pop_back();
+            auto it = find(graphCopy[v].begin(), graphCopy[v].end(), source);
+            graphCopy[v].erase(it);
+
+            findPath(v, graphCopy, eularPath);
+        }
+        eularPath.push_back(source);
+        return eularPath;
+    }
+
 public:
-    void isEularian()
+    vector<int> printEularPath()
+    {
+        int e = isEularian();
+        vector<int> eularPath;
+        vector<list<int>> graphCopy = adjList;
+        if (e == 1 or 2) // semi eularian
+        {
+            int source = 0;
+            if (e == 1)
+                source = findOddVertex();
+            eularPath = findPath(source, graphCopy, eularPath);
+            for(auto a: eularPath)
+            {
+                cout<<a<<" - ";
+            }
+            cout<<"\n";
+        }
+        else
+        {
+            cout << "graph has no eular path or circuit\n";
+        }
+        return eularPath;
+    }
+
+    int isEularian()
     {
         int eular = findEularPathOrCircuit();
         if (eular == 0)
         {
             cout << "not eularian\n";
-            return;
+            return 0;
         }
         if (eular == 1)
         {
             cout << "semi eularian\n";
-            return;
+            return 1;
         }
         if (eular == 2)
         {
             cout << "eularian\n";
-            return;
+            return 2;
         }
+        return -1;
     }
 };
 
@@ -435,13 +486,14 @@ int main()
     freopen("input.in", "r", stdin);
     freopen("output.in", "w", stdout);
 
-    graph g(5, 6, true); // starts from 1
+    graph g(4, 4, false); // starts from 1
     g.defineGraph();
     if (g.isConnected())
         cout << "connected\n";
     else
         cout << "not connected\n";
     g.isEularian();
+    g.printEularPath();
 
     return 0;
 }
