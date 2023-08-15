@@ -137,7 +137,7 @@ public:
                 {
                     distance[v.first] = distance[u] + v.second;
                     minHeap.push(make_pair(v.first, distance[v.first])); // v.first = vertex and v.second = edge weight between u and v.first
-                    parent[v.first] = u;
+                    parent[v.first] = u;                    
                 }
             }
         }
