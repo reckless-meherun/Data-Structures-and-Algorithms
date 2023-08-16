@@ -11,6 +11,12 @@ enum COLORS
     black = 2  // visited along with all the neighbours (fully explored)
 };
 
+class triplet
+{
+public:
+    int u, v, weight;
+};
+
 class graph
 {
     vector<list<pair<int, int>>> adjList;
@@ -85,13 +91,15 @@ public:
             int u = minHeap.top().first; // first is the vertex, second is the distance
             minHeap.pop();
 
-            for (auto v : adjList[u])
+            for (auto node : adjList[u])
             {
-                if (distance[v.first] > distance[u] + v.second)
+                int v = node.first;
+                int weight = node.second;
+                if (distance[v] > distance[u] + weight)
                 {
-                    distance[v.first] = distance[u] + v.second;
-                    minHeap.push(make_pair(v.first, distance[v.first])); // v.first = vertex and v.second = edge weight between u and v.first
-                    parent[v.first] = u;
+                    distance[v] = distance[u] + weight;
+                    minHeap.push(make_pair(v, distance[v])); // v = vertex and weight = edge weight between u and v
+                    parent[v] = u;
                 }
             }
         }
