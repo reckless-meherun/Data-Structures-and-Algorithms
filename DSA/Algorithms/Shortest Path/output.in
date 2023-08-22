@@ -1,8 +1,22 @@
-0 : 1 (2), 2 (4), 
-1 : 2 (1), 4 (5), 3 (4), 
-2 : 1 (3), 3 (2), 4 (3), 
-3 : 
-4 : 3 (5), 
+0 5
+1 8
+Distance of all vertices from source : 0
+0 - 0 : 
+Path : 0 
+Cost : 0
+
+0 - 1 : 
+Path : 0 1 
+Cost : 5
+
+0 - 2 : 
+Path : 0 1 2 
+Cost : 8
+
+0 - 3 : 
+Path : 0 1 2 3 
+Cost : 9
+
 
 Shortest path from source to vertices through dijkstra
 0 - 0 : 
@@ -11,17 +25,81 @@ Cost : 0
 
 0 - 1 : 
 Path : 0 1 
-Cost : 2
+Cost : 5
 
 0 - 2 : 
 Path : 0 1 2 
-Cost : 3
+Cost : 8
 
 0 - 3 : 
 Path : 0 1 2 3 
-Cost : 5
+Cost : 9
 
-0 - 4 : 
-Path : 0 1 2 4 
-Cost : 6
+done
 
+Shortest path from source to vertices through dijkstra
+1 - 0 : 
+Path : No path
+
+Cost : 0
+
+1 - 1 : 
+Path : 1 
+Cost : 0
+
+1 - 2 : 
+Path : 1 2 
+Cost : 3
+
+1 - 3 : 
+Path : 1 2 3 
+Cost : 4
+
+done
+
+Shortest path from source to vertices through dijkstra
+2 - 0 : 
+Path : No path
+
+Cost : 0
+
+2 - 1 : 
+Path : No path
+
+Cost : 2147483647
+
+2 - 2 : 
+Path : 2 
+Cost : 0
+
+2 - 3 : 
+Path : 2 3 
+Cost : 1
+
+done
+
+Shortest path from source to vertices through dijkstra
+3 - 0 : 
+Path : No path
+
+Cost : 0
+
+3 - 1 : 
+Path : No path
+
+Cost : 2147483647
+
+3 - 2 : 
+Path : No path
+
+Cost : 2147483647
+
+3 - 3 : 
+Path : 3 
+Cost : 0
+
+done
+0 5 8 9 
+0 0 3 4 
+0 inf 0 1 
+0 inf inf 0 
