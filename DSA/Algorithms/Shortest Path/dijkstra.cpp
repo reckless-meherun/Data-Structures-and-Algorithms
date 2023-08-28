@@ -75,12 +75,9 @@ public:
         for (int i = 0; i < vertices; i++)
         {
             color[i] = white;
-            for (auto v : adjList[i])
-            {
-                color[v.first] = white;
-                parent[v.first] = INT_MIN;
-                distance[v.first] = INT_MAX;
-            }
+            color[i] = white;
+            parent[i] = INT_MIN;
+            distance[i] = INT_MAX;
         }
 
         priority_queue<iPair, vector<iPair>> minHeap;
