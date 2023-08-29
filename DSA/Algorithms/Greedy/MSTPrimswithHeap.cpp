@@ -106,7 +106,7 @@ public:
             int u = node.second;
 
             pq.pop();
-
+            cout<<"popped "<<u<<endl;
             if (!mst[u])
             {
                 mst[u] = true;
@@ -145,7 +145,7 @@ private:
 
 int main()
 {
-    graph g(4, 5, false); // starts from 0
+    graph g(6, 8, false); // starts from 0
     g.defineGraph();
     g.printGraph();
     cout << "\n";
