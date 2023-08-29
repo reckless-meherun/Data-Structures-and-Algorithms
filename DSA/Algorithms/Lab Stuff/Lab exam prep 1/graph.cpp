@@ -30,6 +30,7 @@ class graph
     int edges;
     vector<vector<duplet>> adjList;
     vector<triplet> edgeList;
+    vector<vector<int>> dpMatrix;
     vector<COLORS> color;
     vector<int> parent;
     vector<int> distance;
@@ -48,6 +49,7 @@ public:
         this->weighted = weighted;
         adjList.resize(vertices);
         edgeList.resize(edges);
+        dpMatrix.resize(vertices, vector<int>(vertices, 1e9 + 7));
         parent.resize(vertices);
         distance.resize(vertices);
         color.resize(vertices);
@@ -59,38 +61,30 @@ public:
 private:
     void defineGraph(bool weighted)
     {
-        int u, v, weight;
-        if (!weighted)
+        int u, v, weight = 1;
+        for (int i = 0; i < edges; i++)
         {
-            for (int i = 0; i < edges; i++)
+            if (!weighted)
             {
                 cin >> u >> v;
-                addEdge(u, v);
             }
-        }
-        else
-        {
-            for (int i = 0; i < edges; i++)
+            else
             {
                 cin >> u >> v >> weight;
-                addEdge(u, v, weight);
             }
+            addEdge(u, v, weight);
         }
-    }
-
-    void addEdge(int u, int v)
-    {
-        adjList[u].push_back({v, 1});
-        if (!directed)
-            adjList[v].push_back({u, 1});
-        edgeList.push_back({u, v, 1});
     }
 
     void addEdge(int u, int v, int w)
     {
         adjList[u].push_back({v, w});
+        dpMatrix[u][v] = w;
         if (!directed)
+        {
             adjList[v].push_back({u, w});
+            dpMatrix[v][u] = w;
+        }
         edgeList.push_back({u, v, w});
     }
 
@@ -265,6 +259,7 @@ public:
                 cout << i << " : " << -1 << "\n";
         }
     }
+
 private:
     bool relax(int u, int v, int w)
     {
@@ -306,14 +301,51 @@ public:
             cout << distance[destination] << "\n";
         return true;
     }
+
+    void floydWarshall()
+    {
+        // initialize if there is no self loop
+        for (int i = 0; i < vertices; i++)
+        {
+            for (int j = 0; j < vertices; j++)
+            {
+                if (i == j and dpMatrix[i][j] == 1e9 + 7)
+                    dpMatrix[i][j] = 0;
+            }
+        }
+
+        for (int k = 0; k < vertices; k++)
+        {
+            for (int i = 0; i < vertices; i++)
+            {
+                for (int j = 0; j < vertices; j++)
+                {
+                    if ((dpMatrix[i][k] != 1e9 + 7 and dpMatrix[k][j] != 1e9 + 7) and (dpMatrix[i][j] > dpMatrix[i][k] + dpMatrix[k][j]))
+                        dpMatrix[i][j] = min(dpMatrix[i][j], dpMatrix[i][k] + dpMatrix[k][j]);
+                }
+            }
+        }
+
+        for (int i = 0; i < vertices; i++)
+        {
+            for (int j = 0; j < vertices; j++)
+            {
+                if (dpMatrix[i][j] != 1e9 + 7)
+                    cout << dpMatrix[i][j] << " ";
+                else
+                    cout << "inf ";
+            }
+            cout << "\n";
+        }
+    }
 };
 
 int main()
 {
-    int m, n;
+     int m, n;
     cin >> m >> n;
-    graph g(m, n, false, true); // starts from 0
+    graph g(m, n, true, true); // starts from 0
    // g.printGraph();
-    g.dijkstra(0);
+    g.floydWarshall();
     return 0;
 }

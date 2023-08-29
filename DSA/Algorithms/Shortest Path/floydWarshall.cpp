@@ -26,7 +26,7 @@ class graph
     COLORS *color;
     int *parent;
     int *distance;
-    vector<vector<int>> predecMatrix;
+    vector<vector<int>> dpMatrix;
 
 public:
     graph(int vertices, int edges, bool ifDirected)
@@ -38,16 +38,16 @@ public:
         color = new COLORS[vertices];
         parent = new int[vertices];
         distance = new int[vertices];
-        predecMatrix.resize(vertices, vector<int>(vertices));
+        dpMatrix.resize(vertices, vector<int>(vertices));
 
         for (int i = 0; i < vertices; i++)
         {
             for (int j = 0; j < vertices; j++)
             {
                 if (i == j)
-                    predecMatrix[i][j] = 0;
+                    dpMatrix[i][j] = 0;
                 else
-                    predecMatrix[i][j] = INT_MAX;
+                    dpMatrix[i][j] = 1e9+5;
             }
         }
     }
@@ -65,11 +65,11 @@ public:
     void addEdge(int u, int v, int weight)
     {
         adjList[u].push_back({v, weight});
-        predecMatrix[u][v] = weight;
+        dpMatrix[u][v] = weight;
         if (!directed)
         {
             adjList[v].push_back({u, weight});
-            predecMatrix[v][u] = weight;
+            dpMatrix[v][u] = weight;
         }
     }
 
@@ -94,9 +94,9 @@ public:
             {
                 for (int j = 0; j < vertices; j++)
                 {
-                    if ((predecMatrix[i][j] > predecMatrix[i][k] + predecMatrix[k][j]) and (predecMatrix[i][k] != INT_MAX and predecMatrix[k][j] != INT_MAX))
+                    if ((dpMatrix[i][j] > dpMatrix[i][k] + dpMatrix[k][j]) and (dpMatrix[i][k] != 1e9+5 and dpMatrix[k][j] != 1e9+5))
                     {
-                        predecMatrix[i][j] = predecMatrix[i][k] + predecMatrix[k][j];
+                        dpMatrix[i][j] = dpMatrix[i][k] + dpMatrix[k][j];
                     }
                 }
             }
@@ -111,11 +111,11 @@ private:
         {
             for (int j = 0; j < vertices; j++)
             {
-                if (predecMatrix[i][j] == INT_MAX)
+                if (dpMatrix[i][j] == 1e9+5)
                     cout << "inf"
                          << " ";
                 else
-                    cout << predecMatrix[i][j] << " ";
+                    cout << dpMatrix[i][j] << " ";
             }
             cout << "\n";
         }
