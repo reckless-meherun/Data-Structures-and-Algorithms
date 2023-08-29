@@ -2,6 +2,7 @@
 using namespace std;
 typedef long long ll;
 
+typedef pair<int, int> iPair;
 #define MAX_VALUE 1e9 + 7;
 
 enum COLORS
@@ -221,55 +222,51 @@ public:
         cout << "\n";
     }
 
-private:
-    static bool cmp(duplet &a, duplet &b)
-    {
-        if (a.weight == b.weight)
-            return a.v > b.v;
-        return a.weight > b.weight;
-    }
+    // private:
+    //     static bool cmp(const duplet &a, const duplet &b)
+    //     {
+    //         if (a.weight == b.weight)
+    //             return a.v < b.v;
+    //         return a.weight < b.weight;
+    //     }
 
 public:
     void dijkstra(int source)
     {
         initialize(source);
-        priority_queue<duplet, vector<duplet>, decltype(&cmp)> minHeap;
-
-        minHeap.push({source, 0});
+        priority_queue<iPair, vector<iPair>, greater<iPair>> minHeap; //pq uses max heap as default
+        minHeap.push({0, source});
 
         while (!minHeap.empty())
         {
-            duplet node = minHeap.top();
+            int u = minHeap.top().second;
             minHeap.pop();
-            int u = node.v;
 
             if (color[u] != white)
                 continue;
-            color[u] = grey;
+            color[u] = black;
 
             for (auto v : adjList[u])
             {
-                if (color[v.v] == white)
+                if (distance[v.v] > distance[u] + v.weight) // relax
                 {
-                    if (distance[v.v] > distance[u] + v.weight) // relax
-                    {
-                        parent[v.v] = u;
-                        distance[v.v] = distance[u] + v.weight;
-                        minHeap.push({v.v, distance[v.v]});
-                    }
+                    parent[v.v] = u;
+                    distance[v.v] = distance[u] + v.weight;
+                    minHeap.push({distance[v.v], v.v});
                 }
             }
         }
 
-        // for (int i = 0; i < vertices; i++)
-        // {
-        //     if (source != i and distance[i] != 0)
-        //         cout << i << " : " << distance[i] << "\n";
-        //     else if (source != i and distance[i] == 0)
-        //         cout << i << " : " << -1 << "\n";
-        // }
+        for (int i = 0; i < vertices; i++)
+        {
+            if (distance[i] != 1e9 + 7)
+                cout << i << " : " << distance[i] << "\n";
+            else
+                cout << i << " : " << -1 << "\n";
+        }
     }
 
+private:
     bool relax(int u, int v, int w)
     {
         if (distance[v] > distance[u] + w)
@@ -281,6 +278,7 @@ public:
         return false;
     }
 
+public:
     bool bellmanFord(int source, int destination)
     {
         initialize(source);
@@ -316,15 +314,7 @@ int main()
     int m, n;
     cin >> m >> n;
     graph g(m, n, false, true); // starts from 0
-    int q;
-    cin >> q;
-    while (q--)
-    {
-        int x, y;
-        cin >> x >> y;
-        g.dijkstra(x);
-        g.printPath(x, y);
-        cout << "\n";
-    }
+   // g.printGraph();
+    g.dijkstra(0);
     return 0;
 }
