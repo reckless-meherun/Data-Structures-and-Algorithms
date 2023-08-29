@@ -157,6 +157,7 @@ public:
             color[i] = white;
             distance[i] = MAX_VALUE;
             parent[i] = -1;
+            predecMatrix[source][i] = -1;
         }
         distance[source] = 0;
     }
@@ -233,21 +234,6 @@ private:
         color[u] = black;
     }
 
-public:
-    void printStartingTimes()
-    {
-        for (int i = 0; i < vertices; i++)
-            cout << i << " : " << startTime[i] << "\n";
-        cout << "\n";
-    }
-
-    void printFinishingTimes()
-    {
-        for (int i = 0; i < vertices; i++)
-            cout << i << " : " << endTime[i] << "\n";
-        cout << "\n";
-    }
-
     // private:
     //     static bool cmp(const duplet &a, const duplet &b)
     //     {
@@ -279,17 +265,10 @@ public:
                     parent[v.v] = u;
                     distance[v.v] = distance[u] + v.weight;
                     minHeap.push({distance[v.v], v.v});
+                    predecMatrix[source][v.v] = u;
                 }
             }
         }
-
-        // for (int i = 0; i < vertices; i++)
-        // {
-        //     if (distance[i] != 1e9 + 7)
-        //         cout << i << " : " << distance[i] << "\n";
-        //     else
-        //         cout << i << " : " << -1 << "\n";
-        // }
     }
 
 private:
@@ -351,7 +330,7 @@ public:
         printWeightMatrix(dpMatrix);
     }
 
-    void printFloydWarshallAPSP(int source, int destination)
+    void printAPSP(int source, int destination)
     {
         if (source == destination)
         {
@@ -363,7 +342,7 @@ public:
         }
         else
         {
-            printFloydWarshallAPSP(source, predecMatrix[source][destination]);
+            printAPSP(source, predecMatrix[source][destination]);
             cout << destination << " ";
         }
     }
@@ -376,6 +355,7 @@ public:
 
     void johnson(int dummySource)
     {
+        // reconstruct to resize the vectors and stuff
         reconstruct(dummySource + 1, edges + dummySource);
         addDummySource(dummySource);
         if (!bellmanFord(dummySource))
@@ -385,7 +365,7 @@ public:
         }
 
         auto bellmanDistance = distance;
-        // reconstruct the graph, adding offset to the negative edges
+        // reconstruct to add offset to the negative edges
         for (int u = 0; u < vertices; u++)
         {
             for (auto v : adjList[u])
@@ -394,6 +374,7 @@ public:
             }
         }
 
+        // reconstruct to go back to the original graph
         reconstruct(dummySource, edges - dummySource);
 
         vector<vector<int>> apsp(vertices);
@@ -402,7 +383,6 @@ public:
             dijkstra(i);
             apsp[i] = distance;
         }
-
         printWeightMatrix(apsp);
     }
 
@@ -430,6 +410,14 @@ int main()
     graph g(m, n, true, true); // starts from 0
                                // g.printGraph();
     g.johnson(m);
-    
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            g.printAPSP(i, j);
+            cout << endl;
+        }
+        cout << "\n";
+    }
     return 0;
 }
