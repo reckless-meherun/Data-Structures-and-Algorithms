@@ -233,15 +233,16 @@ public:
     void dijkstra(int source)
     {
         initialize(source);
-        priority_queue<duplet, vector<duplet>, decltype(&cmp)> minHeap;
-
-        minHeap.push({source, 0});
+       // cout<<"meherun1\n";
+        priority_queue<pair<int,int>, vector<pair<int,int>>> minHeap;
+//cout<<"meherun2";
+        minHeap.push({0, source});
 
         while (!minHeap.empty())
         {
-            duplet node = minHeap.top();
+            auto node = minHeap.top();
             minHeap.pop();
-            int u = node.v;
+            int u = node.second;
 
             if (color[u] != white)
                 continue;
@@ -255,19 +256,19 @@ public:
                     {
                         parent[v.v] = u;
                         distance[v.v] = distance[u] + v.weight;
-                        minHeap.push({v.v, distance[v.v]});
+                        minHeap.push({distance[v.v], v.v});
                     }
                 }
             }
         }
 
-        // for (int i = 0; i < vertices; i++)
-        // {
-        //     if (source != i and distance[i] != 0)
-        //         cout << i << " : " << distance[i] << "\n";
-        //     else if (source != i and distance[i] == 0)
-        //         cout << i << " : " << -1 << "\n";
-        // }
+        for (int i = 0; i < vertices; i++)
+        {
+            if (source != i and distance[i] != 0)
+                cout << i << " : " << distance[i] << "\n";
+            else if (source != i and distance[i] == 0)
+                cout << i << " : " << -1 << "\n";
+        }
     }
 
     bool relax(int u, int v, int w)
