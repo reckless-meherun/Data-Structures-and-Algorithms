@@ -24,6 +24,76 @@ public:
     int u, v, weight;
 };
 
+class dsu
+{
+    vector<int> parent;
+    vector<int> rank;
+    int size;
+
+public:
+    dsu(int size)
+    {
+        this->size = size;
+        parent.resize(size, -1);
+        rank.resize(size, -1);
+        makeSet();
+    }
+
+    void makeSet()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    void make(int a)
+    {
+        parent[a] = a;
+        rank[a] = a;
+    }
+
+    int findRoot(int a)
+    {
+        if (parent[a] == a)
+            return a;
+
+        return parent[a] = findRoot(parent[a]);
+    }
+
+    void Union(int a, int b)
+    {
+        a = findRoot(a);
+        b = findRoot(b);
+
+        if (a == b)
+            return;
+
+        if (rank[a] > rank[b])
+        {
+            parent[b] = a;
+        }
+        else if (rank[b] > rank[a])
+        {
+            parent[a] = b;
+        }
+        else
+        {
+            parent[b] = a;
+            rank[a]++;
+        }
+    }
+
+    bool hasCycle(int a, int b)
+    {
+        if (findRoot(a) == findRoot(b))
+            return true;
+
+        return false;
+    }
+};
+
 class graph
 {
     int vertices;
@@ -50,11 +120,11 @@ public:
         distance.resize(vertices);
         color.resize(vertices);
         mst.resize(vertices, false);
-        
+
         defineGraph(weighted);
     }
 
-    private:
+private:
     void defineGraph(bool weighted)
     {
         int u, v, weight = 1;
@@ -81,6 +151,35 @@ public:
         }
         edgeList.push_back({u, v, w});
     }
+
+    // void removeMultiEdgeAndLoops()
+    // {
+    //     // Remove self-loops
+    //     for (int u = 0; u < vertices; ++u)
+    //     {
+    //         for (auto &edge : adjList[u])
+    //         {
+    //             int v = edge.v;
+    //             int w = edge.weight;
+
+    //             if (u == v)
+    //             {
+    //                 edge = adjList[u].back(); // Replace self-loop with last edge
+    //                 adjList[u].pop_back();
+    //                 break; // There can be at most one self-loop, so we can break here
+    //             }
+    //         }
+    //     }
+
+    //     // Remove multi-edges
+    //     for (int u = 0; u < vertices; ++u)
+    //     {
+    //         sort(adjList[u].begin(), adjList[u].end()); // Sort adjacent vertices
+
+    //         adjList[u].erase(unique(adjList[u].begin(), adjList[u].end()), adjList[u].end());
+    //         // Use unique() to remove consecutive duplicate edges
+    //     }
+    // }
 
 public:
     void printGraph()
@@ -111,6 +210,7 @@ public:
         }
     }
 
+private:
     void intialize(int source)
     {
         for (int i = 0; i < vertices; i++)
@@ -123,19 +223,21 @@ public:
         distance[source] = 0;
     }
 
+public:
     void mstPrims(int source)
     {
+        // removeMultiEdgeAndLoops();
         intialize(source);
         vector<triplet> minSpanTree;
         priority_queue<iPair, vector<iPair>, greater<iPair>> pq;
         vector<vector<int>> edgeCost(vertices, vector<int>(vertices));
         int minCost = 0;
-       
+
         pq.push({0, source});
 
         while (!pq.empty())
         {
-            
+
             int u = pq.top().second;
             pq.pop();
 
@@ -172,13 +274,45 @@ public:
             cout << tree.u << " - " << tree.v << " : " << tree.weight << "\n";
         }
     }
+
+    static bool cmp(triplet &a, triplet &b)
+    {
+        if (a.weight == b.weight)
+        {
+            if (a.u == b.u)
+                return a.v < b.v;
+            return a.u < b.u;
+        }
+        return a.weight < b.weight;
+    }
+
+    void mstKruskals()
+    {
+        dsu minSpanTree(vertices);
+        vector<triplet> minEdgeList;
+        int minCost = 0;
+        sort(edgeList.begin(), edgeList.end(), cmp);
+
+        for (auto e : edgeList)
+        {
+            if (!minSpanTree.hasCycle(e.u, e.v))
+            {
+                minSpanTree.Union(e.u, e.v);
+                minEdgeList.push_back({e.u, e.v, e.weight});
+                minCost += e.weight;
+            }
+        }
+        printMST(minEdgeList);
+        cout << "Minimum cost : " << minCost << "\n";
+    }
 };
 
 int main()
 {
     int m, n;
     cin >> m >> n;
-    graph g(m, n, true, true);
-    g.mstPrims(0);
+    graph g(m, n, false, true);
+    g.mstKruskals();
+    g.mstPrims(3);
     return 0;
 }
