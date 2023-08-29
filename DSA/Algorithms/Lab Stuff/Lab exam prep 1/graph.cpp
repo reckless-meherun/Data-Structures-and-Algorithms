@@ -67,6 +67,27 @@ public:
         defineGraph(weighted);
     }
 
+    void reconstruct(int vertices, int edges)
+    {
+        this->vertices = vertices;
+        this->edges = edges;
+        adjList.resize(vertices);
+        edgeList.resize(edges);
+        dpMatrix.resize(vertices, vector<int>(vertices, 1e9 + 7));
+        predecMatrix.resize(vertices, vector<int>(vertices, -1));
+        parent.resize(vertices);
+        distance.resize(vertices);
+        color.resize(vertices);
+        startTime.resize(vertices);
+        endTime.resize(vertices);
+
+        // initialize diagonals
+        for (int i = 0; i < vertices; i++)
+            for (int j = 0; j < vertices; j++)
+                if (i == j)
+                    dpMatrix[i][j] = 0;
+    }
+
 private:
     void defineGraph(bool weighted)
     {
@@ -262,13 +283,13 @@ public:
             }
         }
 
-        for (int i = 0; i < vertices; i++)
-        {
-            if (distance[i] != 1e9 + 7)
-                cout << i << " : " << distance[i] << "\n";
-            else
-                cout << i << " : " << -1 << "\n";
-        }
+        // for (int i = 0; i < vertices; i++)
+        // {
+        //     if (distance[i] != 1e9 + 7)
+        //         cout << i << " : " << distance[i] << "\n";
+        //     else
+        //         cout << i << " : " << -1 << "\n";
+        // }
     }
 
 private:
@@ -284,7 +305,7 @@ private:
     }
 
 public:
-    bool bellmanFord(int source, int destination)
+    bool bellmanFord(int source)
     {
         initialize(source);
         for (int i = 0; i < vertices - 1; i++)
@@ -305,17 +326,11 @@ public:
                 }
             }
         }
-
-        if (distance[destination] == 1e9 + 7)
-            cout << "Impossible\n";
-        else
-            cout << distance[destination] << "\n";
         return true;
     }
 
     void floydWarshall()
     {
-
         for (int k = 0; k < vertices; k++)
         {
             for (int i = 0; i < vertices; i++)
@@ -333,36 +348,78 @@ public:
                 }
             }
         }
+        printWeightMatrix(dpMatrix);
+    }
 
+    void printFloydWarshallAPSP(int source, int destination)
+    {
+        if (source == destination)
+        {
+            cout << source << " ";
+        }
+        else if (predecMatrix[source][destination] == -1)
+        {
+            cout << "No path\n";
+        }
+        else
+        {
+            printFloydWarshallAPSP(source, predecMatrix[source][destination]);
+            cout << destination << " ";
+        }
+    }
+
+    void addDummySource(int source)
+    {
+        for (int i = 0; i < vertices; i++)
+            addEdge(source, i, 0);
+    }
+
+    void johnson(int dummySource)
+    {
+        reconstruct(dummySource + 1, edges + dummySource);
+        addDummySource(dummySource);
+        if (!bellmanFord(dummySource))
+        {
+            cout << "negative cycle: no shortest path exists\n";
+            return;
+        }
+
+        auto bellmanDistance = distance;
+        // reconstruct the graph, adding offset to the negative edges
+        for (int u = 0; u < vertices; u++)
+        {
+            for (auto v : adjList[u])
+            {
+                v.weight = v.weight + bellmanDistance[u] - bellmanDistance[v.v];
+            }
+        }
+
+        reconstruct(dummySource, edges - dummySource);
+
+        vector<vector<int>> apsp(vertices);
+        for (int i = 0; i < vertices; i++)
+        {
+            dijkstra(i);
+            apsp[i] = distance;
+        }
+
+        printWeightMatrix(apsp);
+    }
+
+    void printWeightMatrix(vector<vector<int>> apsp)
+    {
         for (int i = 0; i < vertices; i++)
         {
             for (int j = 0; j < vertices; j++)
             {
-                if (dpMatrix[i][j] != 1e9 + 7)
-                    cout << dpMatrix[i][j] << " ";
+                if (apsp[i][j] != 1e9 + 7)
+                    cout << apsp[i][j] << " ";
                 else
                     cout << "inf ";
             }
             cout << "\n";
         }
-        cout<<"\n";
-    }
-
-    void printFloydWarshallAPSP(int source, int destination)
-    {
-        if(source==destination)
-        {
-            cout<<source<<" ";
-        }
-        else if(predecMatrix[source][destination]==-1)
-        {
-            cout<<"No path\n";
-        }
-        else
-        {
-            printFloydWarshallAPSP(source, predecMatrix[source][destination]);
-            cout<<destination<<" ";
-        }
+        cout << "\n";
     }
 };
 
@@ -372,15 +429,7 @@ int main()
     cin >> m >> n;
     graph g(m, n, true, true); // starts from 0
                                // g.printGraph();
-    g.floydWarshall();
-    for(int i=0; i<m; i++)
-    {
-        for(int j=0; j<m; j++)
-        {
-            g.printFloydWarshallAPSP(i,j);
-            cout<<endl;
-        }
-        cout<<endl;
-    }
+    g.johnson(m);
+    
     return 0;
 }
