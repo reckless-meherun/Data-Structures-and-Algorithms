@@ -234,13 +234,25 @@ public:
     void dijkstra(int source)
     {
         initialize(source);
+<<<<<<< HEAD
         priority_queue<iPair, vector<iPair>, greater<iPair>> minHeap; //pq uses max heap as default
+=======
+       // cout<<"meherun1\n";
+        priority_queue<pair<int,int>, vector<pair<int,int>>> minHeap;
+//cout<<"meherun2";
+>>>>>>> 3f4bd1b65ae4f3bee7de76cc5ea542bd48bc91b2
         minHeap.push({0, source});
 
         while (!minHeap.empty())
         {
+<<<<<<< HEAD
             int u = minHeap.top().second;
             minHeap.pop();
+=======
+            auto node = minHeap.top();
+            minHeap.pop();
+            int u = node.second;
+>>>>>>> 3f4bd1b65ae4f3bee7de76cc5ea542bd48bc91b2
 
             if (color[u] != white)
                 continue;
@@ -250,18 +262,33 @@ public:
             {
                 if (distance[v.v] > distance[u] + v.weight) // relax
                 {
+<<<<<<< HEAD
                     parent[v.v] = u;
                     distance[v.v] = distance[u] + v.weight;
                     minHeap.push({distance[v.v], v.v});
+=======
+                    if (distance[v.v] > distance[u] + v.weight) // relax
+                    {
+                        parent[v.v] = u;
+                        distance[v.v] = distance[u] + v.weight;
+                        minHeap.push({distance[v.v], v.v});
+                    }
+>>>>>>> 3f4bd1b65ae4f3bee7de76cc5ea542bd48bc91b2
                 }
             }
         }
 
         for (int i = 0; i < vertices; i++)
         {
+<<<<<<< HEAD
             if (distance[i] != 1e9 + 7)
                 cout << i << " : " << distance[i] << "\n";
             else
+=======
+            if (source != i and distance[i] != 0)
+                cout << i << " : " << distance[i] << "\n";
+            else if (source != i and distance[i] == 0)
+>>>>>>> 3f4bd1b65ae4f3bee7de76cc5ea542bd48bc91b2
                 cout << i << " : " << -1 << "\n";
         }
     }
