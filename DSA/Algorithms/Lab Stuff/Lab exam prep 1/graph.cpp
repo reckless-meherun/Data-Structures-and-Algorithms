@@ -55,6 +55,13 @@ public:
         color.resize(vertices);
         startTime.resize(vertices);
         endTime.resize(vertices);
+
+        // initialize diagonals
+        for (int i = 0; i < vertices; i++)
+            for (int j = 0; j < vertices; j++)
+                if (i == j)
+                    dpMatrix[i][j] = 0;
+
         defineGraph(weighted);
     }
 
@@ -304,15 +311,6 @@ public:
 
     void floydWarshall()
     {
-        // initialize if there is no self loop
-        for (int i = 0; i < vertices; i++)
-        {
-            for (int j = 0; j < vertices; j++)
-            {
-                if (i == j and dpMatrix[i][j] == 1e9 + 7)
-                    dpMatrix[i][j] = 0;
-            }
-        }
 
         for (int k = 0; k < vertices; k++)
         {
@@ -342,10 +340,10 @@ public:
 
 int main()
 {
-     int m, n;
+    int m, n;
     cin >> m >> n;
     graph g(m, n, true, true); // starts from 0
-   // g.printGraph();
+                               // g.printGraph();
     g.floydWarshall();
     return 0;
 }
