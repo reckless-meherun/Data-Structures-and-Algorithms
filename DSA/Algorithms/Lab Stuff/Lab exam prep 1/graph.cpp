@@ -31,6 +31,7 @@ class graph
     vector<vector<duplet>> adjList;
     vector<triplet> edgeList;
     vector<vector<int>> dpMatrix;
+    vector<vector<int>> predecMatrix;
     vector<COLORS> color;
     vector<int> parent;
     vector<int> distance;
@@ -50,6 +51,7 @@ public:
         adjList.resize(vertices);
         edgeList.resize(edges);
         dpMatrix.resize(vertices, vector<int>(vertices, 1e9 + 7));
+        predecMatrix.resize(vertices, vector<int>(vertices, -1));
         parent.resize(vertices);
         distance.resize(vertices);
         color.resize(vertices);
@@ -87,10 +89,12 @@ private:
     {
         adjList[u].push_back({v, w});
         dpMatrix[u][v] = w;
+        predecMatrix[u][v] = u;
         if (!directed)
         {
             adjList[v].push_back({u, w});
             dpMatrix[v][u] = w;
+            predecMatrix[v][u] = v;
         }
         edgeList.push_back({u, v, w});
     }
@@ -319,7 +323,13 @@ public:
                 for (int j = 0; j < vertices; j++)
                 {
                     if ((dpMatrix[i][k] != 1e9 + 7 and dpMatrix[k][j] != 1e9 + 7) and (dpMatrix[i][j] > dpMatrix[i][k] + dpMatrix[k][j]))
+                    {
                         dpMatrix[i][j] = min(dpMatrix[i][j], dpMatrix[i][k] + dpMatrix[k][j]);
+                        if (predecMatrix[i][k] != -1)
+                        {
+                            predecMatrix[i][j] = predecMatrix[k][j];
+                        }
+                    }
                 }
             }
         }
@@ -335,6 +345,24 @@ public:
             }
             cout << "\n";
         }
+        cout<<"\n";
+    }
+
+    void printFloydWarshallAPSP(int source, int destination)
+    {
+        if(source==destination)
+        {
+            cout<<source<<" ";
+        }
+        else if(predecMatrix[source][destination]==-1)
+        {
+            cout<<"No path\n";
+        }
+        else
+        {
+            printFloydWarshallAPSP(source, predecMatrix[source][destination]);
+            cout<<destination<<" ";
+        }
     }
 };
 
@@ -345,5 +373,14 @@ int main()
     graph g(m, n, true, true); // starts from 0
                                // g.printGraph();
     g.floydWarshall();
+    for(int i=0; i<m; i++)
+    {
+        for(int j=0; j<m; j++)
+        {
+            g.printFloydWarshallAPSP(i,j);
+            cout<<endl;
+        }
+        cout<<endl;
+    }
     return 0;
 }
