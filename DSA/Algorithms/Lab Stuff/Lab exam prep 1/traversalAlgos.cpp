@@ -69,10 +69,16 @@ private:
         }
     }
 
-    // void removeEdge(int u, int v, int w)
-    // {
-    //     adjList[u].erase(adjList[u].find({v, w}));
-    // }
+public:
+    void removeEdge(int u, int v)
+    {
+        auto it1 = find(adjList[u].begin(), adjList[u].end(), v);
+        auto it2 = find(adjList[v].begin(), adjList[v].end(), u);
+        if (it1 != adjList[u].end())
+            adjList[u].erase(it1);
+        if (it2 != adjList[v].end())
+            adjList[v].erase(it2);
+    }
 
 public:
     void printGraph()
@@ -364,13 +370,17 @@ private:
 
     vector<int> findPath(int source, vector<vector<int>> &graphCopy, vector<int> &eularPath)
     {
-        cout<<source<<endl;
+        cout << source << endl;
         while (!graphCopy[source].empty())
         {
-            int v = graphCopy[source].back();            
+            int v = graphCopy[source].back();
             graphCopy[source].pop_back();
-            auto it = find(graphCopy[v].begin(), graphCopy[v].end(), source);            
-            graphCopy[v].erase(it);
+
+            if (!directed)
+            {
+                auto it = find(graphCopy[v].begin(), graphCopy[v].end(), source);
+                graphCopy[v].erase(it);
+            }
 
             findPath(v, graphCopy, eularPath);
         }
@@ -409,11 +419,13 @@ int main()
     int m, n;
     cin >> m >> n;
     graph g(m, n, false, false);
-    // g.printGraph();
-    g.topologicalSort();
-    g.findSCC();
-    // g.printGraph();
-    g.printEularPath();
+     g.printGraph();
+    // g.topologicalSort();
+    // g.findSCC();
+    // // g.printGraph();
+    // g.printEularPath();
+    g.removeEdge(0,2);
+    g.printGraph();
 
     return 0;
 }
