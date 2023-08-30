@@ -25,7 +25,7 @@ class graph
     int time;
     stack<int> topoOrderStack;
     bool hasCycle;
-    int totalSCC=0;
+    int totalSCC = 0;
 
 public:
     graph(int vertices, int edges, bool ifDirected)
@@ -71,16 +71,12 @@ public:
     void initialize()
     {
         // initialize loop
-        for (int i = 1; i <= vertices; i++)
+        for (int v = 1; v <= vertices; v++)
         {
-            color[i] = white;
-            for (auto v : adjList[i])
-            {
-                color[v] = white;
-                parent[v] = INT_MIN;
-                distance[v] = INT_MAX;
-                low[v] = INT_MAX;
-            }
+            color[v] = white;
+            parent[v] = INT_MIN;
+            distance[v] = INT_MAX;
+            low[v] = INT_MAX;
         }
     }
 
@@ -276,7 +272,8 @@ public:
             finishingTime[i] = 0;
         }
         DFS();
-        if(hasCycle) cout<<"the sorting is not topological"<<endl;
+        if (hasCycle)
+            cout << "the sorting is not topological" << endl;
         int indx = 0;
         vector<pair<int, int>> sortedFinishTime;
         for (int i = 1; i <= vertices; i++)
@@ -354,16 +351,16 @@ public:
 
 int main()
 {
-    int test;
-    cin >> test;
-    while (test--)
-    {
+    // int test;
+    // cin >> test;
+    // while (test--)
+    // {
         int m, n;
         cin >> m >> n;
         graph g(m, n, true); // starts from 1
         g.defineGraph();
         cout << g.totalNumberSCC() << endl;
-    }
+   // }
     return 0;
 }
 
