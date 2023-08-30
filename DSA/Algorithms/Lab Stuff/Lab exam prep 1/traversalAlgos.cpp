@@ -40,7 +40,7 @@ class graph
     vector<int> startTime;
     vector<int> endTime;
     vector<vector<int>> scc;
-    int totalSCC=0;
+    int totalSCC = 0;
     int time = 1;
 
 public:
@@ -89,6 +89,11 @@ private:
         edgeList.push_back({u, v, w});
     }
 
+    // void removeEdge(int u, int v, int w)
+    // {
+    //     adjList[u].erase(adjList[u].find({v, w}));
+    // }
+
 public:
     void printGraph()
     {
@@ -131,6 +136,12 @@ private:
             endTime[i] = 0;
         }
         distance[source] = 0;
+    }
+
+    void DFS(int source)
+    {
+        initialize(source);
+        DFS_Visit(source);
     }
 
     void DFS()
@@ -223,8 +234,51 @@ public:
         // printGraph();
         cout << "SCC:\n";
         DFS(orderedNodes);
-        cout<<"total SCC "<<totalSCC<<endl;
+        cout << "total SCC " << totalSCC << endl;
         transpose();
+    }
+
+    bool isConnected()
+    {
+        if (!directed)
+        {
+            DFS(0);
+            for (int i = 0; i < vertices; i++)
+                if (color[i] == white and adjList[i].size() > 0)
+                    return false;
+            return true;
+        }
+        else
+        {
+            vector<bool> visited1(vertices);
+            DFS(0);
+
+            for(int i=0; i<vertices; i++)
+            {
+                if(color[i]!=white)
+                    visited1[i]=true;
+            }
+
+            transpose();
+
+            vector<bool>visited2(vertices);
+            DFS(0);
+
+            for(int i=0; i<vertices; i++)
+            {
+                if(color[i]!=white)
+                    visited2[i]=true;
+            }
+
+            transpose(); //back to the original
+
+            for(int i=0; i<vertices; i++)
+            {
+                if(!visited1[i] and !visited2[i])
+                    return false;
+            }
+            return true;
+        }
     }
 };
 
@@ -234,7 +288,8 @@ int main()
     cin >> m >> n;
     graph g(m, n, true, false);
     // g.printGraph();
-    g.topologicalSort();
-    g.findSCC();
+    // g.topologicalSort();
+    // g.findSCC();
+    g.printGraph();
     return 0;
 }

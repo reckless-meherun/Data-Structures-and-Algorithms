@@ -361,11 +361,11 @@ public:
             {
                 if (!visited1[i] and !visited2[i])
                 {
-                    transpose();
+                    transpose(); //back to the original
                     return false;
                 }
             }
-            transpose();
+            transpose(); //back to the original
             return true;
         }
     }
