@@ -29,8 +29,10 @@ class graph
     vector<int> startTime;
     vector<int> endTime;
     vector<vector<int>> scc;
+    vector<int> low;
     int totalSCC = 0;
     int time = 1;
+    vector<bool> articulationPoint;
 
 public:
     graph(int vertices, int edges, bool directed, bool weighted)
@@ -46,6 +48,8 @@ public:
         topoOrder.reserve(vertices);
         startTime.resize(vertices);
         endTime.resize(vertices);
+        low.resize(vertices);
+        articulationPoint.resize(vertices);
         defineGraph();
     }
 
@@ -120,6 +124,7 @@ private:
             distance[i] = MAX_VALUE;
             startTime[i] = 0;
             endTime[i] = 0;
+            low[i]=MAX_VALUE;
         }
         distance[source] = 0;
     }
@@ -161,6 +166,7 @@ private:
         color[u] = grey;
         startTime[u] = time;
         time++;
+        int child = 0;
         cout << u << " entering at time " << startTime[u] << endl;
         for (auto v : adjList[u])
         {
@@ -168,10 +174,21 @@ private:
                 hasCycle = true;
             if (color[v] == white)
             {
+                child++;
                 color[v] = grey;
                 parent[v] = u;
                 distance[v] = distance[u] + 1;
                 DFS_Visit(v);
+                low[u] = min(low[v], low[u]);
+
+                if (parent[u] == -1 and child > 1)
+                    articulationPoint[u] = true;
+                if (parent[u] != -1 and low[v] >= startTime[u])
+                    articulationPoint[u] = true;
+            }
+            else if (v != parent[u])
+            {
+                low[u] = min(low[u], startTime[v]);
             }
         }
         color[u] = black;
@@ -412,20 +429,25 @@ public:
         }
         return eularPath;
     }
+
+    vector<bool> findArticulationPoints()
+    {
+        DFS();
+        for (int i = 0; i < vertices; i++)
+            if (articulationPoint[i])
+                cout << i << " ";
+        cout << "\n";
+        return articulationPoint;
+    }
 };
 
 int main()
 {
     int m, n;
     cin >> m >> n;
-    graph g(m, n, false, false);
-     g.printGraph();
-    // g.topologicalSort();
-    // g.findSCC();
-    // // g.printGraph();
-    // g.printEularPath();
-    g.removeEdge(0,2);
+    graph g(m, n, true, false);
     g.printGraph();
+    g.findArticulationPoints();
 
     return 0;
 }
