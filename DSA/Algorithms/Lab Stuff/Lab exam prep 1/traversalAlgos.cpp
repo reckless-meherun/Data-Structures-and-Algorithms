@@ -33,6 +33,7 @@ class graph
     int totalSCC = 0;
     int time = 1;
     vector<bool> articulationPoint;
+    vector<pair<int,int>> bridges;
 
 public:
     graph(int vertices, int edges, bool directed, bool weighted)
@@ -49,6 +50,7 @@ public:
         startTime.resize(vertices);
         endTime.resize(vertices);
         low.resize(vertices);
+        bridges.reserve(vertices);
         articulationPoint.resize(vertices);
         defineGraph();
     }
@@ -124,7 +126,7 @@ private:
             distance[i] = MAX_VALUE;
             startTime[i] = 0;
             endTime[i] = 0;
-            low[i]=MAX_VALUE;
+            low[i] = MAX_VALUE;
         }
         distance[source] = 0;
     }
@@ -164,7 +166,7 @@ private:
     void DFS_Visit(int u)
     {
         color[u] = grey;
-        startTime[u] = time;
+        low[u] = startTime[u] = time;
         time++;
         int child = 0;
         cout << u << " entering at time " << startTime[u] << endl;
@@ -185,6 +187,9 @@ private:
                     articulationPoint[u] = true;
                 if (parent[u] != -1 and low[v] >= startTime[u])
                     articulationPoint[u] = true;
+
+                if(low[v] > startTime[u])
+                    bridges.push_back({u,v});
             }
             else if (v != parent[u])
             {
@@ -439,15 +444,24 @@ public:
         cout << "\n";
         return articulationPoint;
     }
+
+    void findBridges()
+    {
+        DFS();
+        for (auto v : bridges)
+            cout << v.first << " " << v.second << "\n";
+        cout << "\n";
+    }
 };
 
 int main()
 {
     int m, n;
     cin >> m >> n;
-    graph g(m, n, true, false);
+    graph g(m, n, false, false);
     g.printGraph();
     g.findArticulationPoints();
+    g.findBridges();
 
     return 0;
 }
