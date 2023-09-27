@@ -181,7 +181,7 @@ private:
                 parent[v] = u;
                 distance[v] = distance[u] + 1;
                 DFS_Visit(v);
-                low[u] = min(low[v], low[u]);
+                low[u] = min(low[u], low[v]);
 
                 if (parent[u] == -1 and child > 1)
                     articulationPoint[u] = true;

@@ -237,7 +237,6 @@ public:
 
         while (!pq.empty())
         {
-
             int u = pq.top().second;
             pq.pop();
 
