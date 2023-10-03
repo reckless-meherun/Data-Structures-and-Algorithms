@@ -79,7 +79,7 @@ int lcsBottomUp(int len_a, int len_b) // length
 
 int lcsTopDown(int indx_a, int indx_b) // last index len-1
 {
-    if (indx_a == -1 || indx_b == -1)
+    if (indx_a == -1 or indx_b == -1)
         return 0;
     if (vis[indx_a][indx_b])
         return dp[indx_a][indx_b];
