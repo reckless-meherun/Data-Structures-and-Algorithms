@@ -1,1 +1,2 @@
-12
+lcs : NN
+length of lcs : 1

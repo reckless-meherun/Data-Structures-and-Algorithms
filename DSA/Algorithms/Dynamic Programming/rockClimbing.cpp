@@ -63,6 +63,14 @@ void initialize(int n, int m)
                 reDanger[i][j] = danger[i - 1][j - 1];
         }
     }
+    for (int i = 0; i < 1010; i++)
+    {
+        for (int j = 0; j < 1010; j++)
+        {
+            dp[i][j] = 0;
+            vis[i][j] = 0;
+        }
+    }
 }
 
 int climbRocksBottomUp(int n, int m)
