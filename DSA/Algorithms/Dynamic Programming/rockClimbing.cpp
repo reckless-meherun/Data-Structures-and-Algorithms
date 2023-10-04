@@ -12,10 +12,10 @@ int reDanger[2 * 1010][2 * 1010];
 
 void printBestPath(int i, int j, int n)
 {
-    if (i == n) // to print the starting point
-        cout << reDanger[i][j] << " ";
     if (i == 0 or j == 0)
         return;
+    if (i == n) // to print the starting point
+        cout << reDanger[i][j] << " ";
     else if (dp[i - 1][j - 1] < dp[i - 1][j] and dp[i - 1][j - 1] < dp[i - 1][j + 1])
     {
         cout << reDanger[i - 1][j - 1] << " ";
