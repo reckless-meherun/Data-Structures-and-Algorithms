@@ -45,7 +45,7 @@ void printDPArray(int n, int m)
     }
 }
 
-int climbRocksBottomUp(int n, int m)
+void initialize(int n, int m)
 {
     // initialize
     for (int i = 0; i <= n; i++)
@@ -63,7 +63,11 @@ int climbRocksBottomUp(int n, int m)
                 reDanger[i][j] = danger[i - 1][j - 1];
         }
     }
+}
 
+int climbRocksBottomUp(int n, int m)
+{
+    initialize(n, m);
     // dp calculation
     for (int i = 1; i <= n; i++)
     {
@@ -93,25 +97,34 @@ int climbRocksBottomUp(int n, int m)
     return ans;
 }
 
+int climbRocksTopDownRec(int i, int j, int m)
+{
+    if (j == 0 or j == (m + 1))
+        return INT_MAX;
+
+    if (i == 0)
+        return 0;
+
+    if (vis[i][j])
+        return dp[i][j];
+
+    dp[i][j] = reDanger[i][j] + min({climbRocksTopDownRec(i - 1, j - 1, m), climbRocksTopDownRec(i - 1, j, m), climbRocksTopDownRec(i - 1, j + 1, m)});
+    return dp[i][j];
+}
+
 int climbRocksTopDown(int n, int m)
 {
-    if (n == 0 or m == 0)
-        return 0;
-    if (vis[n][m])
-        return dp[n][m];
-    int i = 1, j = 1;
-    for (j = 1; j <= m; j++)
-    {
-        dp[n][j] = reDanger[n][j] + min(climbRocksTopDown(n - 1, j - 1), min(climbRocksTopDown(n - 1, j), climbRocksTopDown(n - 1, j + 1)));
-    }
-    dp[n][m] = dp[n][j - 1];
-    return dp[n][m];
+    initialize(n, m);
+    int ans = INT_MAX;
+    for (int j = 0; j <= m; j++)
+        ans = min(ans, climbRocksTopDownRec(n, j, m));
+    return ans;
 }
 
 int main()
 {
-    cout << climbRocksBottomUp(4, 5);
-    cout << endl;
-    cout<< climbRocksTopDown(4,5);
+    // cout << climbRocksBottomUp(4, 5);
+    // cout << endl;
+    cout << climbRocksTopDown(4, 5);
     return 0;
 }
