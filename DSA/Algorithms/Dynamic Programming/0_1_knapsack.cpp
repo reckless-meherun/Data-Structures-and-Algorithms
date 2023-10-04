@@ -2,10 +2,30 @@
 using namespace std;
 typedef long long ll;
 
-int weight[1010] = {2, 3, 4, 5};
-int profit[1010] = {1, 2, 5, 6};
-
+int weight[1010] = {2, 1, 3, 2};
+int profit[1010] = {12, 10, 20, 15};
 int dp[1010][1010], vis[1010][1010];
+
+enum direction
+{
+    UP,
+    DIAG_UP
+};
+
+direction dir[1010][1010];
+
+void print(int i, int j)
+{
+    if (i == 0 or j == 0)
+        return;
+    else if (dir[i][j] == DIAG_UP)
+    {
+        print(i - 1, j - weight[i]);
+        cout << i << " ";
+    }
+    else if (dir[i][j] == UP)
+        print(i - 1, j);
+}
 
 int knapsackBottomUp(int numObject, int maxCapacity)
 {
@@ -24,11 +44,29 @@ int knapsackBottomUp(int numObject, int maxCapacity)
             if (object == 0 or capacity == 0)
                 dp[object][capacity] = 0;
             else if (capacity >= weight[object])
-                dp[object][capacity] = max(dp[object - 1][capacity], profit[object] + dp[object - 1][capacity - weight[object]]);
+            {
+                // dp[object][capacity] = max(dp[object - 1][capacity], profit[object] + dp[object - 1][capacity - weight[object]]);
+                if ((profit[object] + dp[object - 1][capacity - weight[object]]) > dp[object - 1][capacity])
+                {
+                    dp[object][capacity] = profit[object] + dp[object - 1][capacity - weight[object]];
+                    dir[object][capacity] = DIAG_UP;
+                }
+                else
+                {
+                    dp[object][capacity] = dp[object - 1][capacity];
+                    dir[object][capacity] = UP;
+                }
+            }
             else
+            {
                 dp[object][capacity] = dp[object - 1][capacity];
+                dir[object][capacity] = UP;
+            }
         }
     }
+
+    print(numObject, maxCapacity);
+    cout<<endl;
     return dp[numObject][maxCapacity];
 }
 
@@ -57,8 +95,8 @@ int knapsackTopDown(int i, int W)
 int main()
 {
     memset(vis, 0, sizeof(vis));
-    cout << knapsackTopDown(4-1, 8);
-    cout<<endl;
-    cout<<knapsackBottomUp(4, 8);
+    cout << knapsackTopDown(4 - 1, 5);
+    cout << endl;
+    cout << knapsackBottomUp(4, 5);
     return 0;
 }

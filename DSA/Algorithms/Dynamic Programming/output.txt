@@ -1,2 +1,3 @@
-The best path to climb the rocks : 5 2 1 4 
-Minimum path Danger : 12
+37
+1 2 4 
+37

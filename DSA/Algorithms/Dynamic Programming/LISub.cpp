@@ -2,8 +2,8 @@
 using namespace std;
 typedef long long ll;
 
-int dp[1010], vis[1010];
-// int seq[1010] = {9, 2, 5, 3, 7, 11, 8, 10, 13, 6};
+int dp[1010], vis[1010], preV[1010];
+//int seq[1010] = {9, 2, 5, 3, 7, 11, 8, 10, 13, 6};
 int seq[1010] = {50, 3, 10, 7, 40, 80};
 int n = 6;
 
@@ -16,8 +16,18 @@ void reset()
     }
 }
 
+void printLis(int i)
+{
+    if (i == 0)
+        return;
+    printLis(preV[i]);
+    cout << seq[i] << " ";
+}
+
 int lisBottomUp(int n)
 {
+    preV[0] = -1;
+    int lastIndex = n - 1;
     for (int i = 0; i < n; i++)
         dp[i] = 1; // even if all the other elements are greater than the last element, there is a valid sequence of length 1 containing that last element only
     int ans = 0;   // when there the sequence is empty
@@ -27,11 +37,21 @@ int lisBottomUp(int n)
         {
             if (seq[j] < seq[i])
             {
-                dp[i] = max(dp[i], dp[j] + 1);
+                if (dp[i] < (dp[j] + 1))
+                {
+                    dp[i] = dp[j] + 1;
+                    preV[i] = j;
+                }
             }
         }
-        ans = max(ans, dp[i]);
+        if (ans < dp[i])
+        {
+            ans = dp[i];
+            lastIndex = i;
+        }
     }
+    printLis(lastIndex);
+    cout<<endl;
     return ans;
 }
 
