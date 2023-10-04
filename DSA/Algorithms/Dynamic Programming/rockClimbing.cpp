@@ -12,7 +12,8 @@ int reDanger[2 * 1010][2 * 1010];
 
 void printBestPath(int i, int j, int n)
 {
-    if(i==n) cout<<reDanger[i][j]<<" ";
+    if (i == n) // to print the starting point
+        cout << reDanger[i][j] << " ";
     if (i == 0 or j == 0)
         return;
     else if (dp[i - 1][j - 1] < dp[i - 1][j] and dp[i - 1][j - 1] < dp[i - 1][j + 1])
@@ -86,9 +87,10 @@ int climbRocks(int n, int m)
             final_y = j;
         }
     }
-    cout<<"The best path to climb the rocks : ";
-    printBestPath(final_x, final_y, n);
-    cout << endl << "Minimum path Danger : ";
+    cout << "The best path to climb the rocks : ";
+    printBestPath(final_x, final_y, n); // pass n to print the starting  point
+    cout << endl
+         << "Minimum path Danger : ";
     return ans;
 }
 
