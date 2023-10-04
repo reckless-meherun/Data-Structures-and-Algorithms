@@ -6,6 +6,14 @@ int dp[1010][1010], vis[1010][1010];
 string string_a = "BD";
 string string_b = "ABCD";
 
+enum direcction
+{
+    LEFT,
+    UP,
+    UPDIAG
+};
+direcction dir[1010][1010];
+
 void reset()
 {
     for (int i = 0; i < 1010; i++)
@@ -18,6 +26,21 @@ void reset()
     }
 }
 
+void printLCS(int i, int j)
+{
+    if (i == 0 or j == 0)
+        return;
+    else if (dir[i][j] == UPDIAG)
+    {
+        printLCS(i - 1, j - 1);
+        cout << string_a[i-1];
+    }
+    else if (dir[i][j] == UP)
+        printLCS(i - 1, j);
+    else
+        printLCS(i, j - 1);
+}
+
 /** adding extra empty rows and columns */
 int lcsBottomUp(int len_a, int len_b) // length
 {
@@ -28,11 +51,29 @@ int lcsBottomUp(int len_a, int len_b) // length
             if (i == 0 || j == 0)
                 dp[i][j] = 0;
             else if (string_a[i - 1] == string_b[j - 1])
+            {
                 dp[i][j] = 1 + dp[i - 1][j - 1];
+                dir[i][j] = UPDIAG;
+            }
             else
-                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            {
+                if (dp[i - 1][j] > dp[i][j - 1])
+                {
+                    dp[i][j] = dp[i - 1][j];
+                    dir[i][j] = UP;
+                }
+                else
+                {
+                    dp[i][j] = dp[i][j - 1];
+                    dir[i][j] = LEFT;
+                }
+            }
         }
     }
+    cout<<"lcs : ";
+    printLCS(len_a, len_b);
+    cout<<endl;
+    cout<<"length of lcs : ";
     return dp[len_a][len_b];
 }
 
