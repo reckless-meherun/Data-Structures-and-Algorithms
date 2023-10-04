@@ -12,10 +12,10 @@ int reDanger[2 * 1010][2 * 1010];
 
 void printBestPath(int i, int j, int n)
 {
-    if (i == 0 or j == 0)
-        return;
     if (i == n) // to print the starting point
         cout << reDanger[i][j] << " ";
+    if (i == 0 or j == 0)
+        return;
     else if (dp[i - 1][j - 1] < dp[i - 1][j] and dp[i - 1][j - 1] < dp[i - 1][j + 1])
     {
         cout << reDanger[i - 1][j - 1] << " ";
@@ -45,7 +45,7 @@ void printDPArray(int n, int m)
     }
 }
 
-int climbRocks(int n, int m)
+int climbRocksBottomUp(int n, int m)
 {
     // initialize
     for (int i = 0; i <= n; i++)
@@ -59,7 +59,6 @@ int climbRocks(int n, int m)
             }
             else if (i == 0)
                 reDanger[i][j] = 0;
-
             else
                 reDanger[i][j] = danger[i - 1][j - 1];
         }
@@ -94,8 +93,25 @@ int climbRocks(int n, int m)
     return ans;
 }
 
+int climbRocksTopDown(int n, int m)
+{
+    if (n == 0 or m == 0)
+        return 0;
+    if (vis[n][m])
+        return dp[n][m];
+    int i = 1, j = 1;
+    for (j = 1; j <= m; j++)
+    {
+        dp[n][j] = reDanger[n][j] + min(climbRocksTopDown(n - 1, j - 1), min(climbRocksTopDown(n - 1, j), climbRocksTopDown(n - 1, j + 1)));
+    }
+    dp[n][m] = dp[n][j - 1];
+    return dp[n][m];
+}
+
 int main()
 {
-    cout << climbRocks(4, 5);
+    cout << climbRocksBottomUp(4, 5);
+    cout << endl;
+    cout<< climbRocksTopDown(4,5);
     return 0;
 }
