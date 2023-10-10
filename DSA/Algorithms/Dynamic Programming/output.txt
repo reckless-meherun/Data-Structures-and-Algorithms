@@ -1,2 +1,3 @@
-lcs : NN
-length of lcs : 1
+26
+
+((A(BC))D)
